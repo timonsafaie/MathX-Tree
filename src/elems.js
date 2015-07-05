@@ -1,71 +1,60 @@
+var Elem = function(tag, text) {
+    Node.call(this);
+    this.tag = tag;
+    this.text = text;
+};
+
 var mo = {
     insert: function(text, cursor) {
-        var node = new Node(cursor.parent);
-        node.tag = 'mo';
-        node.text = text;
-
-        listAddBefore(node, cursor);
+        var node = new Elem('mo', text);
+        treeAddBefore(node, cursor);
         return node;
     }
 };
 
 var mn = {
     insert: function(text, cursor) {
-        var node = new Node(cursor.parent);
-        node.tag = 'mn';
-        node.text = text;
-
-        listAddBefore(node, cursor);
+        var node = new Elem('mn', text);
+        treeAddBefore(node, cursor);
         return node;
     }
 };
 
 var mi = {
     insert: function(text, cursor) {
-        var node = new Node(cursor.parent);
-        node.tag = 'mi';
-        node.text = text;
-
-        listAddBefore(node, cursor);
+        var node = new Elem('mi', text);
+        treeAddBefore(node, cursor);
         return node;
     }
 };
 
 var msup = {
     insert: function(text, cursor) {
-        var node = new Node(cursor.parent);
-        node.tag = 'msup';
+        var node = new Elem('msup');
 
         var base = cursor.prev;
-        listDelNode(base);
-        listAddAfter(base, node.children);
-        base.parent = node;
+        treeMoveAfter(base, node.children);
 
-        var mrow = new Node(node);
-        mrow.tag = 'mrow';
-        listAddAfter(mrow, base);
+        var mrow = new Elem('mrow');
+        treeAddAfter(mrow, base);
 
-        listAddBefore(node, cursor);
-        listDelNode(cursor);
-        listAddAfter(cursor, mrow.children);
-        cursor.parent = mrow;
+        treeAddBefore(node, cursor);
+        treeMoveAfter(cursor, mrow.children);
+
         return node;
     }
 };
 
 var msqrt = {
     insert: function(text, cursor) {
-        var node = new Node(cursor.parent);
-        node.tag = 'msqrt';
+        var node = new Elem('msqrt');
 
-        var mrow = new Node(node);
-        mrow.tag = 'mrow';
-        listAddAfter(mrow, node.children);
+        var mrow = new Elem('mrow');
+        treeAddAfter(mrow, node.children);
 
-        listAddBefore(node, cursor);
-        listDelNode(cursor);
-        listAddAfter(cursor, mrow.children);
-        cursor.parent = mrow;
+        treeAddBefore(node, cursor);
+        treeMoveAfter(cursor, mrow.children);
+
         return node;
     }
 };

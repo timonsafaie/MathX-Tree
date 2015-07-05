@@ -53,9 +53,26 @@ function listEmpty(node) {
     return node.next === node;
 }
 
-var Node = function(parent) {
+var Node = function() {
     List.call(this);
-    this.parent = parent;
+    this.parent = undefined;
     this.children = new List();
     listInitHead(this.children);
+    this.children.parent = this;
 };
+
+function treeAddBefore(node, dest) {
+    listAddBefore(node, dest);
+    node.parent = dest.parent;
+}
+
+function treeAddAfter(node, dest) {
+    listAddAfter(node, dest);
+    node.parent = dest.parent;
+}
+
+function treeMoveAfter(node, dest) {
+    listDelNode(node);
+    listAddAfter(node, dest);
+    node.parent = dest.parent;
+}

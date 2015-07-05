@@ -19,9 +19,7 @@ function dumpTree(node, level, indent) {
     var result = ''
     result += indent.repeat(level);
     result += '<' + node.tag + '>';
-    if (node === input.cursor) {
-        return '';
-    } else if (node.text !== undefined) {
+    if (node.text !== undefined) {
         result += node.text;
     } else {
         var start = node.children.next;
@@ -33,7 +31,7 @@ function dumpTree(node, level, indent) {
     return result;
 }
 
-treeString = fs.readFileSync('equations/temp.xml', 'utf8');
-assert(dumpTree(input.root, 0, '  ') == treeString);
+treeString = dumpTree(input.root, 0, '  ');
+assert(treeString == fs.readFileSync('equations/temp.xml', 'utf8'));
 
 print('OK');

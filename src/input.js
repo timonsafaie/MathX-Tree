@@ -1,15 +1,14 @@
 var Cursor = function() {
-    Node.call(this);
+    Elem.call(this, 'cursor', '');
     delete this.children;
     this.aggTag = undefined;
     this.aggStart = undefined;
 };
 
 var MathInput = function() {
-    this.root = new Node();
-    this.root.tag = 'mrow';
-    this.cursor = new Cursor(root);
-    listAddAfter(this.cursor, this.root.children);
+    this.root = new Elem('mrow');
+    this.cursor = new Cursor();
+    treeAddAfter(this.cursor, this.root.children);
 };
 
 MathInput.prototype = {
