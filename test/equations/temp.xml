@@ -1,0 +1,13 @@
+<mrow>
+  <mo>-</mo>
+  <mi>b</mi>
+  <mo>+-</mo>
+  <msqrt>
+    <msup>
+      <mi>b</mi>
+      <mrow>
+	<mn>2</mn>
+      </mrow>
+    </msup>
+  </msqrt>
+</mrow>
