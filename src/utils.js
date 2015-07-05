@@ -1,3 +1,5 @@
+var __slice = [].slice;
+
 function print(message) {
     console.log(message);
 }

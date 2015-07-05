@@ -9,6 +9,17 @@ var mo = {
     }
 };
 
+var mn = {
+    insert: function(text, cursor) {
+        var node = new Node(cursor.parent);
+        node.tag = 'mn';
+        node.text = text;
+
+        listAddBefore(node, cursor);
+        return node;
+    }
+};
+
 var mi = {
     insert: function(text, cursor) {
         var node = new Node(cursor.parent);
@@ -31,6 +42,7 @@ var msup = {
         base.parent = node;
 
         var mrow = new Node(node);
+        mrow.tag = 'mrow';
         listAddAfter(mrow, base);
 
         listAddBefore(node, cursor);
@@ -47,6 +59,7 @@ var msqrt = {
         node.tag = 'msqrt';
 
         var mrow = new Node(node);
+        mrow.tag = 'mrow';
         listAddAfter(mrow, node.children);
 
         listAddBefore(node, cursor);
@@ -59,8 +72,9 @@ var msqrt = {
 
 var atomElems = [
     {input: /^[a-zA-Z]$/, tag: mi},
-    {input: /^[\/+-]$/, tag: mo},
-    {input: '^', tag: msup}
+    {input: /^[0-9]$/,    tag: mn},
+    {input: /^[\/+-]$/,   tag: mo},
+    {input: '^',          tag: msup}
 ];
 
 var aggElems = [

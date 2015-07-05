@@ -37,15 +37,15 @@ function listDelNode(node) {
 }
 
 function listEach(start, end, fn) {
-    var args = arguments.slice(3);
+    var args = __slice.call(arguments, 3);
     for (var pos = start; pos != end; pos = pos.next)
-        fn([pos].concat(args));
+        fn.apply(undefined, [pos].concat(args));
 }
 
 function listFold(start, end, acc, fn) {
-    var args = arguments.slice(4);
+    var args = __slice.call(arguments, 4);
     for (var pos = start; pos != end; pos = pos.next)
-        acc += fn([pos].concat(args));
+        acc += fn.apply(undefined, [pos].concat(args));
     return acc;
 }
 

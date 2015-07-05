@@ -8,22 +8,32 @@ eval(fs.readFileSync('../src/input.js', 'utf8'));
 input = new MathInput();
 lines = fs.readFileSync('equations/temp.in', 'utf8');
 lines = lines.split('\n');
-for (var i = 0; i < lines.length; i++)
-    input.input(lines[i]);
+for (var i = 0; i < lines.length; i++) {
+    var key = lines[i];
+    if (key.length == 0)
+        continue;
+    input.input(key);
+}
 
 function dumpTree(node, level, indent) {
     var result = ''
     result += indent.repeat(level);
     result += '<' + node.tag + '>';
-    if (node.text !== undefined) {
+    if (node === input.cursor) {
+        return '';
+    } else if (node.text !== undefined) {
         result += node.text;
     } else {
         var start = node.children.next;
         var end = node.children;
-        result += listFold(start, end, '', dumpTree, level+1, indent);
+        result += listFold(start, end, '\n', dumpTree, level+1, indent);
+        result += indent.repeat(level);
     }
     result += '</' + node.tag + '>\n';
     return result;
 }
 
-console.log(dumpTree(input.root, 0, '  '));
+treeString = fs.readFileSync('equations/temp.xml', 'utf8');
+assert(dumpTree(input.root, 0, '  ') == treeString);
+
+print('OK');
