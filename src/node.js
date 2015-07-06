@@ -49,8 +49,12 @@ function listFold(start, end, acc, fn) {
     return acc;
 }
 
-function listEmpty(node) {
-    return node.next === node;
+function listIsFirst(node, head) {
+    return node.prev === head;
+}
+
+function listIsLast(node, head) {
+    return node.next === head;
 }
 
 var Node = function() {
@@ -61,18 +65,35 @@ var Node = function() {
     this.children.parent = this;
 };
 
-function treeAddBefore(node, dest) {
-    listAddBefore(node, dest);
-    node.parent = dest.parent;
-}
-
-function treeAddAfter(node, dest) {
-    listAddAfter(node, dest);
-    node.parent = dest.parent;
-}
-
-function treeMoveAfter(node, dest) {
-    listDelNode(node);
-    listAddAfter(node, dest);
-    node.parent = dest.parent;
-}
+extend(Node, List, function(_) {
+    _.addBefore = function(dest) {
+        listAddBefore(this, dest);
+        this.parent = dest.parent;
+    };
+    _.addAfter = function(dest) {
+        listAddAfter(this, dest);
+        this.parent = dest.parent;
+    };
+    _.moveBefore = function(dest) {
+        // root node has no sibling
+        if (dest.parent === undefined)
+            return;
+        listDelNode(this);
+        listAddBefore(this, dest);
+        this.parent = dest.parent;
+    };
+    _.moveAfter = function(dest) {
+        // root node has no sibling
+        if (dest.parent === undefined)
+            return;
+        listDelNode(this);
+        listAddAfter(this, dest);
+        this.parent = dest.parent;
+    };
+    _.isFirstChild = function() {
+        return listIsFirst(this, this.parent.children);
+    };
+    _.isLastChild = function() {
+        return listIsLast(this, this.parent.children);
+    };
+});

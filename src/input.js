@@ -1,40 +1,35 @@
-var Cursor = function() {
-    Elem.call(this, 'cursor', '');
-    delete this.children;
-    this.aggTag = undefined;
-    this.aggStart = undefined;
-};
-
 var MathInput = function() {
-    this.root = new Elem('mrow');
+    this.root = new Mrow();
     this.cursor = new Cursor();
-    treeAddAfter(this.cursor, this.root.children);
+    this.cursor.addAfter(this.root.children);
 };
 
-MathInput.prototype = {
-    input: function(key) {
+extend(MathInput, Object, function(_) {
+    _.input = function(key) {
         var cursor = this.cursor;
         if (checkControl(key, cursor) === true)
             return;
 
-        var tag;
+        var Tag;
         for (var i = 0; i < atomElems.length; i++) {
             var atom = atomElems[i];
             if (atom.input.test !== undefined) {
                 if (atom.input.test(key)) {
-                    tag = atom.tag;
+                    Tag = atom.Tag;
                     break;
                 }
             } else {
                 if (atom.input === key) {
-                    tag = atom.tag;
+                    Tag = atom.Tag;
                     break;
                 }
             }
         }
-        if (tag === undefined)
+
+        if (Tag === undefined)
             throw 'Unknown input "' + key + '"';
-        node = tag.insert(key, cursor);
+        node = new Tag(key);
+        node.insert(cursor);
 
         if (cursor.aggTag !== node.tag) {
             cursor.aggTag = node.tag;
@@ -42,17 +37,31 @@ MathInput.prototype = {
             return;
         }
 
+        var AggTag;
         var aggText = listFold(cursor.aggStart, cursor, '',
                                function(n) {return n.text;});
         for (var i = 0; i < aggElems.length; i++) {
             var agg = aggElems[i];
-            if (agg.input === aggText) {
-                listDel(cursor.aggStart, cursor);
-                agg.tag.insert(aggText, cursor);
-                cursor.aggTag = undefined;
-                cursor.aggStart = undefined;
-                break;
+            if (agg.input.test != undefined) {
+                if (agg.input.test(aggText)) {
+                    AggTag = agg.Tag;
+                    break;
+                }
+            } else {
+                if (agg.input === aggText) {
+                    AggTag = agg.Tag;
+                    break;
+                }
             }
         }
-    }
-};
+
+        if (AggTag === undefined)
+            return;
+        listDel(cursor.aggStart, cursor);
+        node = new AggTag(aggText);
+        node.insert(cursor);
+
+        cursor.aggTag = node.tag;
+        cursor.aggStart = node;
+    };
+});

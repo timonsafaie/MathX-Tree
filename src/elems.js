@@ -4,70 +4,83 @@ var Elem = function(tag, text) {
     this.text = text;
 };
 
-var mo = {
-    insert: function(text, cursor) {
-        var node = new Elem('mo', text);
-        treeAddBefore(node, cursor);
-        return node;
-    }
+extend(Elem, Node);
+
+var Mrow = function() {
+    Elem.call(this, 'mrow');
+    this.cursorStay = true;
+}
+
+extend(Mrow, Elem);
+
+var Mo = function(text) {
+    Elem.call(this, 'mo', text);
 };
 
-var mn = {
-    insert: function(text, cursor) {
-        var node = new Elem('mn', text);
-        treeAddBefore(node, cursor);
-        return node;
+extend(Mo, Elem, function(_) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
     }
+});
+
+var Mn = function(text) {
+    Elem.call(this, 'mn', text);
 };
 
-var mi = {
-    insert: function(text, cursor) {
-        var node = new Elem('mi', text);
-        treeAddBefore(node, cursor);
-        return node;
+extend(Mn, Elem, function(_) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
     }
+});
+
+var Mi = function(text) {
+    Elem.call(this, 'mi', text);
 };
 
-var msup = {
-    insert: function(text, cursor) {
-        var node = new Elem('msup');
+extend(Mi, Elem, function(_) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
+    }
+});
 
+var Msup = function() {
+    Elem.call(this, 'msup');
+};
+
+extend(Msup, Elem, function(_) {
+    _.insert = function(cursor) {
         var base = cursor.prev;
-        treeMoveAfter(base, node.children);
+        base.moveAfter(this.children);
 
-        var mrow = new Elem('mrow');
-        treeAddAfter(mrow, base);
+        var mrow = new Mrow()
+        mrow.addAfter(base);
 
-        treeAddBefore(node, cursor);
-        treeMoveAfter(cursor, mrow.children);
-
-        return node;
+        this.addBefore(cursor);
+        cursor.moveAfter(mrow.children);
     }
+});
+
+var Msqrt = function() {
+    Elem.call(this, 'msqrt');
+    this.cursorStay = true;
 };
 
-var msqrt = {
-    insert: function(text, cursor) {
-        var node = new Elem('msqrt');
-
-        var mrow = new Elem('mrow');
-        treeAddAfter(mrow, node.children);
-
-        treeAddBefore(node, cursor);
-        treeMoveAfter(cursor, mrow.children);
-
-        return node;
+extend(Msqrt, Elem, function(_) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
+        cursor.moveAfter(this.children);
     }
-};
+});
 
 var atomElems = [
-    {input: /^[a-zA-Z]$/, tag: mi},
-    {input: /^[0-9]$/,    tag: mn},
-    {input: /^[\/+-]$/,   tag: mo},
-    {input: '^',          tag: msup}
+    {input: /^[a-zA-Z]$/, Tag: Mi},
+    {input: /^[0-9.]$/,   Tag: Mn},
+    {input: /^[\/+-]$/,   Tag: Mo},
+    {input: '^',          Tag: Msup}
 ];
 
 var aggElems = [
-    {input: '+-', tag: mo},
-    {input: '-+', tag: mo},
-    {input: 'sqrt', tag: msqrt}
+    {input: '+-',         Tag: Mo},
+    {input: '-+',         Tag: Mo},
+    {input: 'sqrt',       Tag: Msqrt}
 ];
