@@ -1,10 +1,10 @@
 function checkControl(key, cursor) {
     switch (key) {
     case 'Left':
-        cursor.movePrev();
+        cursor.moveLeft();
         return true;
     case 'Right':
-        cursor.moveNext();
+        cursor.moveRight();
         return true;
     default:
         return false;

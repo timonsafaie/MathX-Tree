@@ -6,7 +6,7 @@ var Cursor = function() {
 };
 
 extend(Cursor, Node, function(_) {
-    _.movePrev = function() {
+    _.moveLeft = function() {
         if (!this.isFirstChild()) {
             this.moveBefore(this.prev);
         } else {
@@ -15,7 +15,7 @@ extend(Cursor, Node, function(_) {
             } while (this.parent.cursorStay !== true);
         }
     };
-    _.moveNext = function() {
+    _.moveRight = function() {
         if (!this.isLastChild()) {
             this.moveAfter(this.next);
         } else {
