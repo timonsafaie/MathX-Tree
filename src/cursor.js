@@ -6,6 +6,9 @@ var Cursor = function() {
 };
 
 extend(Cursor, Node, function(_) {
+    _.html = function () {
+        return '<span class="cursor">&#8203;</span>';
+    };
     _.moveLeft = function() {
         if (!this.isFirstChild()) {
             this.moveBefore(this.prev);

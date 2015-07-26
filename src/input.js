@@ -5,30 +5,33 @@ var MathInput = function() {
 };
 
 extend(MathInput, Object, function(_) {
+    _.html = function() {
+        return '<span class="mX-container">' + this.root.html() + '</span>';
+    };
     _.input = function(key) {
         var cursor = this.cursor;
         if (checkControl(key, cursor) === true)
             return;
 
-        var Tag;
+        var found;
         for (var i = 0; i < atomElems.length; i++) {
             var atom = atomElems[i];
             if (atom.input.test !== undefined) {
                 if (atom.input.test(key)) {
-                    Tag = atom.Tag;
+                    found = atom;
                     break;
                 }
             } else {
                 if (atom.input === key) {
-                    Tag = atom.Tag;
+                    found = atom;
                     break;
                 }
             }
         }
 
-        if (Tag === undefined)
+        if (!found)
             throw 'Unknown input "' + key + '"';
-        node = new Tag(key);
+        node = new found.Tag(key, found);
         node.insert(cursor);
 
         if (cursor.aggTag !== node.tag) {
@@ -37,28 +40,28 @@ extend(MathInput, Object, function(_) {
             return;
         }
 
-        var AggTag;
-        var aggText = listFold(cursor.aggStart, cursor, '',
-                               function(n) {return n.text;});
+        var aggFound;
+        var aggInput = listFold(cursor.aggStart, cursor, '',
+                                function(n) {return n.input;});
         for (var i = 0; i < aggElems.length; i++) {
             var agg = aggElems[i];
             if (agg.input.test != undefined) {
-                if (agg.input.test(aggText)) {
-                    AggTag = agg.Tag;
+                if (agg.input.test(aggInput)) {
+                    aggFound = agg;
                     break;
                 }
             } else {
-                if (agg.input === aggText) {
-                    AggTag = agg.Tag;
+                if (agg.input === aggInput) {
+                    aggFound = agg;
                     break;
                 }
             }
         }
 
-        if (AggTag === undefined)
+        if (!aggFound)
             return;
         listDel(cursor.aggStart, cursor);
-        node = new AggTag(aggText);
+        node = new aggFound.Tag(aggInput, aggFound);
         node.insert(cursor);
 
         cursor.aggTag = node.tag;

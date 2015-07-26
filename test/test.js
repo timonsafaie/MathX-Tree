@@ -17,8 +17,8 @@ function dumpTree(node, level, indent) {
     result += '<' + node.tag + '>';
     if (node === input.cursor) {
         return indent.repeat(level) + '<cursor/>\n';
-    } else if (node.text !== undefined) {
-        result += node.text;
+    } else if (node.input !== undefined) {
+        result += node.input;
     } else {
         var start = node.children.next;
         var end = node.children;
