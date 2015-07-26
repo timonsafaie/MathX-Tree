@@ -83,7 +83,7 @@ extend(Msup, Elem, function(_) {
 });
 
 var Msqrt = function(input, info) {
-    Elem.call(this, 'msqrt');
+    Elem.call(this, 'msqrt', input, info.output);
     this.cursorStay = true;
 };
 
@@ -94,7 +94,7 @@ extend(Msqrt, Elem, function(_) {
     };
     _.html = function() {
         var html = '<span class="function" func="sqrt">' +
-            '<span class="func-symbol func-symbol-sqrt">' + this.output + '</span>' +
+            '<span class="func-symbol func-symbol-sqrt" style="padding: 0px 0.2em 0px 0px;">' + this.output + '</span>' +
             '<span class="func-sqrt func-box func-max" order="1">';
         listEach(this.children.next, this.children, function(e) {
             html += e.html();
@@ -112,7 +112,7 @@ var atomElems = [
 ];
 
 var aggElems = [
-    {input: '+-',         Tag: Mo,     output: '\u00B1'},
-    {input: '-+',         Tag: Mo,     output: '\u2213'},
-    {input: 'sqrt',       Tag: Msqrt,  output: '\u221A'}
+    {input: '+-',         Tag: Mo,     output: '&plusmn;'},
+    {input: '-+',         Tag: Mo,     output: '&#8723;'},
+    {input: 'sqrt',       Tag: Msqrt,  output: '&radic;'}
 ];

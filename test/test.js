@@ -45,4 +45,7 @@ for (var i = 0; i < lines.length; i++) {
 }
 
 var treeString = dumpTree(input.root, 0, '  ');
-print(treeString);
+//print(treeString);
+var html = '<html><head><link rel="stylesheet" type="text/css" href="mathx.css"></head><body>';
+html += input.html() + '</body></html>'
+print(html);
