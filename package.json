@@ -1,0 +1,9 @@
+{
+  "name": "mathx-tree",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "tiny-lr": "^0.1.6",
+    "gaze": "^0.5.1"
+  }
+}

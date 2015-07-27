@@ -36,10 +36,12 @@ function listDelNode(node) {
     node.prev = undefined;
 }
 
-function listEach(start, end, fn) {
+function listEachReversed(start, end, fn) {
     var args = __slice.call(arguments, 3);
-    for (var pos = start; pos != end; pos = pos.next)
+    for (var pos = end.prev, prev = pos.prev; pos != start;
+         pos = prev, prev = pos.prev)
         fn.apply(undefined, [pos].concat(args));
+    fn.apply(undefined, [pos].concat(args));
 }
 
 function listFold(start, end, acc, fn) {
@@ -73,6 +75,9 @@ extend(Node, List, function(_) {
     _.addAfter = function(dest) {
         listAddAfter(this, dest);
         this.parent = dest.parent;
+    };
+    _.remove = function() {
+        listDelNode(this);
     };
     _.moveBefore = function(dest) {
         // root node has no sibling

@@ -2,13 +2,17 @@ var MathInput = function() {
     this.root = new Mrow();
     this.cursor = new Cursor();
     this.cursor.addAfter(this.root.children);
+    this.JQ = $('<span class="mX-container"></span>');
+    this.cursor.JQ.appendTo(this.JQ);
 };
 
 extend(MathInput, Object, function(_) {
     _.html = function() {
-        return '<span class="mX-container">' + this.root.html() + '</span>';
+        return 
     };
     _.input = function(key) {
+        console.log(key);
+
         var cursor = this.cursor;
         if (checkControl(key, cursor) === true)
             return;
@@ -41,8 +45,9 @@ extend(MathInput, Object, function(_) {
         }
 
         var aggFound;
-        var aggInput = listFold(cursor.aggStart, cursor, '',
-                                function(n) {return n.input;});
+        var aggInput = listFold(cursor.aggStart, cursor, '', function(e) {
+            return e.input;
+        });
         for (var i = 0; i < aggElems.length; i++) {
             var agg = aggElems[i];
             if (agg.input.test != undefined) {
@@ -60,7 +65,9 @@ extend(MathInput, Object, function(_) {
 
         if (!aggFound)
             return;
-        listDel(cursor.aggStart, cursor);
+        listEachReversed(cursor.aggStart, cursor, function(e) {
+            e.remove(cursor);
+        });
         node = new aggFound.Tag(aggInput, aggFound);
         node.insert(cursor);
 

@@ -1,14 +1,12 @@
 var Cursor = function() {
     Node.call(this);
     delete this.children;
+    this.JQ = $('<span class="cursor">&#8203;</span>');
     this.aggTag = undefined;
     this.aggStart = undefined;
 };
 
 extend(Cursor, Node, function(_) {
-    _.html = function () {
-        return '<span class="cursor">&#8203;</span>';
-    };
     _.moveLeft = function() {
         if (!this.isFirstChild()) {
             this.moveBefore(this.prev);
@@ -17,6 +15,7 @@ extend(Cursor, Node, function(_) {
                 this.moveBefore(this.parent);
             } while (this.parent.cursorStay !== true);
         }
+        this.JQ.insertBefore(this.next.JQ);
     };
     _.moveRight = function() {
         if (!this.isLastChild()) {
@@ -26,5 +25,6 @@ extend(Cursor, Node, function(_) {
                 this.moveAfter(this.parent);
             } while (this.parent.cursorStay !== true);
         }
+        this.JQ.insertAfter(this.prev.JQ);
     };
 });
