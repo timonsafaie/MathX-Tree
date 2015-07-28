@@ -1,51 +1,93 @@
 var fs = require('fs');
+var jsdom = require('jsdom');
 
-eval(fs.readFileSync('../src/utils.js', 'utf8'));
-eval(fs.readFileSync('../src/node.js', 'utf8'));
-eval(fs.readFileSync('../src/elems.js', 'utf8'));
-eval(fs.readFileSync('../src/cursor.js', 'utf8'));
-eval(fs.readFileSync('../src/control.js', 'utf8'));
-eval(fs.readFileSync('../src/input.js', 'utf8'));
+var jquery = fs.readFileSync('../node_modules/jquery/dist/jquery.js', 'utf-8');
+var mxtree = fs.readFileSync('../build/mathx-tree.js', 'utf-8');
+
+var mml = false;
+var filename;
 
 function print(message) {
     process.stdout.write(message);
 }
 
-function dumpTree(node, level, indent) {
-    var result = ''
-    result += indent.repeat(level);
-    result += '<' + node.tag + '>';
-    if (node === input.cursor) {
-        return indent.repeat(level) + '<cursor/>\n';
-    } else if (node.input !== undefined) {
-        result += node.input;
-    } else {
-        var start = node.children.next;
-        var end = node.children;
-        result += listFold(start, end, '\n', dumpTree, level+1, indent);
-        result += indent.repeat(level);
+function parseArgs() {
+    var usage = 'Usage: iojs test.js [-m] <in-file>\n'
+    var args = process.argv.slice(2);
+
+    for (var i = 0; i < args.length; i++) {
+        if (args[i] === '-m') {
+            mml = true;
+        } else if (args[i][0] === '-') {
+            print(usage + '\n');
+            process.exit(1);
+        } else {
+            filename = args[i];
+        }
     }
-    result += '</' + node.tag + '>\n';
-    return result;
+    if (filename === undefined) {
+        print(usage + '\n');
+        process.exit(1);
+    }
 }
 
-var filename = process.argv[2];
-if (filename === undefined) {
-    print('Usage: iojs test.js <in-file>\n');
-    process.exit(1);
+function getKeys(filename) {
+    var keys = [];
+    var lines = fs.readFileSync(filename, 'utf8').split('\n');
+    for (var i = 0; i < lines.length; i++) {
+        var key = lines[i].trim();
+        if (key.length == 0)
+            continue;
+        keys.push(key);
+    }
+    return keys;
 }
 
-var input = new MathInput();
-var lines = fs.readFileSync(filename, 'utf8').split('\n');
-for (var i = 0; i < lines.length; i++) {
-    var key = lines[i].trim();
-    if (key.length == 0)
-        continue;
-    input.input(key);
+// from stackoverflow
+function formatXml(xml, jQuery) {
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    xml = xml.replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match( /.+<\/\w[^>]*>$/ )) {
+            indent = 0;
+        } else if (node.match( /^<\/\w/ )) {
+            if (pad != 0) {
+                pad -= 1;
+            }
+        } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '  ';
+        }
+
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    });
+
+    return formatted;
 }
 
-var treeString = dumpTree(input.root, 0, '  ');
-//print(treeString);
-var html = '<html><head><link rel="stylesheet" type="text/css" href="mathx.css"></head><body>';
-html += input.html() + '</body></html>'
-print(html);
+parseArgs();
+jsdom.env({
+    html: '<div class="mathx-tree"/>',
+    src: [jquery, mxtree],
+    done: function(_, window) {
+        var $base = window.$('.mathx-tree');
+        var input = window.mathxtree($base);
+        getKeys(filename).forEach(function(key) {
+            input.input(key);
+        });
+        if (mml)
+            print(input.dumpTree());
+        else
+            print(formatXml($base.html(), window.$));
+    }
+});

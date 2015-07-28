@@ -6,6 +6,9 @@ function checkControl(key, cursor) {
     case 'Right':
         cursor.moveRight();
         return true;
+    case 'Backspace':
+        cursor.delLeft();
+        return true;
     default:
         return false;
     }

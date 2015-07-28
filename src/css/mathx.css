@@ -17,6 +17,16 @@
 
 
 /* basic elements */
+.mX-cursor {
+  border-left: 1px solid black;
+  margin-right: -1px;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  display: -moz-inline-box;
+  display: inline-block;
+}
+
 .mm-container {
   padding:4px;
   min-height:70px;

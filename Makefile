@@ -9,7 +9,7 @@ SOURCES = \
 	$(SRC_DIR)/cursor.js \
 	$(SRC_DIR)/control.js \
 	$(SRC_DIR)/input.js \
-	$(SRC_DIR)/publicapi.js
+	$(SRC_DIR)/entry.js
 
 CSS_DIR = $(SRC_DIR)/css
 FONT_DIR = $(SRC_DIR)/font

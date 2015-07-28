@@ -15,7 +15,6 @@ extend(Elem, Node);
 
 var Mrow = function() {
     Elem.call(this, 'mrow');
-    this.cursorStay = true;
 };
 
 extend(Mrow, Elem);
@@ -29,12 +28,14 @@ extend(Mo, Elem, function(_, _super) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
     };
+
     _.insertJQ = function(cursor) {
         this.JQ = $('<span class="mX">' + this.output + '</span>');
         if (this.padding)
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
     };
+
     _.remove = function(cursor) {
         cursor.JQ.insertBefore(this.JQ);
         this.JQ.remove();
@@ -53,12 +54,14 @@ extend(Mn, Elem, function(_, _super) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
     };
+
     _.insertJQ = function(cursor) {
         this.JQ = $('<span class="mX">' + this.output + '</span>');
         if (this.padding)
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
     };
+
     _.remove = function(cursor) {
         cursor.JQ.insertBefore(this.JQ);
         this.JQ.remove();
@@ -77,12 +80,14 @@ extend(Mi, Elem, function(_, _super) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
     };
+
     _.insertJQ = function(cursor) {
         this.JQ = $('<span class="mX">' + this.output + '</span>');
         if (this.padding)
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
     };
+
     _.remove = function(cursor) {
         cursor.JQ.insertBefore(this.JQ);
         this.JQ.remove();
@@ -96,13 +101,14 @@ var Msup = function() {
     Elem.call(this, 'msup');
 };
 
-extend(Msup, Elem, function(_, _super) {
+extend(Msup, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         cursor.moveAfter(this.children);
 
         this.insertJQ(cursor);
     }
+
     _.insertJQ = function(cursor) {
         this.JQ = $('<sup class="exp-holder"></sup>');
         this.JQ.css({verticalAlign: '0.625em', fontSize: '0.72em'});
@@ -112,6 +118,7 @@ extend(Msup, Elem, function(_, _super) {
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.appendTo(this.JQ);
     };
+
     _.remove = function() {
         // FIXME
         var sup = this.children.prev;
@@ -127,27 +134,28 @@ extend(Msup, Elem, function(_, _super) {
 
 var Msqrt = function(input, info) {
     Elem.call(this, 'msqrt', input, info);
-    this.cursorStay = true;
 };
 
-extend(Msqrt, Elem, function(_, _super) {
+extend(Msqrt, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         cursor.moveAfter(this.children);
 
         this.insertJQ(cursor);
     };
-    _.insertJQ = function(cursor) {
-        this.JQ = $('<span class="func-symbol-sqrt">' + this.output + '</span>');
-        if (this.padding)
-            this.JQ.css('padding', this.padding)
-        this.JQ.insertBefore(cursor.JQ);
 
-        this.baseJQ = $('<span class="func-sqrt"></span>');
-        this.baseJQ.insertBefore(cursor.JQ);
-        cursor.JQ.appendTo(this.baseJQ);
+    _.insertJQ = function(cursor) {
+        this.JQ = $('<span class="func-symbol-sqrt">' + this.output
+                    + '</span>' + '<span class="func-sqrt"></span>');
+        if (this.padding)
+            this.JQ.first().css('padding', this.padding)
+
+        this.JQ.insertBefore(cursor.JQ);
+        cursor.JQ.appendTo(this.baseJQ = this.JQ.last());
     };
+
     _.remove = function(cursor) {
+        // FIXME
         cursor.JQ.insertBefore(this.JQ);
         this.baseJQ.remove();
         this.JQ.remove();

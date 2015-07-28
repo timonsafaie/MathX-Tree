@@ -1,13 +1,12 @@
-jQuery.fn.mathxtree = function() {
-    var JQ = this;
+var entry = function(JQ) {
     var input = new MathInput();
 
-    JQ.append(input.JQ);
+    JQ.append(input.root.JQ);
+    JQ.prop('tabindex', 0);
     JQ.bind({
         keydown: onKeydown,
         keypress: onKeypress
     });
-    JQ.prop('contenteditable', "true");
 
     var KEY_VALUES = {
         8: 'Backspace',
@@ -46,6 +45,7 @@ jQuery.fn.mathxtree = function() {
     function onKeydown(e) {
         var key = KEY_VALUES[e.keyCode];
         if (key) handleKey(key, e);
+        console.log(input.dumpTree());
     }
 
     function onKeypress(e) {
@@ -61,8 +61,6 @@ jQuery.fn.mathxtree = function() {
         }
         e.preventDefault();
     }
-};
 
-jQuery(function() {
-    jQuery('.mathx-tree').mathxtree();
-});
+    return input;
+};

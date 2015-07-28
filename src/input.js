@@ -1,15 +1,10 @@
 var MathInput = function() {
     this.root = new Mrow();
-    this.cursor = new Cursor();
-    this.cursor.addAfter(this.root.children);
-    this.JQ = $('<span class="mX-container"></span>');
-    this.cursor.JQ.appendTo(this.JQ);
+    this.root.JQ = $('<span class="mX-container"></span>');
+    this.cursor = new Cursor(this.root);
 };
 
 extend(MathInput, Object, function(_) {
-    _.html = function() {
-        return 
-    };
     _.input = function(key) {
         console.log(key);
 
@@ -73,5 +68,30 @@ extend(MathInput, Object, function(_) {
 
         cursor.aggTag = node.tag;
         cursor.aggStart = node;
+    };
+
+    _.dumpTree = function() {
+        var cursor = this.cursor;
+
+        function _dump(node, level, indent) {
+            var result = indent.repeat(level);
+
+            if (node === cursor)
+                return result + '<cursor/>\n';
+
+            result += '<' + node.tag + '>';
+            if (node instanceof Mrow) {
+                var start = node.children.next;
+                var end = node.children;
+                result += listFold(start, end, '\n', _dump, level+1, indent);
+                result += indent.repeat(level);
+            } else {
+                result += node.input;
+            }
+            result += '</' + node.tag + '>\n';
+            return result;
+        }
+
+        return _dump(this.root, 0, '  ');
     };
 });

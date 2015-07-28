@@ -59,6 +59,10 @@ function listIsLast(node, head) {
     return node.next === head;
 }
 
+function listIsEmpty(head) {
+    return head.next === head;
+}
+
 var Node = function() {
     List.call(this);
     this.parent = undefined;
