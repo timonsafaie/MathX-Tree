@@ -50,13 +50,11 @@ extend(Cursor, Node, function(_) {
                 return;
             var parent = this.parent;
             var parentJQ = this.parent.JQ.first();
-            listEach(this.next, parent.children, function(e) {
-                e.JQ.insertBefore(parentJQ);
-                e.moveBefore(parent);
+            listEachReversed(this, parent.children, function(e) {
+                e.JQ.insertAfter(parentJQ);
+                e.moveAfter(parent);
                 return true;
             });
-            this.JQ.insertBefore(parentJQ);
-            this.moveBefore(parent);
             parent.JQ.remove();
             parent.remove();
             this.expandAgg(parent);
