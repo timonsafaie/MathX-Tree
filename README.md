@@ -1,11 +1,17 @@
 ## Requirements
 
-iojs
+- iojs
+- Gnumake
 
-## Run Test
+## Run Test Demo
 
-Currently it can only build a very simple MathML tree, with limited
-element types.  To run an example:
+    make
 
+  Then open `test/demo.html` in browser.
+
+## Run Test Command
+
+    make
     cd tree/test
     iojs test.js equations/quadratic.in
+    iojs test.js -m equations/quadratic.in

@@ -23,7 +23,7 @@ var Mo = function(input, info) {
     Elem.call(this, 'mo', input, info);
 };
 
-extend(Mo, Elem, function(_, _super) {
+extend(Mo, Elem, function(_) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
@@ -34,14 +34,6 @@ extend(Mo, Elem, function(_, _super) {
         if (this.padding)
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
-    };
-
-    _.remove = function(cursor) {
-        cursor.JQ.insertBefore(this.JQ);
-        this.JQ.remove();
-
-        cursor.moveBefore(this);
-        _super.remove.call(this);
     };
 });
 
@@ -49,7 +41,7 @@ var Mn = function(input, info) {
     Elem.call(this, 'mn', input, info);
 };
 
-extend(Mn, Elem, function(_, _super) {
+extend(Mn, Elem, function(_) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
@@ -60,14 +52,6 @@ extend(Mn, Elem, function(_, _super) {
         if (this.padding)
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
-    };
-
-    _.remove = function(cursor) {
-        cursor.JQ.insertBefore(this.JQ);
-        this.JQ.remove();
-
-        cursor.moveBefore(this);
-        _super.remove.call(this);
     };
 });
 
@@ -75,7 +59,7 @@ var Mi = function(input, info) {
     Elem.call(this, 'mi', input, info);
 };
 
-extend(Mi, Elem, function(_, _super) {
+extend(Mi, Elem, function(_) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         this.insertJQ(cursor);
@@ -87,25 +71,16 @@ extend(Mi, Elem, function(_, _super) {
             this.JQ.css('padding', this.padding)
         this.JQ.insertBefore(cursor.JQ);
     };
-
-    _.remove = function(cursor) {
-        cursor.JQ.insertBefore(this.JQ);
-        this.JQ.remove();
-
-        cursor.moveBefore(this);
-        _super.remove.call(this);
-    };
 });
 
-var Msup = function() {
-    Elem.call(this, 'msup');
+var Msup = function(input, info) {
+    Elem.call(this, 'msup', input, info);
 };
 
-extend(Msup, Mrow, function(_, _super) {
+extend(Msup, Mrow, function(_) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         cursor.moveAfter(this.children);
-
         this.insertJQ(cursor);
     }
 
@@ -118,29 +93,16 @@ extend(Msup, Mrow, function(_, _super) {
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.appendTo(this.JQ);
     };
-
-    _.remove = function() {
-        // FIXME
-        var sup = this.children.prev;
-        cursor.JQ.insertBefore(sup.JQ);
-        sup.JQ.remove();
-
-        var base = this.children.next;
-        base.moveBefore(this);
-        cursor.moveBefore(this);
-        _super.remove.call(this);
-    };
 });
 
 var Msqrt = function(input, info) {
     Elem.call(this, 'msqrt', input, info);
 };
 
-extend(Msqrt, Mrow, function(_, _super) {
+extend(Msqrt, Mrow, function(_) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         cursor.moveAfter(this.children);
-
         this.insertJQ(cursor);
     };
 
@@ -153,16 +115,6 @@ extend(Msqrt, Mrow, function(_, _super) {
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.appendTo(this.baseJQ = this.JQ.last());
     };
-
-    _.remove = function(cursor) {
-        // FIXME
-        cursor.JQ.insertBefore(this.JQ);
-        this.baseJQ.remove();
-        this.JQ.remove();
-
-        cursor.moveBefore(this);
-        _super.remove.call(this);
-    };
 });
 
 var atomElems = [
@@ -172,8 +124,8 @@ var atomElems = [
     {input: '^',          Tag: Msup}
 ];
 
-var aggElems = [
-    {input: '+-',   Tag: Mo,     output: '&plusmn;'},
-    {input: '-+',   Tag: Mo,     output: '&#8723;'},
-    {input: 'sqrt', Tag: Msqrt,  output: '&radic;', padding: '0 0.18em 0 0'}
-];
+var aggElems = {
+    '+-':   {Tag: Mo,     output: '&plusmn;'},
+    '-+':   {Tag: Mo,     output: '&#8723;'},
+    'sqrt': {Tag: Msqrt,  output: '&radic;', padding: '0 0.18em 0 0'}
+};

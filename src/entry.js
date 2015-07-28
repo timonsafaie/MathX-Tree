@@ -45,7 +45,6 @@ var entry = function(JQ) {
     function onKeydown(e) {
         var key = KEY_VALUES[e.keyCode];
         if (key) handleKey(key, e);
-        console.log(input.dumpTree());
     }
 
     function onKeypress(e) {

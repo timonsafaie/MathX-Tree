@@ -23,31 +23,43 @@ function listAddAfter(node, dest) {
     _listAdd(node, dest, dest.next);
 }
 
-/* list range is defined as [start, end) */
-
-function listDel(start, end) {
-    end.prev = start.prev;
-    start.prev.next = end;
-}
-
 function listDelNode(node) {
-    listDel(node, node.next);
+    node.next.prev = node.prev;
+    node.prev.next = node.next;
     node.next = undefined;
     node.prev = undefined;
 }
 
+/* list range is defined as [start, end) */
+
+function listEach(start, end, fn) {
+    var args = __slice.call(arguments, 3);
+    if (start === end)
+        return;
+    for (var pos = start, next = pos.next; pos != end;
+         pos = next, next = pos.next)
+        if (!fn.apply(undefined, [pos].concat(args)))
+            return;
+}
+
 function listEachReversed(start, end, fn) {
     var args = __slice.call(arguments, 3);
+    if (start === end)
+        return;
     for (var pos = end.prev, prev = pos.prev; pos != start;
          pos = prev, prev = pos.prev)
-        fn.apply(undefined, [pos].concat(args));
+        if (!fn.apply(undefined, [pos].concat(args)))
+            return;
     fn.apply(undefined, [pos].concat(args));
 }
 
 function listFold(start, end, acc, fn) {
     var args = __slice.call(arguments, 4);
-    for (var pos = start; pos != end; pos = pos.next)
-        acc += fn.apply(undefined, [pos].concat(args));
+    for (var pos = start; pos != end; pos = pos.next) {
+        var ret = fn.apply(undefined, [pos].concat(args));
+        if (!ret) break;
+        acc += ret;
+    }
     return acc;
 }
 
@@ -57,10 +69,6 @@ function listIsFirst(node, head) {
 
 function listIsLast(node, head) {
     return node.next === head;
-}
-
-function listIsEmpty(head) {
-    return head.next === head;
 }
 
 var Node = function() {

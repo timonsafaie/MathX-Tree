@@ -19,14 +19,14 @@ function parseArgs() {
         if (args[i] === '-m') {
             mml = true;
         } else if (args[i][0] === '-') {
-            print(usage + '\n');
+            print(usage);
             process.exit(1);
         } else {
             filename = args[i];
         }
     }
     if (filename === undefined) {
-        print(usage + '\n');
+        print(usage);
         process.exit(1);
     }
 }
@@ -79,6 +79,7 @@ parseArgs();
 jsdom.env({
     html: '<div class="mathx-tree"/>',
     src: [jquery, mxtree],
+    virtualConsole: jsdom.createVirtualConsole().sendTo(console),
     done: function(_, window) {
         var $base = window.$('.mathx-tree');
         var input = window.mathxtree($base);

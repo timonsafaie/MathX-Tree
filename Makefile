@@ -7,7 +7,6 @@ SOURCES = \
 	$(SRC_DIR)/node.js \
 	$(SRC_DIR)/elems.js \
 	$(SRC_DIR)/cursor.js \
-	$(SRC_DIR)/control.js \
 	$(SRC_DIR)/input.js \
 	$(SRC_DIR)/entry.js
 
