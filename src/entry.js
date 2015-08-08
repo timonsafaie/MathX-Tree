@@ -44,21 +44,24 @@ var entry = function(JQ) {
 
     function onKeydown(e) {
         var key = KEY_VALUES[e.keyCode];
-        if (key) handleKey(key, e);
+        if (key) {
+            try {
+                input.inputControl(key);
+            } catch (e) {
+                console.log(e);
+            }
+            return false;
+        }
     }
 
     function onKeypress(e) {
         var key = String.fromCharCode(e.charCode);
-        handleKey(key, e);
-    }
-
-    function handleKey(key, e) {
         try {
-            input.input(key);
+            input.inputKey(key);
         } catch (e) {
             console.log(e);
         }
-        e.preventDefault();
+        return false;
     }
 
     return input;

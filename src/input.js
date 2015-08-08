@@ -1,35 +1,37 @@
 var MathInput = function() {
     this.root = new Mrow();
+    this.root.isRoot = true;
     this.root.JQ = $('<span class="mX-container"></span>');
-    this.cursor = new Cursor(this.root);
+
+    this.cursor = new Cursor();
+    this.cursor.addAfter(this.root.children);
+    this.cursor.JQ.appendTo(this.root.JQ);
 };
 
 extend(MathInput, Object, function(_) {
-    _.input = function(key) {
+    _.inputKey = function(key) {
         var cursor = this.cursor;
-        if (this.checkControl(key) === true)
-            return;
+
         cursor.inputKey(key);
         cursor.reduceAgg();
     };
 
-    _.checkControl = function(key) {
+    _.inputControl = function(key) {
         var cursor = this.cursor;
+
         switch (key) {
         case 'Left':
             cursor.moveLeft();
-            return true;
+            return;
         case 'Right':
             cursor.moveRight();
-            return true;
+            return;
         case 'Backspace':
             cursor.delLeft();
-            return true;
+            return;
         case 'Enter':
             cursor.reduceAgg();
-            return true;
-        default:
-            return false;
+            return;
         }
     };
 

@@ -1,75 +1,20 @@
-var Cursor = function(root) {
+var Cursor = function() {
     Node.call(this);
     delete this.children;
-
-    this.root = root;
-    this.addAfter(root.children);
-
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
-    this.JQ.appendTo(root.JQ);
 };
 
 extend(Cursor, Node, function(_) {
     _.moveLeft = function() {
-        if (this.isFirstChild()) {
-            if (this.parent === this.root)
-                return;
-            this.JQ.insertBefore(this.parent.JQ.first());
-            this.moveBefore(this.parent);
-        } else {
-            if (this.prev instanceof Mrow) {
-                this.JQ.appendTo(this.prev.JQ.last());
-                this.moveBefore(this.prev.children);
-            } else {
-                this.JQ.insertBefore(this.prev.JQ.first());
-                this.moveBefore(this.prev);
-            }
-        }
+        this.parent.moveCursorLeft(this);
     };
 
     _.moveRight = function() {
-        if (this.isLastChild()) {
-            if (this.parent === this.root)
-                return;
-            this.JQ.insertAfter(this.parent.JQ.last());
-            this.moveAfter(this.parent);
-        } else {
-            if (this.next instanceof Mrow) {
-                this.JQ.prependTo(this.next.JQ.last());
-                this.moveAfter(this.next.children);
-            } else {
-                this.JQ.insertAfter(this.next.JQ.last());
-                this.moveAfter(this.next);
-            }
-        }
+        this.parent.moveCursorRight(this);
     };
 
     _.delLeft = function() {
-        if (this.isFirstChild()) {
-            if (this.parent === this.root)
-                return;
-            var parent = this.parent;
-            var parentJQ = this.parent.JQ.first();
-            listEachReversed(this, parent.children, function(e) {
-                e.JQ.insertAfter(parentJQ);
-                e.moveAfter(parent);
-                return true;
-            });
-            parent.JQ.remove();
-            parent.remove();
-            this.expandAgg(parent);
-        } else {
-            if (this.prev instanceof Mrow) {
-                this.JQ.appendTo(this.prev.JQ.last());
-                this.moveBefore(this.prev.children);
-                this.delLeft();
-            } else {
-                var prev = this.prev;
-                prev.JQ.remove();
-                prev.remove();
-                this.expandAgg(prev);
-            }
-        }
+        this.parent.delCursorLeft(this);
     };
 
     _.inputKey = function(key) {

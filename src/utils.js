@@ -1,11 +1,9 @@
 var __slice = [].slice;
 
-function assert(truth, message) {
-    if (!truth) {
-        if (message === undefined)
-            message = 'assert failed';
-        throw message;
-    }
+function assert() {
+    if (arguments.length === 1)
+        return console.assert(arguments[0], 'assert failed');
+    return console.assert(arguments)
 }
 
 function extend(type, base, fn) {
