@@ -10,6 +10,6 @@ var atomElems = [
 var aggElems = {
     '+-':   {Tag: Mo,     output: '&plusmn;'},
     '-+':   {Tag: Mo,     output: '&#8723;'},
-    'sqrt': {Tag: Msqrt,  output: '&radic;', padding: '0 0.18em 0 0'}
-
+    'sqrt': {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}},
+    'product': {Tag: Munderover, output: '&prod;'}
 };

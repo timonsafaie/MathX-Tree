@@ -6,15 +6,47 @@ var Cursor = function() {
 
 extend(Cursor, Node, function(_) {
     _.moveLeft = function() {
-        this.parent.moveCursorLeft(this);
+        if (this.isFirstChild()) {
+            var parent = this.parent;
+            if (parent.isRoot)
+                return;
+            if (!parent.putCursorBefore(this))
+                this.moveLeft();
+        } else {
+            var prev = this.prev;
+            if (prev instanceof Mrow) {
+                if (!prev.appendCursor(this))
+                    this.moveLeft();
+            } else {
+                prev.putCursorBefore(this);
+            }
+        }
     };
 
     _.moveRight = function() {
-        this.parent.moveCursorRight(this);
+        if (this.isLastChild()) {
+            var parent = this.parent;
+            if (parent.isRoot)
+                return;
+            if (!parent.putCursorAfter(this))
+                this.moveRight();
+        } else {
+            var next = this.next;
+            if (next instanceof Mrow) {
+                if (!next.prependCursor(this))
+                    this.moveRight();
+            } else {
+                next.putCursorAfter(this);
+            }
+        }
     };
 
     _.delLeft = function() {
-        this.parent.delCursorLeft(this);
+        if (this.isFirstChild())
+            return;
+        var prev = this.prev;
+        prev.putCursorBefore(this);
+        prev.remove();
     };
 
     _.inputKey = function(key) {

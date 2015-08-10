@@ -1,5 +1,5 @@
 var MathInput = function() {
-    this.root = new Mrow();
+    this.root = new Mrow('root');
     this.root.isRoot = true;
     this.root.JQ = $('<span class="mX-container"></span>');
 

@@ -84,7 +84,10 @@ jsdom.env({
         var $base = window.$('.mathx-tree');
         var input = window.mathxtree($base);
         getKeys(filename).forEach(function(key) {
-            input.input(key);
+            if (key.length === 1)
+                input.inputKey(key);
+            else
+                input.inputControl(key);
         });
         if (mml)
             print(input.dumpTree());

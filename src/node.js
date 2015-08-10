@@ -84,13 +84,16 @@ extend(Node, List, function(_) {
         listAddBefore(this, dest);
         this.parent = dest.parent;
     };
+
     _.addAfter = function(dest) {
         listAddAfter(this, dest);
         this.parent = dest.parent;
     };
+
     _.remove = function() {
         listDelNode(this);
     };
+
     _.moveBefore = function(dest) {
         // root node has no sibling
         if (dest.parent === undefined)
@@ -99,6 +102,7 @@ extend(Node, List, function(_) {
         listAddBefore(this, dest);
         this.parent = dest.parent;
     };
+
     _.moveAfter = function(dest) {
         // root node has no sibling
         if (dest.parent === undefined)
@@ -107,9 +111,11 @@ extend(Node, List, function(_) {
         listAddAfter(this, dest);
         this.parent = dest.parent;
     };
+
     _.isFirstChild = function() {
         return listIsFirst(this, this.parent.children);
     };
+
     _.isLastChild = function() {
         return listIsLast(this, this.parent.children);
     };
