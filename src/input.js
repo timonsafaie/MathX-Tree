@@ -1,0 +1,60 @@
+var MathInput = function() {
+    this.root = new Mrow();
+    this.root.JQ = $('<span class="mX-container"></span>');
+    this.cursor = new Cursor(this.root);
+};
+
+extend(MathInput, Object, function(_) {
+    _.input = function(key) {
+        var cursor = this.cursor;
+        if (this.checkControl(key) === true)
+            return;
+        cursor.inputKey(key);
+        cursor.reduceAgg();
+    };
+
+    _.checkControl = function(key) {
+        var cursor = this.cursor;
+        switch (key) {
+        case 'Left':
+            cursor.moveLeft();
+            return true;
+        case 'Right':
+            cursor.moveRight();
+            return true;
+        case 'Backspace':
+            cursor.delLeft();
+            return true;
+        case 'Enter':
+            cursor.reduceAgg();
+            return true;
+        default:
+            return false;
+        }
+    };
+
+    _.dumpTree = function() {
+        var cursor = this.cursor;
+
+        function _dump(node, level, indent) {
+            var result = indent.repeat(level);
+
+            if (node === cursor)
+                return result + '<cursor/>\n';
+
+            result += '<' + node.tag + '>';
+            if (node instanceof Mrow) {
+                var start = node.children.next;
+                var end = node.children;
+                result += listFold(start, end, '\n', _dump, level+1, indent);
+                result += indent.repeat(level);
+            } else {
+                result += node.input;
+            }
+            result += '</' + node.tag + '>\n';
+            return result;
+        }
+
+        return _dump(this.root, 0, '  ');
+    };
+});

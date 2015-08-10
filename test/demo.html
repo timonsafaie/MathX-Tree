@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../build/mathx.css">
+  </head>
+  <body>
+    <style>
+        .mathx-web-basic-container {
+            width: 100%;
+            margin-top: 150px;
+        }
+        .mathx-web-basic-tb {
+            width: 375px;
+            height: 130px;
+            padding: 10px;
+            font-size: 20px;
+            line-height: 15pt;
+            margin: 0 auto 0 auto;
+            border: 1px solid black;
+            font-family: 'Lato', sans-serif;
+            color: black;
+            background-color: rgb(249,249,249);
+        }
+	p {
+            font-family: Monospace;
+	}
+    </style>
+    <p>Left/Right -- move cursor</p>
+    <p>Backspace  -- expand aggregated element</p>
+    <p>Enter      -- reduce aggregated element</p>
+    <p>Currently only 'sqrt', '+-', '-+' and '^' are implemented as special input.</p>
+    <div class="mathx-web-basic-container">
+      <div class="mathx-tree mathx-web-basic-tb mm-container"></div>
+    </div>
+    <script src="http://localhost:35729/livereload.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="../build/mathx-tree.js"></script>
+    <script>
+      $('.mathx-tree').each(function() {
+        mathxtree($(this));
+      });
+      $('.mathx-tree').first().focus();
+    </script>
+  </body>
+</html>

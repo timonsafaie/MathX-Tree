@@ -1,0 +1,11 @@
+{
+  "name": "mathx-tree",
+  "version": "0.0.0",
+  "private": true,
+  "devDependencies": {
+    "tiny-lr": "^0.1.6",
+    "gaze": "^0.5.1",
+    "jquery": "^2.1.4",
+    "jsdom": "^5.6.1"
+  }
+}
