@@ -63,6 +63,14 @@ function listFold(start, end, acc, fn) {
     return acc;
 }
 
+function listFirst(head) {
+    return head.next;
+}
+
+function listLast(head) {
+    return head.prev;
+}
+
 function listIsFirst(node, head) {
     return node.prev === head;
 }
@@ -110,6 +118,14 @@ extend(Node, List, function(_) {
         listDelNode(this);
         listAddAfter(this, dest);
         this.parent = dest.parent;
+    };
+
+    _.firstChild = function() {
+        return listFirst(this.children);
+    };
+
+    _.lastChild = function() {
+        return listLast(this.children);
     };
 
     _.isFirstChild = function() {

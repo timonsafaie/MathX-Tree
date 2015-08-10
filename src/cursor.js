@@ -77,16 +77,16 @@ extend(Cursor, Node, function(_) {
         var cursor = this;
         var agg;
 
-        var start = cursor.parent.children.next;
+        var start = cursor.parent.firstChild();
+        var aggTag = cursor.prev.tag;
         var input = '';
         listEachReversed(start, cursor, function(e) {
-            if (e.input.length > 1 || e.tag != cursor.prev.tag)
+            if (e.tag != aggTag)
                 return false;
             input = e.input + input;
             if (aggSymbols.hasOwnProperty(input)) {
                 agg = aggSymbols[input];
                 start = e;
-                return false;
             }
             return true;
         });
