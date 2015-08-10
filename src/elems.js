@@ -173,14 +173,14 @@ extend(Msubsup, Mrow, function(_) {
 
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="function">' +
-                    '<span class="func-symbol">' + this.output + '</span>' +
+                    '<span class="func-symbol-subsup">' + this.output + '</span>' +
                     '<sub class="func-sub"><span>&#8203;</span></sub>' +
                     '<sup class="func-sup"><span>&#8203;</span></sup>' +
                     '</span>');
         this.sub.JQ = this.JQ.find('.func-sub');
         this.sup.JQ = this.JQ.find('.func-sup');
 
-        var $sym = this.JQ.find('.func-symbol');
+        var $sym = this.JQ.find('.func-symbol-subsup');
         $sym.css('font-size', '2em');
         if (this.css)
             $sym.css(this.css);
