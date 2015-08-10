@@ -51,16 +51,16 @@ extend(Cursor, Node, function(_) {
 
     _.inputKey = function(key) {
         var atom;
-        for (var i = 0; i < atomElems.length; i++) {
-            var e = atomElems[i];
-            if (e.input.test !== undefined) {
-                if (e.input.test(key)) {
-                    atom = e;
+        for (var i = 0; i < atomSymbols.length; i++) {
+            var s = atomSymbols[i];
+            if (s.input.test !== undefined) {
+                if (s.input.test(key)) {
+                    atom = s;
                     break;
                 }
             } else {
-                if (e.input === key) {
-                    atom = e;
+                if (s.input === key) {
+                    atom = s;
                     break;
                 }
             }
@@ -69,7 +69,7 @@ extend(Cursor, Node, function(_) {
         if (!atom)
             throw 'Unknown input "' + key + '"';
 
-        node = new atom.Tag(key, atom);
+        var node = new atom.Tag(key, atom);
         node.insert(this);
     };
 
@@ -83,8 +83,8 @@ extend(Cursor, Node, function(_) {
             if (e.input.length > 1 || e.tag != cursor.prev.tag)
                 return false;
             input = e.input + input;
-            if (aggElems.hasOwnProperty(input)) {
-                agg = aggElems[input];
+            if (aggSymbols.hasOwnProperty(input)) {
+                agg = aggSymbols[input];
                 start = e;
                 return false;
             }
@@ -95,7 +95,6 @@ extend(Cursor, Node, function(_) {
             return;
 
         listEachReversed(start, cursor, function(e) {
-            e.JQ.remove();
             e.remove();
             return true;
         });
