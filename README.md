@@ -15,3 +15,7 @@
     cd tree/test
     iojs test.js equations/quadratic.in
     iojs test.js -m equations/quadratic.in
+
+## Testing Scenario
+
+    type: `sqrt`
