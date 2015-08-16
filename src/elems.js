@@ -111,8 +111,6 @@ extend(Msqrt, Mrow, function(_, _super) {
     };
 });
 
-// FIXME: resize sub sup
-
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
 };
@@ -144,6 +142,12 @@ extend(Msub, Mrow, function(_, _super) {
     _.putCursorAfter = function(cursor) {
         var next = this.next;
         return _super.putCursorAfter.call(this, cursor) && !(next instanceof Msup);
+    };
+
+    _.resize = function() {
+        var next = this.next;
+        if (next instanceof Msup)
+            next.JQ.css('margin-left', -this.JQ.width());
     };
 });
 
@@ -178,6 +182,12 @@ extend(Msup, Mrow, function(_, _super) {
     _.putCursorAfter = function(cursor) {
         var next = this.next;
         return _super.putCursorAfter.call(this, cursor) && !(next instanceof Msub);
+    };
+
+    _.resize = function() {
+        var next = this.next;
+        if (next instanceof Msub)
+            next.JQ.css('margin-left', -this.JQ.width());
     };
 });
 

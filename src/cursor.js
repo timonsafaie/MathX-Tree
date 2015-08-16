@@ -46,6 +46,7 @@ extend(Cursor, Elem, function(_) {
         var prev = this.prev;
         prev.putCursorBefore(this);
         prev.remove();
+        this.bubble('resize');
     };
 
     _.inputKey = function(key) {
@@ -70,6 +71,7 @@ extend(Cursor, Elem, function(_) {
 
         var node = new atom.Tag(key, atom);
         node.insert(this);
+        this.bubble('resize');
     };
 
     _.reduceAgg = function() {
@@ -96,6 +98,7 @@ extend(Cursor, Elem, function(_) {
         });
         node = new agg.Tag(input, agg);
         node.insert(this);
+        this.bubble('resize');
     };
 
     _.expandAgg = function(agg) {
@@ -105,5 +108,6 @@ extend(Cursor, Elem, function(_) {
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);
         });
+        this.bubble('resize');
     };
 });

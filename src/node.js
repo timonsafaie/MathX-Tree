@@ -135,4 +135,14 @@ extend(Node, List, function(_) {
     _.isLastChild = function() {
         return listIsLast(this, this.parent.children);
     };
+
+    _.bubble = function(fn) {
+        var args = __slice.call(arguments, 1);
+        for (var n = this; n; n = n.parent) {
+            if (!n[fn])
+                continue;
+            if (n[fn].apply(n, args) === false)
+                break;
+        }
+    };
 });
