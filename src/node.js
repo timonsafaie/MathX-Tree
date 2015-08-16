@@ -38,7 +38,7 @@ function listEach(start, end, fn) {
         return;
     for (var pos = start, next = pos.next; pos != end;
          pos = next, next = pos.next)
-        if (!fn.apply(undefined, [pos].concat(args)))
+        if (fn.apply(undefined, [pos].concat(args)) === false)
             return;
 }
 
@@ -48,7 +48,7 @@ function listEachReversed(start, end, fn) {
         return;
     for (var pos = end.prev, prev = pos.prev; pos != start;
          pos = prev, prev = pos.prev)
-        if (!fn.apply(undefined, [pos].concat(args)))
+        if (fn.apply(undefined, [pos].concat(args)) === false)
             return;
     fn.apply(undefined, [pos].concat(args));
 }
@@ -57,7 +57,7 @@ function listFold(start, end, acc, fn) {
     var args = __slice.call(arguments, 4);
     for (var pos = start; pos != end; pos = pos.next) {
         var ret = fn.apply(undefined, [pos].concat(args));
-        if (!ret) break;
+        if (ret === false) break;
         acc += ret;
     }
     return acc;

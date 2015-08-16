@@ -86,7 +86,6 @@ extend(Cursor, Elem, function(_) {
                 agg = aggSymbols[input];
                 start = e;
             }
-            return true;
         });
 
         if (!agg)
@@ -94,7 +93,6 @@ extend(Cursor, Elem, function(_) {
 
         listEachReversed(start, this, function(e) {
             e.remove();
-            return true;
         });
         node = new agg.Tag(input, agg);
         node.insert(this);
