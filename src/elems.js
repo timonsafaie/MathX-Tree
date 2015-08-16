@@ -226,16 +226,6 @@ extend(Msubsup, Mrow, function(_, _super) {
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.sub.JQ);
     };
-
-    _.appendCursor = function(cursor) {
-        _super.appendCursor.call(this, cursor)
-        return false;
-    };
-
-    _.prependCursor = function(cursor) {
-        _super.prependCursor.call(this, cursor)
-        return false;
-    };
 });
 
 var Munder = function(input, info) {
