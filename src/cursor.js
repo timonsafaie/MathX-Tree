@@ -1,10 +1,9 @@
 var Cursor = function() {
-    Node.call(this);
-    delete this.children;
+    Elem.call(this, 'cursor', '');
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
 };
 
-extend(Cursor, Node, function(_) {
+extend(Cursor, Elem, function(_) {
     _.moveLeft = function() {
         if (this.isFirstChild()) {
             var parent = this.parent;
@@ -74,13 +73,12 @@ extend(Cursor, Node, function(_) {
     };
 
     _.reduceAgg = function() {
-        var cursor = this;
         var agg;
 
-        var start = cursor.parent.firstChild();
-        var aggTag = cursor.prev.tag;
+        var start = this.parent.firstChild();
+        var aggTag = this.prev.tag;
         var input = '';
-        listEachReversed(start, cursor, function(e) {
+        listEachReversed(start, this, function(e) {
             if (e.tag != aggTag)
                 return false;
             input = e.input + input;
@@ -94,12 +92,12 @@ extend(Cursor, Node, function(_) {
         if (!agg)
             return;
 
-        listEachReversed(start, cursor, function(e) {
+        listEachReversed(start, this, function(e) {
             e.remove();
             return true;
         });
         node = new agg.Tag(input, agg);
-        node.insert(cursor);
+        node.insert(this);
     };
 
     _.expandAgg = function(agg) {

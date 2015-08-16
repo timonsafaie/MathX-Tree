@@ -36,13 +36,8 @@ extend(MathInput, Object, function(_) {
     };
 
     _.dumpTree = function() {
-        var cursor = this.cursor;
-
         function _dump(node, level, indent) {
             var result = indent.repeat(level);
-
-            if (node === cursor)
-                return result + '<cursor/>\n';
 
             result += '<' + node.tag + '>';
             if (node instanceof Mrow) {
