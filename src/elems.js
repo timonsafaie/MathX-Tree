@@ -320,3 +320,11 @@ extend(Munderover, Mrow, function(_, _super) {
         $cursor.prependTo(this.under.JQ);
     };
 });
+
+var atomSymbols = [
+    {input: /^[a-zA-Z]$/,    Tag: Mi},
+    {input: /^[0-9.]$/,      Tag: Mn},
+    {input: /^[\/+-<>|\\]$/, Tag: Mo},
+    {input: '^',             Tag: Msup},
+    {input: '_',             Tag: Msub}
+];
