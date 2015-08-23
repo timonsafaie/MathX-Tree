@@ -6,6 +6,7 @@ SOURCES = \
 	$(SRC_DIR)/utils.js \
 	$(SRC_DIR)/node.js \
 	$(SRC_DIR)/elems.js \
+	$(SRC_DIR)/aggsymbols.js \
 	$(SRC_DIR)/symbols.js \
 	$(SRC_DIR)/cursor.js \
 	$(SRC_DIR)/input.js \
