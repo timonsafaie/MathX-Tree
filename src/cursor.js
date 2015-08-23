@@ -14,6 +14,8 @@ extend(Cursor, Elem, function(_) {
         } else {
             var prev = this.prev;
             if (prev instanceof Mrow) {
+                if (prev.highlighted)
+                    prev.deHighlight();
                 if (!prev.appendCursor(this))
                     this.moveLeft();
             } else {
@@ -44,6 +46,10 @@ extend(Cursor, Elem, function(_) {
         if (this.isFirstChild())
             return;
         var prev = this.prev;
+        if (prev instanceof Mrow && !prev.highlighted) {
+            prev.highlight();
+            return;
+        }
         prev.putCursorBefore(this);
         prev.remove();
         this.bubble('resize');

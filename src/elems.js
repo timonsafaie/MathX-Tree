@@ -87,6 +87,16 @@ extend(Mrow, Elem, function(_, _super) {
             cursor.JQ.insertAfter(cursor.prev.JQ.last());
         return this.cursorStay;
     };
+
+    _.highlight = function() {
+        this.highlighted = true;
+        this.JQ.addClass('highlight');
+    };
+
+    _.deHighlight = function() {
+        this.highlighted = false;
+        this.JQ.removeClass('highlight');
+    };
 });
 
 var Msqrt = function(input, info) {
