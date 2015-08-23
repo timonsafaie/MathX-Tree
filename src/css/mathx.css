@@ -52,8 +52,7 @@
   font-family: "Symbola", Times New Roman, serif;
   font-size:15pt;
   z-index: 6;
-  border-top: 1px #999999 solid;
-  border-bottom: 1px #999999 solid;
+  border: 1px #999999 solid;
   line-height: normal;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -654,7 +653,6 @@
   -ms-transform-origin:top;
   -o-transform-origin:top;
   transform-origin:top;
-  vertical-align: top;
   /*padding-top:.1em;*/
 }
 .func-subsup {
