@@ -35,7 +35,7 @@ function importSymbol(sym) {
 parseArgs();
 eval(fs.readFileSync(dbjs, 'utf8'));
 fs.writeFileSync(symjs, '// auto-generated\n');
-fs.appendFileSync(symjs, 'var aggSymbols = {\n');
+fs.appendFileSync(symjs, 'var _aggSymbols = {\n');
 db.forEach(function(sym) {
     importSymbol(sym);
 });
