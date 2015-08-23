@@ -6,6 +6,7 @@ var MathInput = function() {
     this.cursor = new Cursor();
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
+    this.cursor.focus();
 };
 
 extend(MathInput, Object, function(_) {

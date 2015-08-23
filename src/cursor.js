@@ -4,7 +4,15 @@ var Cursor = function() {
 };
 
 extend(Cursor, Elem, function(_) {
-    _.moveLeft = function() {
+    _.focus = function() {
+        this.JQ.parent().addClass('focus');
+    };
+
+    _.blur = function() {
+        this.JQ.parent().removeClass('focus');
+    };
+
+    _._moveLeft = function() {
         if (this.isFirstChild()) {
             var parent = this.parent;
             if (parent.isRoot)
@@ -14,8 +22,6 @@ extend(Cursor, Elem, function(_) {
         } else {
             var prev = this.prev;
             if (prev instanceof Mrow) {
-                if (prev.highlighted)
-                    prev.deHighlight();
                 if (!prev.appendCursor(this))
                     this.moveLeft();
             } else {
@@ -24,7 +30,7 @@ extend(Cursor, Elem, function(_) {
         }
     };
 
-    _.moveRight = function() {
+    _._moveRight = function() {
         if (this.isLastChild()) {
             var parent = this.parent;
             if (parent.isRoot)
@@ -40,6 +46,22 @@ extend(Cursor, Elem, function(_) {
                 next.putCursorAfter(this);
             }
         }
+    };
+
+    _._move = function(moveFn) {
+        this.blur();
+        if (this.prev.highlighted)
+            this.prev.deHighlight();
+        moveFn.apply(this);
+        this.focus();
+    };
+
+    _.moveLeft = function() {
+        this._move(this._moveLeft);
+    };
+
+    _.moveRight = function() {
+        this._move(this._moveRight);
     };
 
     _.delLeft = function() {
@@ -76,8 +98,10 @@ extend(Cursor, Elem, function(_) {
             throw 'Unknown input "' + key + '"';
 
         var node = new atom.Tag(key, atom);
+        this.blur();
         node.insert(this);
         this.bubble('resize');
+        this.focus();
     };
 
     _.reduceAgg = function() {
@@ -102,9 +126,12 @@ extend(Cursor, Elem, function(_) {
         listEachReversed(start, this, function(e) {
             e.remove();
         });
-        node = new agg.Tag(input, agg);
+
+        var node = new agg.Tag(input, agg);
+        this.blur();
         node.insert(this);
         this.bubble('resize');
+        this.focus();
     };
 
     _.expandAgg = function(agg) {
