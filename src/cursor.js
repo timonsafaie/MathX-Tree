@@ -52,6 +52,8 @@ extend(Cursor, Elem, function(_) {
         this.blur();
         if (this.prev.highlighted)
             this.prev.deHighlight();
+        if (this.next.highlighted)
+            this.next.deHighlight();
         moveFn.apply(this);
         this.focus();
     };
@@ -74,6 +76,19 @@ extend(Cursor, Elem, function(_) {
         }
         prev.putCursorBefore(this);
         prev.remove();
+        this.bubble('resize');
+    };
+
+    _.delRight = function() {
+        if (this.isLastChild())
+            return;
+        var next = this.next;
+        if (next instanceof Mrow && !next.highlighted) {
+            next.highlight();
+            return;
+        }
+        next.putCursorBefore(this);
+        next.remove();
         this.bubble('resize');
     };
 

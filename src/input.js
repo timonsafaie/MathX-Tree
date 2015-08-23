@@ -30,6 +30,9 @@ extend(MathInput, Object, function(_) {
         case 'Backspace':
             cursor.delLeft();
             return;
+        case 'Del':
+            cursor.delRight();
+            return;
         case 'Enter':
             cursor.reduceAgg();
             return;
