@@ -19,6 +19,10 @@
   background: #ccc;
 }
 
+.unsettled {
+  color: #DC143C;
+}
+
 .focus {
   border-radius: 0px;
   border:1px #aaa solid;

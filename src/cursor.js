@@ -5,12 +5,14 @@ var Cursor = function() {
 
 extend(Cursor, Elem, function(_) {
     _.beforeInput = function(key) {
-        if (key !== 'Backspace' && this.prev.highlighted)
+        if (this.prev.highlighted && key !== 'Backspace')
             this.prev.deHighlight();
-        if (key !== 'Del' && this.next.highlighted)
+        if (this.next.highlighted && key !== 'Del')
             this.next.deHighlight();
-        if (key !== 'Backspace' && this.lastAgg)
+        if (this.lastAgg && key !== 'Backspace') {
+            this.lastAgg.settle();
             delete this.lastAgg;
+        }
         this.JQ.parent().removeClass('focus');
     };
 
@@ -109,17 +111,18 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.reduceAgg = function() {
-        var agg;
+        var agg, input;
 
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
-        var input = '';
+        var search = '';
         listEachReversed(start, this, function(e) {
             if (e.tag != aggTag)
                 return false;
-            input = e.input + input;
-            if (aggSymbols.hasOwnProperty(input)) {
-                agg = aggSymbols[input];
+            search = e.input + search;
+            if (aggSymbols.hasOwnProperty(search)) {
+                agg = aggSymbols[search];
+                input = search;
                 start = e;
             }
         });
@@ -134,6 +137,7 @@ extend(Cursor, Elem, function(_) {
         var node = new agg.Tag(input, agg);
         node.insert(this);
         this.lastAgg = node;
+        this.lastAgg.unsettle();
     };
 
     _.expandAgg = function(agg) {

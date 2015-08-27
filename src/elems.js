@@ -44,6 +44,16 @@ extend(Elem, Node, function(_, _super) {
         cursor.JQ.insertAfter(this.JQ.last());
         return this.parent.cursorStay;
     };
+
+    _.unsettle = function() {
+        this.unsettled = true;
+        this.JQ.addClass('unsettled');
+    };
+
+    _.settle = function() {
+        this.unsettled = false;
+        this.JQ.removeClass('unsettled');
+    };
 });
 
 var Mi = function(input, info) {
