@@ -4,15 +4,22 @@ var Cursor = function() {
 };
 
 extend(Cursor, Elem, function(_) {
-    _.focus = function() {
-        this.JQ.parent().addClass('focus');
-    };
-
-    _.blur = function() {
+    _.beforeInput = function(key) {
+        if (key !== 'Backspace' && this.prev.highlighted)
+            this.prev.deHighlight();
+        if (key !== 'Del' && this.next.highlighted)
+            this.next.deHighlight();
+        if (key !== 'Backspace' && this.lastAgg)
+            delete this.lastAgg;
         this.JQ.parent().removeClass('focus');
     };
 
-    _._moveLeft = function() {
+    _.afterInput = function(key) {
+        this.JQ.parent().addClass('focus');
+        this.bubble('resize');
+    };
+
+    _.moveLeft = function() {
         if (this.isFirstChild()) {
             var parent = this.parent;
             if (parent.isRoot)
@@ -30,7 +37,7 @@ extend(Cursor, Elem, function(_) {
         }
     };
 
-    _._moveRight = function() {
+    _.moveRight = function() {
         if (this.isLastChild()) {
             var parent = this.parent;
             if (parent.isRoot)
@@ -48,25 +55,12 @@ extend(Cursor, Elem, function(_) {
         }
     };
 
-    _._move = function(moveFn) {
-        this.blur();
-        if (this.prev.highlighted)
-            this.prev.deHighlight();
-        if (this.next.highlighted)
-            this.next.deHighlight();
-        moveFn.apply(this);
-        this.focus();
-    };
-
-    _.moveLeft = function() {
-        this._move(this._moveLeft);
-    };
-
-    _.moveRight = function() {
-        this._move(this._moveRight);
-    };
-
     _.delLeft = function() {
+        if (this.lastAgg) {
+            this.expandAgg(this.lastAgg);
+            delete this.lastAgg;
+            return;
+        }
         if (this.isFirstChild())
             return;
         var prev = this.prev;
@@ -76,7 +70,6 @@ extend(Cursor, Elem, function(_) {
         }
         prev.putCursorBefore(this);
         prev.remove();
-        this.bubble('resize');
     };
 
     _.delRight = function() {
@@ -89,7 +82,6 @@ extend(Cursor, Elem, function(_) {
         }
         next.putCursorBefore(this);
         next.remove();
-        this.bubble('resize');
     };
 
     _.inputKey = function(key) {
@@ -113,10 +105,7 @@ extend(Cursor, Elem, function(_) {
             throw 'Unknown input "' + key + '"';
 
         var node = new atom.Tag(key, atom);
-        this.blur();
         node.insert(this);
-        this.bubble('resize');
-        this.focus();
     };
 
     _.reduceAgg = function() {
@@ -143,19 +132,17 @@ extend(Cursor, Elem, function(_) {
         });
 
         var node = new agg.Tag(input, agg);
-        this.blur();
         node.insert(this);
-        this.bubble('resize');
-        this.focus();
+        this.lastAgg = node;
     };
 
     _.expandAgg = function(agg) {
+        agg.putCursorBefore(this);
+        agg.remove();
+
         var cursor = this;
-        if (agg.input.length === 1)
-            return;
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);
         });
-        this.bubble('resize');
     };
 });

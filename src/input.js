@@ -6,15 +6,25 @@ var MathInput = function() {
     this.cursor = new Cursor();
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
-    this.cursor.focus();
+    this.cursor.afterInput();
 };
 
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
         var cursor = this.cursor;
 
+        cursor.beforeInput(key);
         cursor.inputKey(key);
         cursor.reduceAgg();
+        cursor.afterInput(key);
+    };
+
+    _._runControl = function(fn, key) {
+        var cursor = this.cursor;
+
+        cursor.beforeInput(key);
+        fn.apply(cursor);
+        cursor.afterInput(key);
     };
 
     _.inputControl = function(key) {
@@ -22,20 +32,20 @@ extend(MathInput, Object, function(_) {
 
         switch (key) {
         case 'Left':
-            cursor.moveLeft();
-            return;
+            this._runControl(cursor.moveLeft, key);
+            break;
         case 'Right':
-            cursor.moveRight();
-            return;
+            this._runControl(cursor.moveRight, key);
+            break;
         case 'Backspace':
-            cursor.delLeft();
-            return;
+            this._runControl(cursor.delLeft, key);
+            break;
         case 'Del':
-            cursor.delRight();
-            return;
+            this._runControl(cursor.delRight, key);
+            break;
         case 'Enter':
-            cursor.reduceAgg();
-            return;
+            this._runControl(cursor.reduceAgg, key);
+            break;
         }
     };
 
