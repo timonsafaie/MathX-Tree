@@ -69,9 +69,6 @@ extend(Cursor, Elem, function(_) {
         if (prev instanceof Mrow && !prev.highlighted) {
             prev.highlight();
             return;
-        } else if (prev.info.multiChar) {
-            this.expandAgg(prev);
-            prev = this.prev;
         }
         prev.putCursorBefore(this);
         prev.remove();
@@ -84,9 +81,6 @@ extend(Cursor, Elem, function(_) {
         if (next instanceof Mrow && !next.highlighted) {
             next.highlight();
             return;
-        } else if (next.info.multiChar) {
-            this.expandAgg(next, true);
-            next = this.next;
         }
         next.putCursorBefore(this);
         next.remove();
