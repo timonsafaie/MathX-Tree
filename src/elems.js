@@ -2,9 +2,10 @@ var Elem = function(tag, input, info) {
     Node.call(this);
     this.tag = tag;
     this.input = input;
+    this.output = input;
     this.info = info;
-    if (this.info && this.info.output === undefined)
-        this.info.output = input;
+    if (info && info.output !== undefined)
+        this.output = info.output;
 };
 
 extend(Elem, Node, function(_, _super) {
@@ -14,7 +15,7 @@ extend(Elem, Node, function(_, _super) {
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="mX">' + this.info.output + '</span>');
+        this.JQ = $('<span class="mX">' + this.output + '</span>');
         if (this.info.css)
             this.JQ.css(this.info.css);
         this.JQ.insertBefore($cursor);
@@ -117,7 +118,7 @@ extend(Msqrt, Mrow, function(_, _super) {
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="func-symbol-sqrt">' + this.info.output + '</span>' +
+        this.JQ = $('<span class="func-symbol-sqrt">' + this.output + '</span>' +
                     '<span class="func-sqrt"><span>&#8203;</span></span>');
         if (this.info.css)
             this.JQ.first().css(this.info.css);
@@ -227,7 +228,7 @@ extend(Msubsup, Mrow, function(_, _super) {
 
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="function">' +
-                    '<span class="func-symbol-subsup">' + this.info.output + '</span>' +
+                    '<span class="func-symbol-subsup">' + this.output + '</span>' +
                     '<sub class="func-sub"><span>&#8203;</span></sub>' +
                     '<sup class="func-sup"><span>&#8203;</span></sup>' +
                     '</span>');
@@ -321,7 +322,7 @@ extend(Munderover, Mrow, function(_, _super) {
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="function">' +
                     '<span class="func-over"><span>&#8203;</span></span>' +
-                    '<span class="func-symbol">' + this.info.output + '</span>' +
+                    '<span class="func-symbol">' + this.output + '</span>' +
                     '<span class="func-under"><span>&#8203;</span></span>' +
                     '</span>');
         this.under.JQ = this.JQ.find('.func-under');
