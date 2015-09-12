@@ -37,6 +37,24 @@ extend(MathInput, Object, function(_) {
         case 'Right':
             this._runControl(cursor.moveRight, key);
             break;
+        case 'Tab':
+            this._runControl(cursor.moveNextRow, key);
+            break;
+        case 'Shift-Tab':
+            this._runControl(cursor.movePrevRow, key);
+            break;
+        case 'Home':
+            this._runControl(cursor.moveFirst, key);
+            break;
+        case 'End':
+            this._runControl(cursor.moveLast, key);
+            break;
+        case 'Up':
+            this._runControl(cursor.moveUp, key);
+            break;
+        case 'Down':
+            this._runControl(cursor.moveDown, key);
+            break;
         case 'Backspace':
             this._runControl(cursor.delLeft, key);
             break;

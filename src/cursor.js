@@ -57,6 +57,88 @@ extend(Cursor, Elem, function(_) {
         }
     };
 
+    _.moveFirst = function() {
+        if (this.isFirstChild())
+            return;
+        var first = this.parent.firstChild();
+        first.putCursorBefore(this);
+    };
+
+    _.moveLast = function() {
+        if (this.isLastChild())
+            return;
+        var last = this.parent.lastChild();
+        last.putCursorAfter(this);
+    };
+
+    _.movePrevRow = function() {
+        var parent = this.parent;
+        if (parent.isRoot && this.isFirstChild())
+            return;
+        var prev = this.prev;
+        while (true) {
+            this.moveLeft();
+            if (this.parent != parent)
+                return;
+            if (this.parent.isRoot && this.isFirstChild())
+                break
+        }
+        prev.putCursorAfter(this);
+    };
+
+    _.moveNextRow = function() {
+        var parent = this.parent;
+        if (parent.isRoot && this.isLastChild())
+            return;
+        var next = this.next;
+        while (true) {
+            this.moveRight();
+            if (this.parent != parent)
+                return;
+            if (this.parent.isRoot && this.isLastChild())
+                break
+        }
+        next.putCursorBefore(this);
+    };
+
+    _.moveUp = function() {
+        var parent = this.parent;
+        var up = null;
+        if (parent instanceof Msub) {
+            if (parent.next instanceof Msup)
+                up = parent.next;
+            else if (parent.prev instanceof Msup)
+                up = parent.prev;
+        }
+        if (parent instanceof Munder) {
+            if (parent.next instanceof Mover)
+                up = parent.next;
+            if (parent.prev instanceof Mover)
+                up = parent.prev
+        }
+        if (up !== null)
+            up.prependCursor(this);
+    };
+
+    _.moveDown = function() {
+        var parent = this.parent;
+        var down = null;
+        if (parent instanceof Msup) {
+            if (parent.next instanceof Msub)
+                down = parent.next;
+            else if (parent.prev instanceof Msub)
+                down = parent.prev;
+        }
+        if (parent instanceof Mover) {
+            if (parent.next instanceof Munder)
+                down = parent.next;
+            if (parent.prev instanceof Munder)
+                down = parent.prev
+        }
+        if (down !== null)
+            down.prependCursor(this);
+    };
+
     _.delLeft = function() {
         if (this.lastAgg) {
             this.expandAgg(this.lastAgg);

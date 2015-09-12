@@ -45,6 +45,8 @@ var entry = function(JQ) {
     function onKeydown(e) {
         var key = KEY_VALUES[e.keyCode];
         if (key) {
+            if (e.shiftKey)
+                key = 'Shift-' + key;
             try {
                 input.inputControl(key);
             } catch (e) {
