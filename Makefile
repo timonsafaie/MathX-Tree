@@ -3,6 +3,7 @@ INTRO = $(SRC_DIR)/intro.js
 OUTRO = $(SRC_DIR)/outro.js
 
 SOURCES = \
+	$(SRC_DIR)/jquery.js \
 	$(SRC_DIR)/utils.js \
 	$(SRC_DIR)/node.js \
 	$(SRC_DIR)/elems.js \

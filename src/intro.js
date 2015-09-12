@@ -1,1 +1,1 @@
-function mathxtree(JQ) {
+(function() {
