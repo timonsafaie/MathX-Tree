@@ -337,3 +337,34 @@ extend(Munderover, Mrow, function(_, _super) {
         $cursor.prependTo(this.under.JQ);
     };
 });
+
+var Mfrac = function(input, info) {
+    Mrow.call(this, 'mfrac', input, info);
+    this.cursorStay = false;
+};
+
+extend(Mfrac, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        this.under = new Munder();
+        this.over = new Mover();
+
+        this.addBefore(cursor);
+        this.over.addBefore(this.children);
+        this.under.addBefore(this.children);
+        cursor.moveAfter(this.over.children);
+
+        this.insertJQ(cursor.JQ);
+    }
+
+    _.insertJQ = function($cursor) {
+        this.JQ = $('<span class="division">' +
+                    '<span class="divisor"><span>&#8203;</span></span>' +
+                    '<span class="dividend"><span>&#8203;</span></span>' +
+                    '</span>');
+        this.over.JQ = this.JQ.find('.divisor');
+        this.under.JQ = this.JQ.find('.dividend');
+
+        this.JQ.insertBefore($cursor);
+        $cursor.prependTo(this.over.JQ);
+    };
+});

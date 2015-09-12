@@ -57,10 +57,11 @@ var atomSymbols = [
     {input: '>', Tag: Mo, css: {padding: '0 .2em'}},
     {input: '*', Tag: Mo, css: {padding: '0 .2em'}},
 
-    {input: /^[0-9.]$/,      Tag: Mn},
-    {input: /^[\/+\-|\\]$/,  Tag: Mo},
+    {input: '/',             Tag: Mfrac},
     {input: '^',             Tag: Msup},
-    {input: '_',             Tag: Msub}
+    {input: '_',             Tag: Msub},
+    {input: /^[0-9.]$/,      Tag: Mn},
+    {input: /^[+\-|\\]$/,    Tag: Mo}
 ];
 
 var aggSymbols = {
