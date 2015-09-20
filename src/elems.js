@@ -345,8 +345,8 @@ var Mfrac = function(input, info) {
 
 extend(Mfrac, Mrow, function(_, _super) {
     _.insert = function(cursor) {
-        this.under = new Munder();
         this.over = new Mover();
+        this.under = new Munder();
 
         this.addBefore(cursor);
         this.over.addBefore(this.children);
@@ -354,15 +354,32 @@ extend(Mfrac, Mrow, function(_, _super) {
         cursor.moveAfter(this.over.children);
 
         this.insertJQ(cursor.JQ);
+
+        var hasDivisor = false;
+        while (true) {
+            var prev = this.prev;
+            if (!(prev instanceof Mi || prev instanceof Mn || prev instanceof Mfrac))
+                break;
+            hasDivisor = true;
+            prev.moveAfter(this.over.children);
+            prev.JQ.prependTo(this.over.JQ);
+        }
+        if (hasDivisor) {
+            cursor.moveAfter(this.under.children);
+            cursor.JQ.prependTo(this.under.JQ);
+        }
     }
 
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="division">' +
                     '<span class="divisor"><span>&#8203;</span></span>' +
                     '<span class="dividend"><span>&#8203;</span></span>' +
+                    '<span style="display:block;width:0">&nbsp;</span>' +
                     '</span>');
         this.over.JQ = this.JQ.find('.divisor');
         this.under.JQ = this.JQ.find('.dividend');
+
+        this.JQ.css('font-size', '.9em');
 
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.over.JQ);
