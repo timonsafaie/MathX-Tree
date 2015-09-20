@@ -58,6 +58,7 @@ var atomSymbols = [
     {input: '*', Tag: Mo, css: {padding: '0 .2em'}},
 
     {input: '/',             Tag: Mfrac},
+    {input: ' ',             Tag: Mspace},
     {input: '^',             Tag: Msup},
     {input: '_',             Tag: Msub},
     {input: /^[0-9.]$/,      Tag: Mn},

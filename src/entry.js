@@ -23,8 +23,6 @@ var entry = function(JQ) {
 
         27: 'Esc',
 
-        32: 'Spacebar',
-
         33: 'PageUp',
         34: 'PageDown',
         35: 'End',

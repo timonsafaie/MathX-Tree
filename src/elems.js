@@ -71,6 +71,17 @@ var Mn = function(input, info) {
 
 extend(Mn, Elem);
 
+var Mspace = function(input, info) {
+    Elem.call(this, 'mspace', input, info);
+};
+
+extend(Mspace, Elem, function(_, _super) {
+    _.insertJQ = function($cursor) {
+        this.JQ = $('<span class="mX space"></span>');
+        this.JQ.insertBefore($cursor);
+    };
+});
+
 var Mrow = function() {
     Elem.apply(this, arguments);
     this.cursorStay = true;
