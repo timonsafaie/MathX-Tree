@@ -199,8 +199,6 @@ extend(Cursor, Elem, function(_) {
         var aggTag = this.prev.tag;
         var search = '';
         listEachReversed(start, this, function(e) {
-            if (e.tag != aggTag)
-                return false;
             search = e.input + search;
             if (aggSymbols.hasOwnProperty(search)) {
                 agg = aggSymbols[search];
