@@ -396,3 +396,95 @@ extend(Mfrac, Mrow, function(_, _super) {
         $cursor.prependTo(this.over.JQ);
     };
 });
+
+var Mopen = function(input, info) {
+    Elem.call(this, 'mopen', input, info);
+};
+
+extend(Mopen, Elem, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+
+        var start = cursor.next;
+        var end = cursor.parent.children;
+
+        var menclose = new Menclose();
+        menclose.insert(cursor);
+        listEach(start, end, function(e) {
+            if (e instanceof Mclose)
+                return false;
+            menclose.append(e);
+        });
+        menclose.resize();
+    };
+
+    _.putCursorAfter = function(cursor) {
+        _super.putCursorAfter.call(this, cursor);
+        return false;
+    };
+});
+
+var Mclose = function(input, info) {
+    Elem.call(this, 'mclose', input, info);
+};
+
+extend(Mclose, Elem, function(_, _super) {
+    _.insert = function(cursor) {
+        if (!(cursor.parent instanceof Menclose)) {
+            _super.insert.call(this, cursor);
+            return;
+        }
+
+        var menclose = cursor.parent;
+        menclose.putCursorAfter(cursor);
+        _super.insert.call(this, cursor);
+        menclose.resize();
+    };
+
+    _.putCursorBefore = function(cursor) {
+        _super.putCursorBefore.call(this, cursor);
+        return false;
+    };
+});
+
+var Menclose = function() {
+    Mrow.call(this, 'menclose');
+};
+
+extend(Menclose, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
+        cursor.moveAfter(this.children);
+        this.insertJQ(cursor.JQ);
+    };
+
+    _.insertJQ = function($cursor) {
+        this.JQ = $('<span class="brack-holder"></span>');
+        this.JQ.insertBefore($cursor);
+        $cursor.prependTo(this.JQ);
+    };
+
+    _.append = function(elem) {
+        elem.moveBefore(this.children);
+        elem.JQ.appendTo(this.JQ);
+    };
+
+    _.putCursorAfter = function(cursor) {
+        _super.putCursorAfter.call(this, cursor);
+        return false;
+    };
+
+    _.putCursorBefore = function(cursor) {
+        _super.putCursorBefore.call(this, cursor);
+        return false;
+    };
+
+    _.resize = function() {
+        var scale = this.JQ.outerHeight()/+this.JQ.css('fontSize').slice(0,-2);
+        var transform = 'scale(1, ' + scale + ')';
+        if (this.prev instanceof Mopen)
+            this.prev.JQ.css({transform: transform});
+        if (this.next instanceof Mclose)
+            this.next.JQ.css({transform: transform});
+    };
+});

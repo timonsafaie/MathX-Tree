@@ -57,6 +57,13 @@ var atomSymbols = [
     {input: '>', Tag: Mo, css: {padding: '0 .2em'}},
     {input: '*', Tag: Mo, css: {padding: '0 .2em'}},
 
+    {input: '(', Tag: Mopen},
+    {input: '[', Tag: Mopen},
+    {input: '{', Tag: Mopen},
+    {input: ')', Tag: Mclose},
+    {input: ']', Tag: Mclose},
+    {input: '}', Tag: Mclose},
+
     {input: '/',             Tag: Mfrac},
     {input: ' ',             Tag: Mspace},
     {input: '^',             Tag: Msup},

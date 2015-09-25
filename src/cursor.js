@@ -22,39 +22,39 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveLeft = function() {
+        var stay;
         if (this.isFirstChild()) {
             var parent = this.parent;
             if (parent.isRoot)
                 return;
-            if (!parent.putCursorBefore(this))
-                this.moveLeft();
+            stay = parent.putCursorBefore(this);
         } else {
             var prev = this.prev;
-            if (prev instanceof Mrow) {
-                if (!prev.appendCursor(this))
-                    this.moveLeft();
-            } else {
-                prev.putCursorBefore(this);
-            }
+            if (prev instanceof Mrow)
+                stay = prev.appendCursor(this);
+            else
+                stay = prev.putCursorBefore(this);
         }
+        if (!stay)
+            this.moveLeft();
     };
 
     _.moveRight = function() {
+        var stay;
         if (this.isLastChild()) {
             var parent = this.parent;
             if (parent.isRoot)
                 return;
-            if (!parent.putCursorAfter(this))
-                this.moveRight();
+            stay = parent.putCursorAfter(this);
         } else {
             var next = this.next;
-            if (next instanceof Mrow) {
-                if (!next.prependCursor(this))
-                    this.moveRight();
-            } else {
-                next.putCursorAfter(this);
-            }
+            if (next instanceof Mrow)
+                stay = next.prependCursor(this);
+            else
+                stay = next.putCursorAfter(this);
         }
+        if (!stay)
+            this.moveRight();
     };
 
     _.moveFirst = function() {
