@@ -23,6 +23,10 @@
   color: #DC143C;
 }
 
+.showMenu {
+  color: #213AEF;
+}
+
 .focus {
   border-radius: 0px;
   border:1px #aaa solid;

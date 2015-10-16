@@ -51,6 +51,18 @@ extend(Elem, Node, function(_, _super) {
         this.unsettled = false;
         this.JQ.removeClass('unsettled');
     };
+    
+    // Temporary Target Highlighting
+    // inplace of SmartMenu display
+    _.showMenu = function() {
+        this.showMenu = true;
+        this.JQ.addClass('showMenu');
+    };
+    
+    _.hideMenu = function() {
+        this.showMenu = false;
+        this.JQ.removeClass('showMenu');
+    };
 });
 
 var Mi = function(input, info) {
