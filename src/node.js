@@ -136,6 +136,15 @@ extend(Node, List, function(_) {
         return listIsLast(this, this.parent.children);
     };
 
+    _.isAncestor = function(node) {
+        while (node) {
+            if (node.parent === this)
+                return true;
+            node = node.parent;
+        }
+        return false;
+    };
+
     _.bubble = function(fn) {
         var args = __slice.call(arguments, 1);
         for (var n = this; n; n = n.parent) {

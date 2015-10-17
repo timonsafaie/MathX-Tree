@@ -43,12 +43,12 @@ extend(Elem, Node, function(_, _super) {
     };
 
     _.unsettle = function() {
-        this.unsettled = true;
+        this.settled = false;
         this.JQ.addClass('unsettled');
     };
 
     _.settle = function() {
-        this.unsettled = false;
+        this.settled = true;
         this.JQ.removeClass('unsettled');
     };
     
@@ -411,28 +411,13 @@ extend(Mfrac, Mrow, function(_, _super) {
 
 var Mopen = function(input, info) {
     Elem.call(this, 'mopen', input, info);
+    this.closeInfo = info.closeInfo;
 };
 
 extend(Mopen, Elem, function(_, _super) {
     _.insert = function(cursor) {
-        _super.insert.call(this, cursor);
-
-        var start = cursor.next;
-        var end = cursor.parent.children;
-
-        var menclose = new Menclose();
+        var menclose = new Menclose(this);
         menclose.insert(cursor);
-        listEach(start, end, function(e) {
-            if (e instanceof Mclose)
-                return false;
-            menclose.append(e);
-        });
-        menclose.resize();
-    };
-
-    _.putCursorAfter = function(cursor) {
-        _super.putCursorAfter.call(this, cursor);
-        return false;
     };
 });
 
@@ -442,61 +427,75 @@ var Mclose = function(input, info) {
 
 extend(Mclose, Elem, function(_, _super) {
     _.insert = function(cursor) {
-        if (!(cursor.parent instanceof Menclose)) {
+        var menclose = cursor.parent.parent;
+        if (cursor.isLastChild() &&
+            menclose instanceof Menclose && !menclose.settled) {
+            menclose.resetMclose(this);
+            menclose.putCursorAfter(cursor);
+        } else {
             _super.insert.call(this, cursor);
-            return;
         }
-
-        var menclose = cursor.parent;
-        menclose.putCursorAfter(cursor);
-        _super.insert.call(this, cursor);
-        menclose.resize();
-    };
-
-    _.putCursorBefore = function(cursor) {
-        _super.putCursorBefore.call(this, cursor);
-        return false;
     };
 });
 
-var Menclose = function() {
+var Menclose = function(mopen) {
     Mrow.call(this, 'menclose');
+    this.mopen = mopen;
+    this.settled = false;
+    this.cursorStay = false;
 };
 
 extend(Menclose, Mrow, function(_, _super) {
     _.insert = function(cursor) {
+        var ci = this.mopen.closeInfo;
+        this.mclose = new ci.Tag(ci.input, ci);
+        this.mrow = new Mrow();
+
+        this.mopen.addBefore(this.children);
+        this.mrow.addBefore(this.children);
+        this.mclose.addBefore(this.children);
+
         this.addBefore(cursor);
-        cursor.moveAfter(this.children);
+        cursor.moveAfter(this.mrow.children);
         this.insertJQ(cursor.JQ);
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="brack-holder"></span>');
+        this.JQ = $(
+            '<span class="mX mopen">' + this.mopen.output + '</span>' +
+            '<span class="brack-holder"></span>' +
+            '<span class="mX mclose unsettled">' + this.mclose.output + '</span>'
+        );
+        this.mopen.JQ = this.JQ.eq(0);
+        this.mrow.JQ = this.JQ.eq(1);
+        this.mclose.JQ = this.JQ.eq(2);
+
         this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.JQ);
-    };
-
-    _.append = function(elem) {
-        elem.moveBefore(this.children);
-        elem.JQ.appendTo(this.JQ);
-    };
-
-    _.putCursorAfter = function(cursor) {
-        _super.putCursorAfter.call(this, cursor);
-        return false;
-    };
-
-    _.putCursorBefore = function(cursor) {
-        _super.putCursorBefore.call(this, cursor);
-        return false;
+        $cursor.prependTo(this.mrow.JQ);
     };
 
     _.resize = function() {
-        var scale = this.JQ.outerHeight()/+this.JQ.css('fontSize').slice(0,-2);
+        var scale = this.mrow.JQ.outerHeight()/+this.mrow.JQ.css('fontSize').slice(0,-2);
         var transform = 'scale(1, ' + scale + ')';
-        if (this.prev instanceof Mopen)
-            this.prev.JQ.css({transform: transform});
-        if (this.next instanceof Mclose)
-            this.next.JQ.css({transform: transform});
+        this.mopen.JQ.css({transform: transform});
+        this.mclose.JQ.css({transform: transform});
+    };
+
+    _.resetMclose = function(mclose) {
+        this.mclose.info = mclose.info;
+        this.mclose.input = mclose.input;
+        this.mclose.output = mclose.output;
+        this.mclose.JQ.html(mclose.output);
+        this.settle();
+    };
+
+    _.settle = function() {
+        this.mclose.JQ.removeClass('unsettled');
+        this.settled = true;
+    };
+
+    _.unsettle = function() {
+        this.mclose.JQ.addClass('unsettled');
+        this.settled = false;
     };
 });

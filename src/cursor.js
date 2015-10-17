@@ -14,9 +14,17 @@ extend(Cursor, Elem, function(_) {
             delete this.lastAgg;
         }
         this.JQ.parent().removeClass('focus');
+
+        var menclose = this.parent.parent;
+        if (menclose instanceof Menclose && !menclose.settled)
+            this.lastMenclose = menclose;
+        else
+            this.lastMenclose = null;
     };
 
     _.afterInput = function(key) {
+        if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
+            this.lastMenclose.settle();
         this.JQ.parent().addClass('focus');
         this.bubble('resize');
     };
