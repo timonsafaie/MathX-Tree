@@ -106,7 +106,7 @@
 *[contenteditable] {
     -webkit-user-select: auto !important;
 }
-#aC-container table {
+.aC-container table {
   border-spacing:0px !important;
 }
 .mX:focus, .mx-c:focus {
@@ -213,13 +213,13 @@
 
 
 /* drop down */
-#aC-container {
+.aC-container {
   position:absolute;
   width:14px;
   display:none;
   z-index:1000;
 }
-#aC-results {
+.aC-results {
   display: block;
   position:absolute;
   /*margin-left:30px;*/

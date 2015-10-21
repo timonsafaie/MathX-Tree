@@ -206,7 +206,7 @@ extend(Cursor, Elem, function(_) {
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
-        var aggList = '';
+        var aggList = [];
         listEachReversed(start, this, function(e) {
             search = e.input + search;
             if (aggSymbols.hasOwnProperty(search)) {
@@ -216,19 +216,35 @@ extend(Cursor, Elem, function(_) {
             } else if (search.length > 2) {
                 for(var aggSymbol in aggSymbols) {
                     if (aggSymbol.substr(0, search.length) == search) {
-                        // TODO: Replace with actual SmartMenu 
-                        // candidate collection array
-                        aggList += aggSymbol+", ";
+                        // Add symbol to SmartMenu candidate list
+                        var aggNode = {
+                             aggSymbol: aggSymbol,
+                             props: aggSymbols[aggSymbol]
+                        }
+                        aggList.push(aggNode);
                     }
                 }
             }
         });
         
-        if (aggList)
-            console.log('SmartMenu: '+aggList.substr(0, aggList.length-2));
-        
-        if (!agg)
+        if (!agg) {
+            if (aggList.length > 0) {
+                // Add list and display SmartMenu
+                console.log('unsorted: ');
+                aggList.forEach(function(item) {
+                    console.log(item.aggSymbol);
+                });
+                var menu = new Menu(aggList);
+                this.parent.JQ.find('.aC-container').remove();
+                menu.JQ.appendTo(this.parent.JQ);
+                menu.display();
+                console.log('sorted: ');
+                aggList.forEach(function(item) {
+                    console.log(item.aggSymbol);
+                });
+            }
             return;
+        }
 
         listEachReversed(start, this, function(e) {
             e.remove();
@@ -246,21 +262,27 @@ extend(Cursor, Elem, function(_) {
 
         var cursor = this;
         var first = null;
-        var aggList = '';
+        var aggList = [];
         // Reengage search of the SmartMenu
         for(var aggSymbol in aggSymbols) {
             if (aggSymbol.substr(0, agg.input.length) == agg.input) {
-                // TODO: Replace with actual SmartMenu
-                // candidate collection array
-                aggList += aggSymbol+", ";
+                // Add symbol to SmartMenu candidate list
+                var aggNode = {
+                     aggSymbol: aggSymbol,
+                     props: aggSymbols[aggSymbol]
+                }
+                aggList.push(aggNode);
             }
         }
-        console.log('SmartMenu: '+aggList.substr(0, aggList.length-2));
+        if (aggList) {
+            // TODO: Display SmartMenu
+            aggList.forEach(function(a) {
+                console.log(a.aggSymbol);
+            });
+        }
         
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);
-            if (aggList)
-                cursor.prev.showMenu();
             if (first === null)
                 first = cursor.prev;
         });

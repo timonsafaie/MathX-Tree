@@ -2,7 +2,7 @@ var fs = require('fs');
 var dbjs, symjs;
 
 function parseArgs() {
-    var usage = 'Usage: iojs importsymbols.js <db.js> <symbols.js>\n';
+    var usage = 'Usage: iojs importsymbols.js <db.js> <aggsymbols.js>\n';
     var args = process.argv.slice(2);
     dbjs = args[0];
     symjs = args[1];
@@ -28,6 +28,9 @@ function importSymbol(sym) {
         css.margin = sym.symbolmargin;
     if (!isEmpty(css))
         res += ', css: ' + JSON.stringify(css);
+    res += ', family: "'+sym.family+'"';
+    res += ', category: "'+sym.category+'"';
+    res += ', rank: '+sym.symbolrank;
     res += '},\n';
     fs.appendFileSync(symjs, res);
 }
@@ -39,4 +42,4 @@ fs.appendFileSync(symjs, 'var _aggSymbols = {\n');
 db.forEach(function(sym) {
     importSymbol(sym);
 });
-fs.appendFileSync(symjs, '    null: null\n}');
+fs.appendFileSync(symjs, '    null: null\n}\n');
