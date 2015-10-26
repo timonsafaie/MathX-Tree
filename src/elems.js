@@ -270,57 +270,33 @@ extend(Msubsup, Mrow, function(_, _super) {
 
 var Munder = function(input, info) {
     Mrow.call(this, 'munder', input, info);
+    this.cursorStay = false;
 };
 
 extend(Munder, Mrow, function(_, _super) {
     _.insert = function(cursor) {
+        this.under = new Mrow('under');
+
         this.addBefore(cursor);
-        cursor.moveAfter(this.children);
+        this.under.addBefore(this.children);
+        cursor.moveAfter(this.under.children);
+
         this.insertJQ(cursor.JQ);
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="func-under"><span>&#8203;</span></span>');
+        this.JQ = $('<span class="function">' +
+                    '<span class="mX">' + this.output + '</span>' +
+                    '<span class="func-under"><span>&#8203;</span></span>' +
+                    '</span>');
+        this.under.JQ = this.JQ.find('.func-under');
+
+        var $sym = this.JQ.find('.func-symbol');
+        if (this.info.css)
+            $sym.css(this.info.css);
+
         this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.JQ);
-    };
-
-    _.putCursorBefore = function(cursor) {
-        var prev = this.prev;
-        return _super.putCursorBefore.call(this, cursor) && !(prev instanceof Mover);
-    };
-
-    _.putCursorAfter = function(cursor) {
-        var next = this.next;
-        return _super.putCursorAfter.call(this, cursor) && !(next instanceof Mover);
-    };
-});
-
-var Mover = function(input, info) {
-    Mrow.call(this, 'mover', input, info);
-};
-
-extend(Mover, Mrow, function(_, _super) {
-    _.insert = function(cursor) {
-        this.addBefore(cursor);
-        cursor.moveAfter(this.children);
-        this.insertJQ(cursor.JQ);
-    }
-
-    _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="func-over"><span>&#8203;</span></span>');
-        this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.JQ);
-    };
-
-    _.putCursorBefore = function(cursor) {
-        var prev = this.prev;
-        return _super.putCursorBefore.call(this, cursor) && !(prev instanceof Munder);
-    };
-
-    _.putCursorAfter = function(cursor) {
-        var next = this.next;
-        return _super.putCursorAfter.call(this, cursor) && !(next instanceof Munder);
+        $cursor.prependTo(this.under.JQ);
     };
 });
 
@@ -331,8 +307,8 @@ var Munderover = function(input, info) {
 
 extend(Munderover, Mrow, function(_, _super) {
     _.insert = function(cursor) {
-        this.under = new Munder();
-        this.over = new Mover();
+        this.under = new Mrow('under');
+        this.over = new Mrow('over');
 
         this.addBefore(cursor);
         this.under.addBefore(this.children);
@@ -340,7 +316,7 @@ extend(Munderover, Mrow, function(_, _super) {
         cursor.moveAfter(this.under.children);
 
         this.insertJQ(cursor.JQ);
-    }
+    };
 
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="function">' +
@@ -368,8 +344,8 @@ var Mfrac = function(input, info) {
 
 extend(Mfrac, Mrow, function(_, _super) {
     _.insert = function(cursor) {
-        this.over = new Mover();
-        this.under = new Munder();
+        this.over = new Mrow('over');
+        this.under = new Mrow('under');
 
         this.addBefore(cursor);
         this.over.addBefore(this.children);
