@@ -5,7 +5,8 @@ var entry = function(JQ) {
     JQ.prop('tabindex', 0);
     JQ.bind({
         keydown: onKeydown,
-        keypress: onKeypress
+        keypress: onKeypress,
+        click: onClick
     });
 
     var KEY_VALUES = {
@@ -61,6 +62,11 @@ var entry = function(JQ) {
         } catch (e) {
             console.log(e);
         }
+        return false;
+    }
+
+    function onClick(e) {
+        input.click($(e.target), e.offsetX, e.offsetY);
         return false;
     }
 

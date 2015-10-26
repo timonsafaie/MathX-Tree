@@ -1,3 +1,6 @@
+elemId = 0;
+allElems = {};
+
 var Elem = function(tag, input, info) {
     Node.call(this);
     this.tag = tag;
@@ -6,6 +9,9 @@ var Elem = function(tag, input, info) {
     this.info = info;
     if (info && info.output !== undefined)
         this.output = info.output;
+
+    this.id = elemId++;
+    allElems[this.id] = this;
 };
 
 extend(Elem, Node, function(_, _super) {
@@ -18,6 +24,7 @@ extend(Elem, Node, function(_, _super) {
         this.JQ = $('<span class="mX">' + this.output + '</span>');
         if (this.info.css)
             this.JQ.css(this.info.css);
+        this.JQ.attr('mxId', this.id);
         this.JQ.insertBefore($cursor);
     };
 

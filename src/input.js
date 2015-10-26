@@ -67,6 +67,18 @@ extend(MathInput, Object, function(_) {
         }
     };
 
+    _.click = function($elem, offsetX, offsetY) {
+        mxid = $elem.attr('mxid');
+        elem = allElems[mxid];
+        width2 = $elem.width()/2;
+        this.cursor.beforeInput();
+        if (offsetX < width2)
+            elem.putCursorBefore(this.cursor);
+        else
+            elem.putCursorAfter(this.cursor);
+        this.cursor.afterInput();
+    };
+
     _.dumpTree = function() {
         function _dump(node, level, indent) {
             var result = indent.repeat(level);
