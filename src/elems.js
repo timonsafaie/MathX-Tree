@@ -277,33 +277,28 @@ extend(Msubsup, Mrow, function(_, _super) {
 
 var Munder = function(input, info) {
     Mrow.call(this, 'munder', input, info);
-    this.cursorStay = false;
 };
 
 extend(Munder, Mrow, function(_, _super) {
     _.insert = function(cursor) {
-        this.under = new Mrow('under');
-
         this.addBefore(cursor);
-        this.under.addBefore(this.children);
-        cursor.moveAfter(this.under.children);
-
+        cursor.moveAfter(this.children);
         this.insertJQ(cursor.JQ);
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="function">' +
-                    '<span class="mX">' + this.output + '</span>' +
-                    '<span class="func-under"><span>&#8203;</span></span>' +
+        this.JQ = $('<span class="munder">' +
+                    '<span class="munder-sym">' + this.output + '</span>' +
+                    '<span class="munder-row"><span>&#8203;</span></span>' +
+                    '<span style="display:block;width:0">&nbsp;</span>' +
                     '</span>');
-        this.under.JQ = this.JQ.find('.func-under');
-
-        var $sym = this.JQ.find('.func-symbol');
+        var $sym = this.JQ.find('.munder-sym');
         if (this.info.css)
             $sym.css(this.info.css);
 
+        var $row = this.JQ.find('.munder-row');
         this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.under.JQ);
+        $cursor.prependTo($row);
     };
 });
 

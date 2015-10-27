@@ -37,6 +37,24 @@
   width: 0.2em;
 }
 
+.munder {
+  display:inline-block;
+  vertical-align:-1em;
+  padding-right:0.2em;
+}
+.munder-sym {
+  text-align:center;
+  display: block;
+  width: 100%;
+}
+.munder-row {
+  text-align:center;
+  display: block;
+  float: right;
+  width: 100%;
+  font-size: .6em;
+}
+
 /* basic elements */
 .mX-cursor {
   border-left: 1px solid black;
