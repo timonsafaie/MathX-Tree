@@ -64,19 +64,24 @@ extend(MathInput, Object, function(_) {
         case 'Enter':
             this._runControl(cursor.reduceAgg, key);
             break;
+        case 'Esc':
+            console.log(this.dumpTree());
+            break;
         }
     };
 
     _.click = function($elem, offsetX, offsetY) {
-        mxid = $elem.attr('mxid');
-        elem = allElems[mxid];
-        width2 = $elem.width()/2;
+        var mxid = $elem.attr('mxid');
+        var width2 = $elem.width()/2;
+        var elem = allElems[mxid];
+
         this.cursor.beforeInput();
         if (offsetX < width2)
-            elem.putCursorBefore(this.cursor);
+            elem.putCursorLeft(this.cursor);
         else
-            elem.putCursorAfter(this.cursor);
+            elem.putCursorRight(this.cursor);
         this.cursor.afterInput();
+        return false;
     };
 
     _.dumpTree = function() {

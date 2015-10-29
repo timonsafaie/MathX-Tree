@@ -6,7 +6,10 @@ var entry = function(JQ) {
     JQ.bind({
         keydown: onKeydown,
         keypress: onKeypress,
-        click: onClick
+        mousedown: onMousedown,
+    });
+    $('body').on('click', '[mxId]', function (e) {
+        return input.click($(e.currentTarget), e.offsetX, e.offsetY);
     });
 
     var KEY_VALUES = {
@@ -65,9 +68,7 @@ var entry = function(JQ) {
         return false;
     }
 
-    function onClick(e) {
-        input.click($(e.target), e.offsetX, e.offsetY);
-        return false;
+    function onMousedown() {
     }
 
     return input;

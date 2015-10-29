@@ -42,12 +42,14 @@ extend(Elem, Node, function(_, _super) {
         cursor.JQ.insertBefore(this.JQ.first());
         return this.parent.cursorStay;
     };
+    _.putCursorLeft = _.putCursorBefore;
 
     _.putCursorAfter = function(cursor) {
         cursor.moveAfter(this);
         cursor.JQ.insertAfter(this.JQ.last());
         return this.parent.cursorStay;
     };
+    _.putCursorRight = _.putCursorAfter;
 
     _.unsettle = function() {
         this.settled = false;
@@ -97,6 +99,7 @@ var Mspace = function(input, info) {
 extend(Mspace, Elem, function(_, _super) {
     _.insertJQ = function($cursor) {
         this.JQ = $('<span class="mX space"></span>');
+        this.JQ.attr('mxId', this.id);
         this.JQ.insertBefore($cursor);
     };
 });
@@ -153,8 +156,16 @@ extend(Msqrt, Mrow, function(_, _super) {
         if (this.info.css)
             this.JQ.first().css(this.info.css);
 
+        var $sym = this.JQ.first();
+        $sym.attr('mxId', this.id);
+
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.JQ.last());
+    };
+
+    _.putCursorRight = function(cursor) {
+        cursor.moveAfter(this.children);
+        cursor.JQ.prependTo(this.JQ.last());
     };
 });
 
@@ -270,6 +281,7 @@ extend(Msubsup, Mrow, function(_, _super) {
         if (this.info.css)
             $sym.css(this.info.css);
 
+        this.JQ.attr('mxId', this.id);
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.sub.JQ);
     };
@@ -296,8 +308,10 @@ extend(Munder, Mrow, function(_, _super) {
         if (this.info.css)
             $sym.css(this.info.css);
 
-        var $row = this.JQ.find('.munder-row');
+        this.JQ.attr('mxId', this.id);
         this.JQ.insertBefore($cursor);
+
+        var $row = this.JQ.find('.munder-row');
         $cursor.prependTo($row);
     };
 });
@@ -334,6 +348,7 @@ extend(Munderover, Mrow, function(_, _super) {
         if (this.info.css)
             $sym.css(this.info.css);
 
+        this.JQ.attr('mxId', this.id);
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.under.JQ);
     };
@@ -394,8 +409,17 @@ var Mopen = function(input, info) {
 
 extend(Mopen, Elem, function(_, _super) {
     _.insert = function(cursor) {
-        var menclose = new Menclose(this);
-        menclose.insert(cursor);
+        this.menclose = new Menclose(this);
+        this.menclose.insert(cursor);
+    };
+
+    _.putCursorLeft = function(cursor) {
+        this.menclose.putCursorBefore(cursor);
+    };
+
+    _.putCursorRight = function(cursor) {
+        this.menclose.putCursorBefore(cursor);
+        cursor.moveRight();
     };
 });
 
@@ -414,6 +438,24 @@ extend(Mclose, Elem, function(_, _super) {
             _super.insert.call(this, cursor);
         }
     };
+
+    _.putCursorLeft = function(cursor) {
+        var menclose = this.parent;
+        if (menclose instanceof Menclose) {
+            menclose.putCursorRight(cursor);
+            cursor.moveLeft();
+        } else {
+            _super.putCursorLeft.call(this, cursor);
+        }
+    };
+
+    _.putCursorRight = function(cursor) {
+        var menclose = this.parent;
+        if (menclose instanceof Menclose)
+            menclose.putCursorRight(cursor);
+        else
+            _super.putCursorRight.call(this, cursor);
+    };
 });
 
 var Menclose = function(mopen) {
@@ -426,8 +468,8 @@ var Menclose = function(mopen) {
 extend(Menclose, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         var ci = this.mopen.closeInfo;
-        this.mclose = new ci.Tag(ci.input, ci);
-        this.mrow = new Mrow();
+        this.mclose = new Mclose(ci.input, ci);
+        this.mrow = new Mrow('menclosed');
 
         this.mopen.addBefore(this.children);
         this.mrow.addBefore(this.children);
@@ -447,6 +489,9 @@ extend(Menclose, Mrow, function(_, _super) {
         this.mopen.JQ = this.JQ.eq(0);
         this.mrow.JQ = this.JQ.eq(1);
         this.mclose.JQ = this.JQ.eq(2);
+
+        this.mopen.JQ.attr('mxId', this.mopen.id);
+        this.mclose.JQ.attr('mxId', this.mclose.id);
 
         this.JQ.insertBefore($cursor);
         $cursor.prependTo(this.mrow.JQ);
