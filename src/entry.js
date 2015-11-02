@@ -45,16 +45,15 @@ var entry = function(JQ) {
     };
 
     function onKeydown(e) {
-        var key = KEY_VALUES[e.keyCode];
-        if (key) {
-            if (e.shiftKey)
-                key = 'Shift-' + key;
-            try {
-                input.inputControl(key);
-            } catch (e) {
-                console.log(e);
-            }
-            return false;
+        var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
+        if (e.ctrlKey)
+            key = 'Ctrl-' + key;
+        if (e.shiftKey)
+            key = 'Shift-' + key;
+        try {
+            return input.inputControl(key);
+        } catch (e) {
+            console.log(e);
         }
     }
 

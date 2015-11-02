@@ -33,40 +33,40 @@ extend(MathInput, Object, function(_) {
         switch (key) {
         case 'Left':
             this._runControl(cursor.moveLeft, key);
-            break;
+            return false;
         case 'Right':
             this._runControl(cursor.moveRight, key);
-            break;
+            return false;
         case 'Tab':
             this._runControl(cursor.moveNextRow, key);
-            break;
+            return false;
         case 'Shift-Tab':
             this._runControl(cursor.movePrevRow, key);
-            break;
+            return false;
         case 'Home':
             this._runControl(cursor.moveFirst, key);
-            break;
+            return false;
         case 'End':
             this._runControl(cursor.moveLast, key);
-            break;
+            return false;
         case 'Up':
             this._runControl(cursor.moveUp, key);
-            break;
+            return false;
         case 'Down':
             this._runControl(cursor.moveDown, key);
-            break;
+            return false;
         case 'Backspace':
             this._runControl(cursor.delLeft, key);
-            break;
+            return false;
         case 'Del':
             this._runControl(cursor.delRight, key);
-            break;
+            return false;
         case 'Enter':
             this._runControl(cursor.reduceAgg, key);
-            break;
-        case 'Esc':
+            return false;
+        case 'Ctrl-Esc':
             console.log(this.dumpTree());
-            break;
+            return false;
         }
     };
 
