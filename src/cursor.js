@@ -201,7 +201,7 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.reduceAgg = function() {
-        var agg, input;
+        var agg, input, menu;
 
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
@@ -215,8 +215,10 @@ extend(Cursor, Elem, function(_) {
                 start = e;
             } else if (search.length > 2) {
                 for(var aggSymbol in aggSymbols) {
-                    if (aggSymbol.substr(0, search.length) == search) {
+                    if (aggSymbol.indexOf(search) > -1) {
+                    //if (aggSymbol.substr(0, search.length) == search) {
                         // Add symbol to SmartMenu candidate list
+                        input = search;
                         var aggNode = {
                              aggSymbol: aggSymbol,
                              props: aggSymbols[aggSymbol]
@@ -230,18 +232,13 @@ extend(Cursor, Elem, function(_) {
         if (!agg) {
             if (aggList.length > 0) {
                 // Add list and display SmartMenu
-                console.log('unsorted: ');
-                aggList.forEach(function(item) {
-                    console.log(item.aggSymbol);
-                });
-                var menu = new Menu(aggList);
+                menu = new Menu(aggList, input);
                 this.parent.JQ.find('.aC-container').remove();
                 menu.JQ.appendTo(this.parent.JQ);
                 menu.display();
-                console.log('sorted: ');
-                aggList.forEach(function(item) {
-                    console.log(item.aggSymbol);
-                });
+            } else {
+                if (this.parent.JQ.find('.aC-container'))
+                    this.parent.JQ.find('.aC-container').remove();
             }
             return;
         }

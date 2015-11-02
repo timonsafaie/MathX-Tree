@@ -73,6 +73,8 @@ var atomSymbols = [
 ];
 
 var aggSymbols = {
+    '+-':                 {Tag: Mo, output: '&pm;'},
+    '-+':                 {Tag: Mo, output: '&mp;'},
     '<-':                 {Tag: Mo, output: '&larr;'},
     '->':                 {Tag: Mo, output: '&rarr;'},
     '<->':                {Tag: Mo, output: '&harr;'},
