@@ -190,11 +190,6 @@ var _aggSymbols = {
     "h bar": {Tag: Mi, output: "&#x210f;", family: "symbol", category: "Special Character", rank: 2},
     "Planck constant": {Tag: Mi, output: "&#x210e;", family: "symbol", category: "Special Character", rank: 3},
     "weierstrass power set": {Tag: Mi, output: "&weierp;", family: "symbol", category: "Special Character", rank: 4},
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     "left arrow": {Tag: Mi, output: "&larr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow"},
     "left right arrow": {Tag: Mi, output: "&harr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow"},
     "right arrow": {Tag: Mi, output: "&rarr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow"},
