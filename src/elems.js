@@ -39,7 +39,7 @@ extend(Elem, Node, function(_, _super) {
 
     _.putCursorBefore = function(cursor) {
         cursor.moveBefore(this);
-        cursor.JQ.insertBefore(this.JQ.first());
+        cursor.JQ.insertBefore(this.JQ);
         return this.parent.cursorStay;
     };
     _.putCursorLeft = _.putCursorBefore;
@@ -117,7 +117,7 @@ extend(Mrow, Elem, function(_, _super) {
         if (cursor.isLastChild())
             this.JQ.last().prepend(cursor.JQ);
         else
-            cursor.JQ.insertBefore(cursor.next.JQ.first());
+            cursor.JQ.insertBefore(cursor.next.JQ);
         return this.cursorStay;
     };
 
@@ -153,16 +153,18 @@ extend(Msqrt, Mrow, function(_, _super) {
     };
 
     _.insertJQ = function($cursor) {
-        this.JQ = $('<span class="func-symbol-sqrt">' + this.output + '</span>' +
-                    '<span class="func-sqrt"><span>&#8203;</span></span>');
-        if (this.info.css)
-            this.JQ.first().css(this.info.css);
+        this.JQ = $('<span>' +
+                    '<span class="func-symbol-sqrt">' + this.output + '</span>' +
+                    '<span class="func-sqrt"><span>&#8203;</span></span>' +
+                    '</span>');
 
-        var $sym = this.JQ.first();
+        var $sym = this.JQ.find('.func-symbol-sqrt');
+        if (this.info.css)
+            $sym.css(this.info.css);
         $sym.attr('mxId', this.id);
 
         this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.JQ.last());
+        $cursor.prependTo(this.JQ.find('.func-sqrt'));
     };
 
     _.putCursorRight = function(cursor) {
