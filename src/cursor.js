@@ -162,6 +162,41 @@ extend(Cursor, Elem, function(_) {
         }
         prev.putCursorBefore(this);
         prev.remove();
+        // Update SmartMenu
+        var menu;
+        var start = this.parent.firstChild();
+        var search ='';
+        var aggList = [];
+        listEachReversed(start, this, function(e) {
+            if ((e instanceof Mi) || (e instanceof Mspace)) {
+                search = e.input + search;
+            } else {
+                start = e;
+            }
+            if (search.length > 2) {
+                for(var aggSymbol in aggSymbols) {
+                    if (aggSymbol.indexOf(search) > -1) {
+                        // Add symbol to SmartMenu candidate list
+                        input = search;
+                        var aggNode = {
+                             aggSymbol: aggSymbol,
+                             props: aggSymbols[aggSymbol]
+                        }
+                        aggList.push(aggNode);
+                    }
+                }
+             }
+        });
+        if (aggList.length > 0) {
+            // Add list and display SmartMenu
+            menu = new Menu(aggList, input);
+            this.parent.JQ.find('.aC-container').remove();
+            menu.JQ.appendTo(this.parent.JQ);
+            menu.display();
+        } else {
+            if (this.parent.JQ.find('.aC-container'))
+                   this.parent.JQ.find('.aC-container').remove();
+        }
     };
 
     _.delRight = function() {
@@ -202,7 +237,7 @@ extend(Cursor, Elem, function(_) {
 
     _.reduceAgg = function() {
         var agg, input, menu;
-
+        
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
@@ -226,7 +261,7 @@ extend(Cursor, Elem, function(_) {
                         aggList.push(aggNode);
                     }
                 }
-            }
+             }
         });
         
         if (!agg) {
@@ -238,7 +273,7 @@ extend(Cursor, Elem, function(_) {
                 menu.display();
             } else {
                 if (this.parent.JQ.find('.aC-container'))
-                    this.parent.JQ.find('.aC-container').remove();
+                   this.parent.JQ.find('.aC-container').remove();
             }
             return;
         }

@@ -63,6 +63,7 @@ extend(Elem, Node, function(_, _super) {
     
     // Temporary Target Highlighting
     // inplace of SmartMenu display
+    /*
     _.showMenu = function() {
         this.showMenu = true;
         this.JQ.addClass('showMenu');
@@ -72,6 +73,7 @@ extend(Elem, Node, function(_, _super) {
         this.showMenu = false;
         this.JQ.removeClass('showMenu');
     };
+    */
 });
 
 var Mi = function(input, info) {

@@ -1,4 +1,4 @@
-var Menu = function(list, searchterm) {
+var Menu = function(list, searchTerm) {
     this.JQ = $('<div class="aC-container">'+
                 '<div class="aC-results">'+
                 '<span class="search_results">'+
@@ -9,10 +9,14 @@ var Menu = function(list, searchterm) {
     
     // List of found items
     this.list = list;
-    this.searchterm = searchterm;
+    this.searchterm = searchTerm;
 };
 
 extend(Menu, Object, function(_) {
+    _.setContent = function(list, searchTerm) {
+        this.list = list;
+        this.searchterm = searchTerm;
+    };
     _.display = function() {
         var mJQ = this.JQ;
         var symbolcount = 0;
@@ -46,12 +50,9 @@ extend(Menu, Object, function(_) {
             'top': top+'px'
         });
     };
-
     _.hide = function() {
-        this.JQ.css('display', 'none');
-        this.JQ.find('.aC-results').find('span').remove();
+        this.JQ.remove(".aC-container");
     };
-    
     _.marquee = function(search, symbol) {
         var i = symbol.indexOf(search);
         var firstpart = symbol.substr(0, i);
@@ -59,7 +60,7 @@ extend(Menu, Object, function(_) {
         return '<span nowrap>'+firstpart+
                '<span class="resnamematch">'+search+
                '</span>'+lastpart+'</span>';
-    }
+    };
     _.sort = function() {
         var search = this.searchterm;
         this.list.sort(function (a, b) {
@@ -83,5 +84,5 @@ extend(Menu, Object, function(_) {
                 return 0;
             }
         });
-    }
+    };
 });
