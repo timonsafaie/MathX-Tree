@@ -1,14 +1,39 @@
-var Cursor = function() {
+var Cursor = function(root) {
     Elem.call(this, 'cursor', '');
+    this.root = root;
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
+    this.selection = {start: null, end: null};
 };
+
+var moveKeys = [
+    'Left',
+    'Right',
+    'Tab',
+    'Shift-Tab',
+    'Home',
+    'End',
+    'Up',
+    'Down',
+    'Enter',
+    'Click',
+    'Select',
+    'Ctrl-Esc'
+];
 
 extend(Cursor, Elem, function(_) {
     _.beforeInput = function(key) {
-        if (this.prev.highlighted && key !== 'Backspace')
-            this.prev.deHighlight();
-        if (this.next.highlighted && key !== 'Del')
-            this.next.deHighlight();
+        var prev = this.prev;
+        var next = this.next;
+        if (moveKeys.indexOf(key) !== -1) {
+            while (prev.selected) {
+                prev.deSelect();
+                prev = prev.prev;
+            }
+            while (next.selected) {
+                next.deSelect();
+                next = next.next;
+            }
+        }
         if (this.lastAgg && key !== 'Backspace') {
             this.lastAgg.settle();
             delete this.lastAgg;
@@ -147,7 +172,28 @@ extend(Cursor, Elem, function(_) {
             down.prependCursor(this);
     };
 
+    _.delSelection = function() {
+        var prev = this.prev;
+        var next = this.next;
+        var deleted = false;
+        while (prev.selected) {
+            prev = prev.prev;
+            prev.next.remove();
+            deleted = true;
+        }
+        while (next.selected) {
+            next = next.next;
+            next.prev.remove();
+            deleted = true;
+        }
+        if (deleted)
+            this.selection = {start: null, end: null};
+        return deleted;
+    };
+
     _.delLeft = function() {
+        if (this.delSelection())
+            return;
         if (this.lastAgg) {
             this.expandAgg(this.lastAgg);
             delete this.lastAgg;
@@ -156,8 +202,8 @@ extend(Cursor, Elem, function(_) {
         if (this.isFirstChild())
             return;
         var prev = this.prev;
-        if (prev instanceof Mrow && !prev.highlighted) {
-            prev.highlight();
+        if (prev instanceof Mrow && !prev.selected) {
+            prev.select();
             return;
         }
         prev.putCursorBefore(this);
@@ -200,11 +246,13 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.delRight = function() {
+        if (this.delSelection())
+            return;
         if (this.isLastChild())
             return;
         var next = this.next;
-        if (next instanceof Mrow && !next.highlighted) {
-            next.highlight();
+        if (next instanceof Mrow && !next.selected) {
+            next.select();
             return;
         }
         next.putCursorBefore(this);
@@ -212,6 +260,8 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.inputKey = function(key) {
+        this.delSelection();
+
         var atom;
         for (var i = 0; i < atomSymbols.length; i++) {
             var s = atomSymbols[i];
@@ -233,6 +283,100 @@ extend(Cursor, Elem, function(_) {
 
         var node = new atom.Tag(key, atom);
         node.insert(this);
+    };
+
+    _.click = function($elem, offsetX, offsetY) {
+        var mxid = $elem.attr('mxid');
+        var width2 = $elem.width()/2;
+        var elem = allElems[mxid];
+        if (offsetX < width2)
+            elem.putCursorLeft(this);
+        else
+            elem.putCursorRight(this);
+    };
+
+    function select(sel) {
+        if (!sel.start)
+            return;
+        listEach(sel.start, sel.end.next, function(elem) {
+            elem.select();
+        });
+    }
+    function deSelect(sel) {
+        if (!sel.start)
+            return;
+        listEach(sel.start, sel.end.next, function(elem) {
+            elem.deSelect();
+        });
+    }
+
+    _.resetSelection = function() {
+        deSelect(this.selection);
+        this.selection = {start: null, end: null};
+    };
+
+    _.updateSelection = function(startX, startY, endX, endY) {
+        var rec = {left: startX, right: endX, top: startY, bottom: endY};
+
+        if (endX < startX) {
+            rec.left = endX;
+            rec.right = startX;
+        }
+        if (endY < startY) {
+            rec.top = endY;
+            rec.bottom = startY;
+        }
+        if (rec.right - rec.left < 3 && rec.bottom - rec.top < 3)
+            return;
+
+        this.selection = this.getSelection(rec, this.root);
+        if (!this.selection.start)
+            return;
+        select(this.selection);
+
+        if (startX === rec.left) {
+            this.selection.end.putCursorAfter(this);
+        } else {
+            this.selection.start.putCursorBefore(this);
+        }
+    };
+
+    function overlap(rec1, rec2) {
+        return !(rec1.top > rec2.bottom || rec2.top > rec1.bottom ||
+                 rec1.left > rec2.right || rec2.left > rec1.right);
+    }
+
+    _.getSelection = function(rec, node) {
+        var cursor = this;
+        var start = node.children.next;
+        var end = node.children;
+        var elems = [];
+
+        listEach(start, end, function(elem) {
+            if (elem === cursor)
+                return;
+            var $elem = elem.JQ;
+            var offset = $elem.offset();
+            var recElem = {
+                left: offset.left,
+                top: offset.top,
+                right: offset.left + $elem.width(),
+                bottom: offset.top + $elem.height()
+            };
+            if (overlap(rec, recElem))
+                elems.push(elem);
+        });
+
+        if (elems.length === 0)
+            return {start: null, end: null};
+
+        if (elems.length > 1 || !elems[0].hasChild()) {
+            if (node.cursorStay === false)
+                return {start: node, end: node};
+            return {start: elems[0], end: elems[elems.length-1]};
+        }
+
+        return this.getSelection(rec, elems[0]);
     };
 
     _.reduceAgg = function() {

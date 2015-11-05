@@ -50,20 +50,12 @@ var entry = function(JQ) {
             key = 'Ctrl-' + key;
         if (e.shiftKey)
             key = 'Shift-' + key;
-        try {
-            return input.inputControl(key);
-        } catch (e) {
-            console.log(e);
-        }
+        return input.inputControl(key);
     }
 
     function onKeypress(e) {
         var key = String.fromCharCode(e.charCode);
-        try {
-            input.inputKey(key);
-        } catch (e) {
-            console.log(e);
-        }
+        input.inputKey(key);
         return false;
     }
 
@@ -71,7 +63,7 @@ var entry = function(JQ) {
         var startX, startY;
 
         function startSelection(e) {
-            input.resetSelection();
+            input.resetSelection()
             startX = e.pageX;
             startY = e.pageY;
         }

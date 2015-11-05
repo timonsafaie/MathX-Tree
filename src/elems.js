@@ -60,7 +60,17 @@ extend(Elem, Node, function(_, _super) {
         this.settled = true;
         this.JQ.removeClass('unsettled');
     };
-    
+
+    _.select = function() {
+        this.selected = true;
+        this.JQ.addClass('mx-selected');
+    };
+
+    _.deSelect = function() {
+        this.selected = false;
+        this.JQ.removeClass('mx-selected');
+    };
+
     // Temporary Target Highlighting
     // inplace of SmartMenu display
     /*
@@ -128,16 +138,6 @@ extend(Mrow, Elem, function(_, _super) {
         else
             cursor.JQ.insertAfter(cursor.prev.JQ);
         return this.cursorStay;
-    };
-
-    _.highlight = function() {
-        this.highlighted = true;
-        this.JQ.addClass('highlight');
-    };
-
-    _.deHighlight = function() {
-        this.highlighted = false;
-        this.JQ.removeClass('highlight');
     };
 });
 
