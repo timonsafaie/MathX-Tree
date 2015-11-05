@@ -67,7 +67,27 @@ var entry = function(JQ) {
         return false;
     }
 
-    function onMousedown() {
+    function onMousedown(e) {
+        var startX, startY;
+
+        function startSelection(e) {
+            input.resetSelection();
+            startX = e.pageX;
+            startY = e.pageY;
+        }
+
+        function updateSelection(e) {
+            input.updateSelection(startX, startY, e.pageX, e.pageY);
+        }
+
+        function endSelection(e) {
+            $('body').off('mousemove.mathx');
+            $('body').off('mouseup.mathx');
+        }
+
+        startSelection(e);
+        $('body').on('mousemove.mathx', updateSelection);
+        $('body').on('mouseup.mathx', endSelection);
     }
 
     return input;

@@ -79,6 +79,10 @@ function listIsLast(node, head) {
     return node.next === head;
 }
 
+function listIsEmpty(head) {
+    return head.next === head;
+}
+
 var Node = function() {
     List.call(this);
     this.parent = undefined;
@@ -126,6 +130,10 @@ extend(Node, List, function(_) {
 
     _.lastChild = function() {
         return listLast(this.children);
+    };
+
+    _.hasChild = function() {
+        return !listIsEmpty(this.children);
     };
 
     _.isFirstChild = function() {
