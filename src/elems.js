@@ -46,7 +46,7 @@ extend(Elem, Node, function(_, _super) {
 
     _.putCursorAfter = function(cursor) {
         cursor.moveAfter(this);
-        cursor.JQ.insertAfter(this.JQ.last());
+        cursor.JQ.insertAfter(this.JQ);
         return this.parent.cursorStay;
     };
     _.putCursorRight = _.putCursorAfter;
@@ -115,7 +115,7 @@ extend(Mrow, Elem, function(_, _super) {
     _.prependCursor = function(cursor) {
         cursor.moveAfter(this.children);
         if (cursor.isLastChild())
-            this.JQ.last().prepend(cursor.JQ);
+            this.JQ.prepend(cursor.JQ);
         else
             cursor.JQ.insertBefore(cursor.next.JQ);
         return this.cursorStay;
@@ -124,9 +124,9 @@ extend(Mrow, Elem, function(_, _super) {
     _.appendCursor = function(cursor) {
         cursor.moveBefore(this.children);
         if (cursor.isFirstChild())
-            this.JQ.last().prepend(cursor.JQ);
+            this.JQ.prepend(cursor.JQ);
         else
-            cursor.JQ.insertAfter(cursor.prev.JQ.last());
+            cursor.JQ.insertAfter(cursor.prev.JQ);
         return this.cursorStay;
     };
 
@@ -169,7 +169,7 @@ extend(Msqrt, Mrow, function(_, _super) {
 
     _.putCursorRight = function(cursor) {
         cursor.moveAfter(this.children);
-        cursor.JQ.prependTo(this.JQ.last());
+        cursor.JQ.prependTo(this.JQ.find('.func-sqrt'));
     };
 });
 
