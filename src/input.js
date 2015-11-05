@@ -1,4 +1,4 @@
-// FIXME: may merge MathInput with Cursor
+// FIXME: all mathinputs should share one selection
 
 var MathInput = function() {
     this.root = new Mrow('root');
@@ -66,8 +66,20 @@ extend(MathInput, Object, function(_) {
         case 'Enter':
             this._runControl(cursor.reduceAgg, key);
             return false;
+        case 'Ctrl-C':
+            this._runControl(cursor.copySelection, key);
+            return false;
+        case 'Ctrl-V':
+            this._runControl(cursor.pasteSelection, key);
+            return false;
+        case 'Ctrl-X':
+            this._runControl(cursor.cutSelection, key);
+            return false;
         case 'Ctrl-Esc':
-            console.log(this.dumpTree());
+            console.log(this.dumpRoot());
+            return false;
+        case 'Shift-Ctrl-Esc':
+            console.log(this.dumpSavedSelection());
             return false;
         }
     };
@@ -94,23 +106,27 @@ extend(MathInput, Object, function(_) {
         cursor.afterInput('Select');
     };
 
-    _.dumpTree = function() {
-        function _dump(node, level, indent) {
-            var result = indent.repeat(level);
+    function dump(node, level, indent) {
+        var result = indent.repeat(level);
 
-            result += '<' + node.tag + '>';
-            if (node instanceof Mrow) {
-                var start = node.children.next;
-                var end = node.children;
-                result += listFold(start, end, '\n', _dump, level+1, indent);
-                result += indent.repeat(level);
-            } else {
-                result += node.input;
-            }
-            result += '</' + node.tag + '>\n';
-            return result;
+        result += '<' + node.tag + '>';
+        if (node instanceof Mrow) {
+            var start = node.children.next;
+            var end = node.children;
+            result += listFold(start, end, '\n', dump, level+1, indent);
+            result += indent.repeat(level);
+        } else {
+            result += node.input;
         }
+        result += '</' + node.tag + '>\n';
+        return result;
+    }
 
-        return _dump(this.root, 0, '  ');
+    _.dumpRoot = function() {
+        return dump(this.root, 0, '  ');
+    };
+
+    _.dumpSavedSelection = function() {
+        return dump(this.cursor.savedSelection, 0, '  ');
     };
 });

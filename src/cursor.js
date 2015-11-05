@@ -3,9 +3,10 @@ var Cursor = function(root) {
     this.root = root;
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
     this.selection = {start: null, end: null};
+    this.savedSelection = new Mrow('savedSelection');
 };
 
-var moveKeys = [
+var keepSelections = [
     'Left',
     'Right',
     'Tab',
@@ -17,6 +18,8 @@ var moveKeys = [
     'Enter',
     'Click',
     'Select',
+    'Ctrl-C',
+    'Ctrl-X',
     'Ctrl-Esc'
 ];
 
@@ -24,7 +27,7 @@ extend(Cursor, Elem, function(_) {
     _.beforeInput = function(key) {
         var prev = this.prev;
         var next = this.next;
-        if (moveKeys.indexOf(key) !== -1) {
+        if (keepSelections.indexOf(key) !== -1) {
             while (prev.selected) {
                 prev.deSelect();
                 prev = prev.prev;
@@ -377,6 +380,42 @@ extend(Cursor, Elem, function(_) {
         }
 
         return this.getSelection(rec, elems[0]);
+    };
+
+    _.copySelection = function() {
+        this.savedSelection = new Mrow('savedSelection');
+
+        if (!this.selection.start)
+            return;
+
+        var savedSelection = this.savedSelection;
+        var start = this.selection.start;
+        var end = this.selection.end.next;
+
+        listEach(start, end, function(elem) {
+            var copy = elem.deepCopy();
+            copy.addBefore(savedSelection.children);
+        });
+    };
+
+    _.pasteSelection = function() {
+        if (!this.savedSelection.hasChild())
+            return;
+
+        var cursor = this;
+        var start = this.savedSelection.children.next;
+        var end = this.savedSelection.children;
+
+        listEach(start, end, function(elem) {
+            var copy = elem.deepCopy();
+            copy.addBefore(cursor);
+            copy.JQ.insertBefore(cursor.JQ);
+        });
+    };
+
+    _.cutSelection = function() {
+        this.copySelection();
+        this.delSelection();
     };
 
     _.reduceAgg = function() {

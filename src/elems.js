@@ -37,6 +37,14 @@ extend(Elem, Node, function(_, _super) {
         this.JQ.remove();
     };
 
+    _.copy = function() {
+        var elem = new Elem(this.tag, this.input, this.info);
+        elem.JQ = $('<span class="mX">' + elem.output + '</span>');
+        elem.JQ.attr('mxId', elem.id);
+        return elem;
+    };
+    _.deepCopy = _.copy;
+
     _.putCursorBefore = function(cursor) {
         cursor.moveBefore(this);
         cursor.JQ.insertBefore(this.JQ);
