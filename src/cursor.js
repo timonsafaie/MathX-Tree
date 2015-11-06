@@ -393,7 +393,7 @@ extend(Cursor, Elem, function(_) {
         var end = this.selection.end.next;
 
         listEach(start, end, function(elem) {
-            var copy = elem.deepCopy();
+            var copy = elem.copy();
             copy.addBefore(savedSelection.children);
         });
     };
@@ -407,7 +407,7 @@ extend(Cursor, Elem, function(_) {
         var end = this.savedSelection.children;
 
         listEach(start, end, function(elem) {
-            var copy = elem.deepCopy();
+            var copy = elem.copy();
             copy.addBefore(cursor);
             copy.JQ.insertBefore(cursor.JQ);
         });
