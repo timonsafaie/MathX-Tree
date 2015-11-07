@@ -84,10 +84,10 @@ extend(MathInput, Object, function(_) {
         }
     };
 
-    _.click = function($elem, offsetX, offsetY) {
+    _.click = function($elem, pageX, pageY) {
         cursor = this.cursor;
         cursor.beforeInput('Click');
-        cursor.click($elem, offsetX, offsetY);
+        cursor.click($elem, pageX, pageY);
         cursor.afterInput('Click');
         return false;
     };

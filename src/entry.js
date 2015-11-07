@@ -9,7 +9,7 @@ var entry = function(JQ) {
         mousedown: onMousedown,
     });
     $('body').on('click', '[mxId]', function (e) {
-        return input.click($(e.currentTarget), e.offsetX, e.offsetY);
+        return input.click($(e.currentTarget), e.pageX, e.pageY);
     });
 
     var KEY_VALUES = {

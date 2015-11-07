@@ -288,14 +288,18 @@ extend(Cursor, Elem, function(_) {
         node.insert(this);
     };
 
-    _.click = function($elem, offsetX, offsetY) {
+    _.click = function($elem, pageX, pageY) {
         var mxid = $elem.attr('mxid');
-        var width2 = $elem.width()/2;
         var elem = allElems[mxid];
-        if (offsetX < width2)
-            elem.putCursorLeft(this);
-        else
-            elem.putCursorRight(this);
+
+        if (!elem.putCursorBefore(this))
+            this.moveLeft();
+        var leftOff = pageX - this.JQ.offset().left;
+
+        this.moveRight();
+        var rightOff = this.JQ.offset().left - pageX;
+        if (leftOff < rightOff)
+            this.moveLeft();
     };
 
     function select(sel) {

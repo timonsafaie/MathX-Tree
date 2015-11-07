@@ -39,14 +39,12 @@ extend(Elem, Node, function(_, _super) {
         cursor.JQ.insertBefore(this.JQ);
         return this.parent.cursorStay;
     };
-    _.putCursorLeft = _.putCursorBefore;
 
     _.putCursorAfter = function(cursor) {
         cursor.moveAfter(this);
         cursor.JQ.insertAfter(this.JQ);
         return this.parent.cursorStay;
     };
-    _.putCursorRight = _.putCursorAfter;
 
     _.unsettle = function() {
         this.settled = false;
@@ -161,21 +159,16 @@ var Msqrt = function(input, info) {
                 '<span class="func-symbol-sqrt">' + this.output + '</span>' +
                 '<span class="func-sqrt"><span>&#8203;</span></span>' +
                 '</span>');
+    this.JQ.attr('mxId', this.id);
 
     var $sym = this.JQ.find('.func-symbol-sqrt');
     if (this.info.css)
         $sym.css(this.info.css);
-    $sym.attr('mxId', this.id);
 
     this.childrenJQ = this.JQ.find('.func-sqrt');
 };
 
-extend(Msqrt, Mrow, function(_, _super) {
-    _.putCursorRight = function(cursor) {
-        cursor.moveAfter(this.children);
-        cursor.JQ.prependTo(this.childrenJQ);
-    };
-});
+extend(Msqrt, Mrow);
 
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
@@ -308,7 +301,7 @@ var Munder = function(input, info) {
                 '<span style="display:block;width:0">&nbsp;</span>' +
                 '</span>');
     var $sym = this.JQ.find('.munder-sym');
-    if (this.info.css)
+    if (this.info && this.info.css)
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
@@ -317,12 +310,30 @@ var Munder = function(input, info) {
 
 extend(Munder, Mrow);
 
+var Mover = function(input, info) {
+    Mrow.call(this, 'munder', input, info);
+
+    this.JQ = $('<span class="mover">' +
+                '<span class="mover-sym">' + this.output + '</span>' +
+                '<span class="mover-row"><span>&#8203;</span></span>' +
+                '<span style="display:block;width:0">&nbsp;</span>' +
+                '</span>');
+    var $sym = this.JQ.find('.mover-sym');
+    if (this.info && this.info.css)
+        $sym.css(this.info.css);
+
+    this.JQ.attr('mxId', this.id);
+    this.childrenJQ = this.JQ.find('.mover-row');
+};
+
+extend(Mover, Mrow);
+
 var Munderover = function(input, info) {
     Mrow.call(this, 'munderover', input, info);
     this.cursorStay = false;
 
-    this.under = new Mrow('under');
-    this.over = new Mrow('over');
+    this.under = new Munder();
+    this.over = new Mover();
     this.under.addBefore(this.children);
     this.over.addBefore(this.children);
 
@@ -377,8 +388,8 @@ var Mfrac = function(input, info) {
     Mrow.call(this, 'mfrac', input, info);
     this.cursorStay = false;
 
-    this.over = new Mrow('over');
-    this.under = new Mrow('under');
+    this.over = new Mover();
+    this.under = new Munder();
     this.over.addBefore(this.children);
     this.under.addBefore(this.children);
 
@@ -391,6 +402,7 @@ var Mfrac = function(input, info) {
     this.under.JQ = this.JQ.find('.dividend');
 
     this.JQ.css('font-size', '.9em');
+    this.JQ.attr('mxId', this.id);
 };
 
 extend(Mfrac, Mrow, function(_, _super) {
@@ -448,15 +460,6 @@ extend(Mopen, Elem, function(_, _super) {
         this.menclose = new Menclose(this);
         this.menclose.insert(cursor);
     };
-
-    _.putCursorLeft = function(cursor) {
-        this.menclose.putCursorBefore(cursor);
-    };
-
-    _.putCursorRight = function(cursor) {
-        this.menclose.putCursorBefore(cursor);
-        cursor.moveRight();
-    };
 });
 
 var Mclose = function(input, info) {
@@ -473,24 +476,6 @@ extend(Mclose, Elem, function(_, _super) {
         } else {
             _super.insert.call(this, cursor);
         }
-    };
-
-    _.putCursorLeft = function(cursor) {
-        var menclose = this.parent;
-        if (menclose instanceof Menclose) {
-            menclose.putCursorRight(cursor);
-            cursor.moveLeft();
-        } else {
-            _super.putCursorLeft.call(this, cursor);
-        }
-    };
-
-    _.putCursorRight = function(cursor) {
-        var menclose = this.parent;
-        if (menclose instanceof Menclose)
-            menclose.putCursorRight(cursor);
-        else
-            _super.putCursorRight.call(this, cursor);
     };
 });
 
