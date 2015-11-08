@@ -1,30 +1,54 @@
+var ClipBoard = function() {
+    Mrow.call(this, 'savedSelection');
+};
+
+extend(ClipBoard, Mrow, function(_) {
+    _.reset = function() {
+        this.children = new List();
+        listInitHead(this.children);
+    };
+});
+
+var clipBoard = new ClipBoard();
+
 var Cursor = function(root) {
     Elem.call(this, 'cursor', '');
     this.root = root;
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
     this.selection = {start: null, end: null};
-    this.savedSelection = new Mrow('savedSelection');
 };
 
-var keepSelections = [
-    'Left',
-    'Right',
-    'Tab',
-    'Shift-Tab',
-    'Home',
-    'End',
-    'Up',
-    'Down',
-    'Enter',
-    'Click',
-    'Select',
-    'Ctrl-C',
-    'Ctrl-X',
-    'Ctrl-Esc'
-];
-
 extend(Cursor, Elem, function(_) {
+    var keepSelections = [
+        'Left',
+        'Right',
+        'Tab',
+        'Shift-Tab',
+        'Home',
+        'End',
+        'Up',
+        'Down',
+        'Enter',
+        'Click',
+        'Select',
+        'Ctrl-C',
+        'Ctrl-X',
+        'Ctrl-Esc'
+    ];
+
+    _.show = function() {
+        this.JQ.parent().addClass('focus');
+        this.JQ.removeClass('invisible-cursor');
+    };
+
+    _.hide = function() {
+        this.JQ.addClass('invisible-cursor');
+        this.JQ.parent().removeClass('focus');
+    };
+
     _.beforeInput = function(key) {
+        this.hide();
+
         var prev = this.prev;
         var next = this.next;
         if (keepSelections.indexOf(key) !== -1) {
@@ -41,7 +65,6 @@ extend(Cursor, Elem, function(_) {
             this.lastAgg.settle();
             delete this.lastAgg;
         }
-        this.JQ.parent().removeClass('focus');
 
         var menclose = this.parent.parent;
         if (menclose instanceof Menclose && !menclose.settled)
@@ -53,8 +76,8 @@ extend(Cursor, Elem, function(_) {
     _.afterInput = function(key) {
         if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
             this.lastMenclose.settle();
-        this.JQ.parent().addClass('focus');
         this.bubble('resize');
+        this.show();
     };
 
     _.moveLeft = function() {
@@ -387,28 +410,25 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.copySelection = function() {
-        this.savedSelection = new Mrow('savedSelection');
-
         if (!this.selection.start)
             return;
 
-        var savedSelection = this.savedSelection;
+        clipBoard.reset();
         var start = this.selection.start;
         var end = this.selection.end.next;
-
         listEach(start, end, function(elem) {
             var copy = elem.copy();
-            copy.addBefore(savedSelection.children);
+            copy.addBefore(clipBoard.children);
         });
     };
 
     _.pasteSelection = function() {
-        if (!this.savedSelection.hasChild())
+        if (!clipBoard.hasChild())
             return;
 
         var cursor = this;
-        var start = this.savedSelection.children.next;
-        var end = this.savedSelection.children;
+        var start = clipBoard.children.next;
+        var end = clipBoard.children;
 
         listEach(start, end, function(elem) {
             var copy = elem.copy();

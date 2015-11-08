@@ -1,5 +1,3 @@
-// FIXME: all mathinputs should share one selection
-
 var MathInput = function() {
     this.root = new Mrow('root');
     this.root.isRoot = true;
@@ -8,7 +6,7 @@ var MathInput = function() {
     this.cursor = new Cursor(this.root);
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
-    this.cursor.afterInput();
+    this.cursor.hide();
 };
 
 extend(MathInput, Object, function(_) {
@@ -85,6 +83,10 @@ extend(MathInput, Object, function(_) {
     };
 
     _.click = function($elem, pageX, pageY) {
+        var mxid = $elem.attr('mxid');
+        var elem = allElems[mxid];
+        if (!this.root.isAncestor(elem))
+            return false;
         cursor = this.cursor;
         cursor.beforeInput('Click');
         cursor.click($elem, pageX, pageY);

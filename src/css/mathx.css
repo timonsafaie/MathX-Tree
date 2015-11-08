@@ -65,6 +65,9 @@
   display: -moz-inline-box;
   display: inline-block;
 }
+.invisible-cursor {
+  border-left: transparent;
+}
 
 .mm-container {
   padding:4px;

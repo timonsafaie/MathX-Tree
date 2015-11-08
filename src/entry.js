@@ -6,8 +6,15 @@ var entry = function(JQ) {
     JQ.bind({
         keydown: onKeydown,
         keypress: onKeypress,
-        mousedown: onMousedown,
+        mousedown: onMousedown
     });
+    JQ.focus(function() {
+        input.cursor.show();
+    });
+    JQ.blur(function() {
+        input.cursor.hide();
+    });
+
     $('body').on('click', '[mxId]', function (e) {
         return input.click($(e.currentTarget), e.pageX, e.pageY);
     });
