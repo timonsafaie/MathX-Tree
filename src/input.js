@@ -84,9 +84,9 @@ extend(MathInput, Object, function(_) {
 
     _.click = function($elem, pageX, pageY) {
         var mxid = $elem.attr('mxid');
+        if (!mxid)
+            return;
         var elem = allElems[mxid];
-        if (!this.root.isAncestor(elem))
-            return false;
         cursor = this.cursor;
         cursor.beforeInput('Click');
         cursor.click($elem, pageX, pageY);

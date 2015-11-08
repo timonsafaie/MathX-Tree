@@ -14,9 +14,8 @@ var entry = function(JQ) {
     JQ.blur(function() {
         input.cursor.hide();
     });
-
-    $('body').on('click', '[mxId]', function (e) {
-        return input.click($(e.currentTarget), e.pageX, e.pageY);
+    input.root.JQ.click(function(e) {
+        input.click($(e.target), e.pageX, e.pageY);
     });
 
     var KEY_VALUES = {
