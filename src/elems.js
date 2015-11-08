@@ -106,6 +106,14 @@ var Mspace = function(input, info) {
 
 extend(Mspace, Elem);
 
+function copyChildren(src, dst) {
+    listEach(src.children.next, src.children, function(elem) {
+        var cp = elem.copy();
+        cp.addBefore(dst.children);
+        cp.JQ.appendTo(dst.children.JQ);
+    });
+}
+
 var Mrow = function() {
     Elem.apply(this, arguments);
     this.cursorStay = true;
@@ -116,20 +124,14 @@ extend(Mrow, Elem, function(_, _super) {
         this.addBefore(cursor);
         cursor.moveAfter(this.children);
         this.JQ.insertBefore(cursor.JQ);
-        cursor.JQ.prependTo(this.childrenJQ);
+        cursor.JQ.prependTo(this.children.JQ);
         if (this.repose)
             this.repose();
     };
 
     _.copy = function() {
         var copy = new this.constructor(this.input, this.info);
-        var start = this.children.next;
-        var end = this.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.children);
-            cp.JQ.appendTo(copy.childrenJQ);
-        });
+        copyChildren(this, copy);
         return copy;
     };
 
@@ -165,7 +167,7 @@ var Msqrt = function(input, info) {
     if (this.info.css)
         $sym.css(this.info.css);
 
-    this.childrenJQ = this.JQ.find('.func-sqrt');
+    this.children.JQ = this.JQ.find('.func-sqrt');
 };
 
 extend(Msqrt, Mrow);
@@ -176,7 +178,7 @@ var Msub = function(input, info) {
     this.JQ = $('<sub class="und-holder"><span>&#8203;</span></sub>');
     this.JQ.css({verticalAlign: '-0.325em', fontSize: '0.72em'});
 
-    this.childrenJQ = this.JQ;
+    this.children.JQ = this.JQ;
 };
 
 extend(Msub, Mrow, function(_, _super) {
@@ -209,7 +211,7 @@ var Msup = function(input, info) {
     this.JQ = $('<sup class="exp-holder"><span>&#8203;</span></sup>');
     this.JQ.css({verticalAlign: '0.625em', fontSize: '0.72em'});
 
-    this.childrenJQ = this.JQ;
+    this.children.JQ = this.JQ;
 };
 
 extend(Msup, Mrow, function(_, _super) {
@@ -250,8 +252,8 @@ var Msubsup = function(input, info) {
                 '<sub class="func-sub"><span>&#8203;</span></sub>' +
                 '<sup class="func-sup"><span>&#8203;</span></sup>' +
                 '</span>');
-    this.sub.JQ = this.JQ.find('.func-sub');
-    this.sup.JQ = this.JQ.find('.func-sup');
+    this.sub.children.JQ = this.JQ.find('.func-sub');
+    this.sup.children.JQ = this.JQ.find('.func-sup');
 
     var $sym = this.JQ.find('.func-symbol-subsup');
     $sym.css('font-size', '2em');
@@ -266,28 +268,13 @@ extend(Msubsup, Mrow, function(_, _super) {
         this.addBefore(cursor);
         cursor.moveAfter(this.sub.children);
         this.JQ.insertBefore(cursor.JQ);
-        cursor.JQ.prependTo(this.sub.JQ);
+        cursor.JQ.prependTo(this.sub.children.JQ);
     };
 
     _.copy = function(cursor) {
         var copy = new Msubsup(this.input, this.info);
-
-        var start = this.sub.children.next;
-        var end = this.sub.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.sub.children);
-            cp.JQ.appendTo(copy.sub.JQ);
-        });
-
-        start = this.sup.children.next;
-        end = this.sup.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.sup.children);
-            cp.JQ.appendTo(copy.sup.JQ);
-        });
-
+        copyChildren(this.sub, copy.sub);
+        copyChildren(this.sup, copy.sup);
         return copy;
     };
 });
@@ -305,7 +292,7 @@ var Munder = function(input, info) {
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
-    this.childrenJQ = this.JQ.find('.munder-row');
+    this.children.JQ = this.JQ.find('.munder-row');
 };
 
 extend(Munder, Mrow);
@@ -323,7 +310,7 @@ var Mover = function(input, info) {
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
-    this.childrenJQ = this.JQ.find('.mover-row');
+    this.children.JQ = this.JQ.find('.mover-row');
 };
 
 extend(Mover, Mrow);
@@ -342,8 +329,8 @@ var Munderover = function(input, info) {
                 '<span class="func-symbol">' + this.output + '</span>' +
                 '<span class="func-under"><span>&#8203;</span></span>' +
                 '</span>');
-    this.under.JQ = this.JQ.find('.func-under');
-    this.over.JQ = this.JQ.find('.func-over');
+    this.under.children.JQ = this.JQ.find('.func-under');
+    this.over.children.JQ = this.JQ.find('.func-over');
 
     var $sym = this.JQ.find('.func-symbol');
     $sym.css('font-size', '1.5em');
@@ -358,28 +345,13 @@ extend(Munderover, Mrow, function(_, _super) {
         this.addBefore(cursor);
         cursor.moveAfter(this.under.children);
         this.JQ.insertBefore(cursor.JQ);
-        cursor.JQ.prependTo(this.under.JQ);
+        cursor.JQ.prependTo(this.under.children.JQ);
     };
 
     _.copy = function() {
         var copy = new Munderover(this.input, this.info);
-
-        var start = this.under.children.next;
-        var end = this.under.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.under.children);
-            cp.JQ.appendTo(copy.under.JQ);
-        });
-
-        start = this.over.children.next;
-        end = this.over.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.over.children);
-            cp.JQ.appendTo(copy.over.JQ);
-        });
-
+        copyChildren(this.under, copy.under);
+        copyChildren(this.over, copy.over);
         return copy;
     };
 });
@@ -398,8 +370,8 @@ var Mfrac = function(input, info) {
                 '<span class="dividend"><span>&#8203;</span></span>' +
                 '<span style="display:block;width:0">&nbsp;</span>' +
                 '</span>');
-    this.over.JQ = this.JQ.find('.divisor');
-    this.under.JQ = this.JQ.find('.dividend');
+    this.over.children.JQ = this.JQ.find('.divisor');
+    this.under.children.JQ = this.JQ.find('.dividend');
 
     this.JQ.css('font-size', '.9em');
     this.JQ.attr('mxId', this.id);
@@ -410,7 +382,7 @@ extend(Mfrac, Mrow, function(_, _super) {
         this.addBefore(cursor);
         cursor.moveAfter(this.over.children);
         this.JQ.insertBefore(cursor.JQ);
-        cursor.JQ.prependTo(this.over.JQ);
+        cursor.JQ.prependTo(this.over.children.JQ);
 
         var hasDivisor = false;
         while (true) {
@@ -419,46 +391,19 @@ extend(Mfrac, Mrow, function(_, _super) {
                 break;
             hasDivisor = true;
             prev.moveAfter(this.over.children);
-            prev.JQ.prependTo(this.over.JQ);
+            prev.JQ.prependTo(this.over.children.JQ);
         }
         if (hasDivisor) {
             cursor.moveAfter(this.under.children);
-            cursor.JQ.prependTo(this.under.JQ);
+            cursor.JQ.prependTo(this.under.children.JQ);
         }
     };
 
     _.copy = function() {
         var copy = new Mfrac(this.input, this.info);
-
-        var start = this.under.children.next;
-        var end = this.under.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.under.children);
-            cp.JQ.appendTo(copy.under.JQ);
-        });
-
-        start = this.over.children.next;
-        end = this.over.children;
-        listEach(start, end, function(elem) {
-            var cp = elem.copy();
-            cp.addBefore(copy.over.children);
-            cp.JQ.appendTo(copy.over.JQ);
-        });
-
+        copyChildren(this.under, copy.under);
+        copyChildren(this.over, copy.over);
         return copy;
-    };
-});
-
-var Mopen = function(input, info) {
-    Elem.call(this, 'mopen', input, info);
-    this.closeInfo = info.closeInfo;
-};
-
-extend(Mopen, Elem, function(_, _super) {
-    _.insert = function(cursor) {
-        this.menclose = new Menclose(this);
-        this.menclose.insert(cursor);
     };
 });
 
@@ -479,47 +424,49 @@ extend(Mclose, Elem, function(_, _super) {
     };
 });
 
-var Menclose = function(mopen) {
-    Mrow.call(this, 'menclose');
-    this.mopen = mopen;
+var Menclose = function(input, info) {
+    Mrow.call(this, 'menclose', input, info);
     this.settled = false;
     this.cursorStay = false;
+
+    this.mopen = new Elem('mopen', input, info);
+    this.mclose = new Mclose(info.closeInfo.input, info.closeInfo);
+    this.menclosed = new Mrow('menclosed');
+
+    this.mopen.addBefore(this.children);
+    this.menclosed.addBefore(this.children);
+    this.mclose.addBefore(this.children);
+
+    this.JQ = $('<span>' +
+                '<span class="mX mopen">' + this.mopen.output + '</span>' +
+                '<span class="brack-holder menclosed"></span>' +
+                '<span class="mX mclose unsettled">' + this.mclose.output + '</span>' +
+                '</span>');
+    this.mopen.JQ = this.JQ.find('.mopen');
+    this.menclosed.children.JQ = this.JQ.find('.menclosed');
+    this.mclose.JQ = this.JQ.find('.mclose');
+
+    this.mopen.JQ.attr('mxId', this.mopen.id);
+    this.mclose.JQ.attr('mxId', this.mclose.id);
 };
 
 extend(Menclose, Mrow, function(_, _super) {
     _.insert = function(cursor) {
-        var ci = this.mopen.closeInfo;
-        this.mclose = new Mclose(ci.input, ci);
-        this.mrow = new Mrow('menclosed');
-
-        this.mopen.addBefore(this.children);
-        this.mrow.addBefore(this.children);
-        this.mclose.addBefore(this.children);
-
         this.addBefore(cursor);
-        cursor.moveAfter(this.mrow.children);
-        this.insertJQ(cursor.JQ);
+        cursor.moveAfter(this.menclosed.children);
+        this.JQ.insertBefore(cursor.JQ);
+        cursor.JQ.prependTo(this.menclosed.children.JQ);
     };
 
-    _.insertJQ = function($cursor) {
-        this.JQ = $(
-            '<span class="mX mopen">' + this.mopen.output + '</span>' +
-            '<span class="brack-holder"></span>' +
-            '<span class="mX mclose unsettled">' + this.mclose.output + '</span>'
-        );
-        this.mopen.JQ = this.JQ.eq(0);
-        this.mrow.JQ = this.JQ.eq(1);
-        this.mclose.JQ = this.JQ.eq(2);
-
-        this.mopen.JQ.attr('mxId', this.mopen.id);
-        this.mclose.JQ.attr('mxId', this.mclose.id);
-
-        this.JQ.insertBefore($cursor);
-        $cursor.prependTo(this.mrow.JQ);
+    _.copy = function() {
+        var copy = new Menclose(this.input, this.info);
+        copy.resetMclose(this.mclose);
+        copyChildren(this.menclosed, copy.menclosed);
+        return copy;
     };
 
     _.resize = function() {
-        var scale = this.mrow.JQ.outerHeight()/+this.mrow.JQ.css('fontSize').slice(0,-2);
+        var scale = this.menclosed.JQ.outerHeight()/+this.menclosed.JQ.css('fontSize').slice(0,-2);
         var transform = 'scale(1, ' + scale + ')';
         this.mopen.JQ.css({transform: transform});
         this.mclose.JQ.css({transform: transform});
