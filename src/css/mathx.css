@@ -304,6 +304,7 @@
   font-family: "Symbola", Times New Roman, serif;
   white-space: nowrap;
   line-height: 33px;
+  cursor: pointer;
 }
 .search_results.arrow_sm .symbol {
   font-size:17px;

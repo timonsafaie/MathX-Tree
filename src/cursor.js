@@ -235,34 +235,45 @@ extend(Cursor, Elem, function(_) {
         prev.putCursorBefore(this);
         prev.remove();
         // Update SmartMenu
-        var menu;
         var start = this.parent.firstChild();
         var search ='';
+        var target = '';
         var aggList = [];
         listEachReversed(start, this, function(e) {
             if ((e instanceof Mi) || (e instanceof Mspace)) {
-                search = e.input + search;
+                if (e.input.length == 1) 
+                    search = e.input + search;
+                else
+                    start = e;
             } else {
                 start = e;
             }
-            if (search.length > 2) {
+            if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols) {
                     if (aggSymbol.indexOf(search) > -1) {
                         // Add symbol to SmartMenu candidate list
-                        input = search;
-                        var aggNode = {
-                             aggSymbol: aggSymbol,
-                             props: aggSymbols[aggSymbol]
-                        }
-                        aggList.push(aggNode);
+                        target = search;
                     }
                 }
              }
         });
+        if (target) {
+            for (var aggSymbol in aggSymbols) {
+                if (aggSymbol.indexOf(target) > -1) {
+                    var aggNode = {
+                         aggSymbol: aggSymbol,
+                         props: aggSymbols[aggSymbol]
+                    }
+                    aggList.push(aggNode);
+                }
+            }
+        }
         if (aggList.length > 0) {
             // Add list and display SmartMenu
-            menu = new Menu(aggList, input);
-            this.parent.JQ.find('.aC-container').remove();
+            if (this.parent.JQ.find('.aC-container')) {
+                this.parent.JQ.find('.aC-container').remove();
+            }
+            var menu = new Menu(aggList, target);
             menu.JQ.appendTo(this.parent.JQ);
             menu.display();
         } else {
@@ -448,6 +459,7 @@ extend(Cursor, Elem, function(_) {
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
+        var target ='';
         var aggList = [];
         listEachReversed(start, this, function(e) {
             search = e.input + search;
@@ -456,11 +468,20 @@ extend(Cursor, Elem, function(_) {
                 input = search;
                 start = e;
             } else if (search.length > 2) {
-                for(var aggSymbol in aggSymbols) {
+                for(var aggSymbol in aggSymbols)
                     if (aggSymbol.indexOf(search) > -1) {
-                    //if (aggSymbol.substr(0, search.length) == search) {
-                        // Add symbol to SmartMenu candidate list
-                        input = search;
+                        target = search;
+                        start = e;
+                    }
+             }
+        });
+        
+        if (!agg) {
+            if (target) { 
+                var trimTarget = target.trim();
+                for(var aggSymbol in aggSymbols) {
+                    if (aggSymbol.indexOf(trimTarget) > -1) {
+                        input = target;
                         var aggNode = {
                              aggSymbol: aggSymbol,
                              props: aggSymbols[aggSymbol]
@@ -468,16 +489,36 @@ extend(Cursor, Elem, function(_) {
                         aggList.push(aggNode);
                     }
                 }
-             }
-        });
-        
-        if (!agg) {
-            if (aggList.length > 0) {
-                // Add list and display SmartMenu
-                menu = new Menu(aggList, input);
-                this.parent.JQ.find('.aC-container').remove();
-                menu.JQ.appendTo(this.parent.JQ);
-                menu.display();
+                // Single SmartMenu item should be autoinserted
+                if (aggList.length == 1) {
+                    // Agg found
+                    agg = aggSymbols[aggList[0].aggSymbol];
+                    input = target;
+                    
+                    // Convert to Agg
+                    listEachReversed(start, this, function(e) {
+                        e.remove();
+                    });
+                    
+                    // Insert Agg into textbox
+                    var node = new agg.Tag(input, agg);
+                    node.insert(this);
+                    this.lastAgg = node;
+                    this.lastAgg.unsettle();
+                    
+                    // Hide SmartMenu
+                    if (this.parent.JQ.find('.aC-container'))
+                       this.parent.JQ.find('.aC-container').remove();
+                } else {
+                    // Add list and display SmartMenu
+                    menu = new Menu(aggList, input);
+                    this.parent.JQ.find('.aC-container').remove();
+                    menu.JQ.appendTo(this.parent.JQ);
+                    menu.display();
+                    // Fix location above cursor
+                    menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+                    menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+                }
             } else {
                 if (this.parent.JQ.find('.aC-container'))
                    this.parent.JQ.find('.aC-container').remove();
@@ -493,6 +534,11 @@ extend(Cursor, Elem, function(_) {
         node.insert(this);
         this.lastAgg = node;
         this.lastAgg.unsettle();
+
+
+        // Hide SmartMenu
+        if (this.parent.JQ.find('.aC-container'))
+           this.parent.JQ.find('.aC-container').remove();
     };
 
     _.expandAgg = function(agg, before) {
@@ -501,6 +547,8 @@ extend(Cursor, Elem, function(_) {
 
         var cursor = this;
         var first = null;
+        
+        /*
         var aggList = [];
         // Reengage search of the SmartMenu
         for(var aggSymbol in aggSymbols) {
@@ -519,6 +567,7 @@ extend(Cursor, Elem, function(_) {
                 console.log(a.aggSymbol);
             });
         }
+        */
         
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);

@@ -30,7 +30,7 @@ function importSymbol(sym) {
         res += ', css: ' + JSON.stringify(css);
     res += ', family: "'+sym.family+'"';
     res += ', category: "'+sym.category+'"';
-    res += ', rank: '+sym.symbolrank;
+    res += ', rank: "'+sym.symbolrank+'"';
     res += '},\n';
     fs.appendFileSync(symjs, res);
 }
