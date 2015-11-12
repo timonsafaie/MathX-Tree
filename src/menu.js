@@ -50,8 +50,13 @@ extend(Menu, Object, function(_) {
             'top': top+'px'
         });
     };
-    _.hide = function() {
-        this.JQ.remove(".aC-container");
+    _.click = function() {
+        var s = "";
+        this.JQ.find(".symbol").click(function() {
+            s = $(this).attr('title');
+        });
+        var node = new aggSymbols.Tag(key, s);
+        node.insert(this);
     };
     _.marquee = function(search, symbol) {
         var i = symbol.indexOf(search);
