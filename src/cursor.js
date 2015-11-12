@@ -276,6 +276,26 @@ extend(Cursor, Elem, function(_) {
             var menu = new Menu(aggList, target);
             menu.JQ.appendTo(this.parent.JQ);
             menu.display();
+            
+            // Fix location above cursor
+            menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+            menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+
+            // Setup Clicking
+            var clickedSymbol = "";
+            var c = this;
+            menu.JQ.find('.symbol').click(function(){
+                clickedSymbol = aggSymbols[$(this).attr('title')];
+
+                listEachReversed(start, c, function(e) {
+                    e.remove();
+                });
+
+                var node = new clickedSymbol.Tag('click', clickedSymbol);
+                node.insert(c);
+
+                c.parent.JQ.find('.aC-container').remove();
+            });
         } else {
             if (this.parent.JQ.find('.aC-container'))
                    this.parent.JQ.find('.aC-container').remove();
@@ -491,6 +511,7 @@ extend(Cursor, Elem, function(_) {
                 }
                 // Single SmartMenu item should be autoinserted
                 if (aggList.length == 1) {
+                    /*
                     // Agg found
                     agg = aggSymbols[aggList[0].aggSymbol];
                     input = target;
@@ -505,7 +526,7 @@ extend(Cursor, Elem, function(_) {
                     node.insert(this);
                     this.lastAgg = node;
                     this.lastAgg.unsettle();
-                    
+                    */
                     // Hide SmartMenu
                     if (this.parent.JQ.find('.aC-container'))
                        this.parent.JQ.find('.aC-container').remove();
@@ -515,9 +536,28 @@ extend(Cursor, Elem, function(_) {
                     this.parent.JQ.find('.aC-container').remove();
                     menu.JQ.appendTo(this.parent.JQ);
                     menu.display();
+                    
                     // Fix location above cursor
                     menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
                     menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+                    
+                    // Setup Clicking
+                    var clickedSymbol = "";
+                    var c = this;
+                    menu.JQ.find('.symbol').click(function(){
+                        clickedSymbol = aggSymbols[$(this).attr('title')];
+                        
+                        listEachReversed(start, c, function(e) {
+                            e.remove();
+                        });
+                        
+                        
+                        c.parent.JQ.find('.aC-container').remove();
+
+                        var node = new clickedSymbol.Tag('click', clickedSymbol);
+                        node.insert(c);
+                        
+                    });
                 }
             } else {
                 if (this.parent.JQ.find('.aC-container'))
@@ -534,7 +574,6 @@ extend(Cursor, Elem, function(_) {
         node.insert(this);
         this.lastAgg = node;
         this.lastAgg.unsettle();
-
 
         // Hide SmartMenu
         if (this.parent.JQ.find('.aC-container'))
