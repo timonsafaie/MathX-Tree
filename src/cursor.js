@@ -287,7 +287,11 @@ extend(Cursor, Elem, function(_) {
             
             // Fix location above cursor
             menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-            menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+            var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
+            if (mode == 'right') {
+                leftOffset -= (menu.JQ.find('.search_results').width()-(3*40));
+            }
+            menu.JQ.css('left', leftOffset);
 
             // Setup Clicking
             var clickedSymbol = "";
@@ -587,7 +591,11 @@ extend(Cursor, Elem, function(_) {
 
                 // Fix location above cursor
                 menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-                menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+                var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
+                if (mode == 'right') {
+                    leftOffset -= (menu.JQ.find('.search_results').width()-(3*40));
+                }
+                menu.JQ.css('left', leftOffset);
                 /*
                 console.log("cursor offset: "+this.JQ.offset().left+
                             " textbox offset: "+this.parent.JQ.offset().left+

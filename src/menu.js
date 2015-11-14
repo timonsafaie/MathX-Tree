@@ -122,13 +122,9 @@ extend(Menu, Object, function(_) {
                                               '</span>'+after+'</span>');
                     if (!wraparound) {//(firstposition > 0)
                         mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
-                        console.log('fp: '+firstposition+' i: '+i);
                     } else {
                         var pages = Math.ceil(symbols.length/5);
                         mJQ.find('.resultsrow').animate({left: '+='+((pages-1)*250)+'px'}, 400);
-                        console.log('fp: '+firstposition+' i: '+i);
-                        
-                        //mJQ.find('.resultsrow').animate({left: '0px'}, 400);
                     }
                 }
             }
