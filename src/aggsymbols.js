@@ -1,8 +1,8 @@
 // auto-generated
 var _aggSymbols = {
     "left arrow": {Tag: Mi, output: "&larr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "1"},
-    "left right arrow": {Tag: Mi, output: "&harr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "2"},
-    "right arrow": {Tag: Mi, output: "&rarr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "3"},
+    "right arrow": {Tag: Mi, output: "&rarr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "2"},
+    "left right arrow": {Tag: Mi, output: "&harr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "3"},
     "map": {Tag: Mi, output: "&#8614;", family: "symbol", category: "Arrow", rank: "4"},
     "inclusion map": {Tag: Mi, output: "&#8618;", family: "symbol", category: "Arrow", rank: "5"},
     "left up harpoon": {Tag: Mi, output: "&#8636;", family: "symbol", category: "Arrow", rank: "6"},

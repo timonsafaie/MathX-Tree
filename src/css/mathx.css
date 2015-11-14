@@ -338,6 +338,14 @@
   z-index: 900;
   position: relative;
   cursor: pointer;
+  -webkit-transition: color 0.1s linear;
+  -moz-transition: color 0.1s linear;
+  -ms-transition: color 0.1s linear;
+  -o-transition: color 0.1s linear;
+  transition: color 0.1s linear;
+}
+.resultsnav:hover {
+    color:#2B6C80;
 }
 .resultsnav.navdisabled {
   color:#2B6C80;

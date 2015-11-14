@@ -250,7 +250,7 @@ extend(Cursor, Elem, function(_) {
             }
             if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols) {
-                    if (aggSymbol.indexOf(search) > -1) {
+                    if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
                         // Add symbol to SmartMenu candidate list
                         target = search;
                     }
@@ -259,7 +259,7 @@ extend(Cursor, Elem, function(_) {
         });
         if (target) {
             for (var aggSymbol in aggSymbols) {
-                if (aggSymbol.indexOf(target) > -1) {
+                if ((aggSymbol.indexOf(target) > -1) && (aggSymbols[aggSymbol].rank)) {
                     var aggNode = {
                          aggSymbol: aggSymbol,
                          props: aggSymbols[aggSymbol]
@@ -275,7 +275,15 @@ extend(Cursor, Elem, function(_) {
             }
             var menu = new Menu(aggList, target);
             menu.JQ.appendTo(this.parent.JQ);
-            menu.display();
+            var mode = 'left';
+            // Calculates how far (in %) the cursor is into the textbox
+            var cursorOffset = ((this.JQ.offset().left - 
+                                 this.parent.JQ.offset().left)/
+                                this.parent.JQ.parent().width())*100;
+            if (cursorOffset > 50) {
+                mode = 'right';
+            }
+            menu.display(mode);
             
             // Fix location above cursor
             menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
@@ -489,7 +497,7 @@ extend(Cursor, Elem, function(_) {
                 start = e;
             } else if (search.length > 2) {
                 for(var aggSymbol in aggSymbols)
-                    if (aggSymbol.indexOf(search) > -1) {
+                    if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
                         target = search;
                         start = e;
                     }
@@ -497,10 +505,10 @@ extend(Cursor, Elem, function(_) {
         });
         
         if (!agg) {
-            if (target) { 
+            if (target) {
                 var trimTarget = target.trim();
                 for(var aggSymbol in aggSymbols) {
-                    if (aggSymbol.indexOf(trimTarget) > -1) {
+                    if ((aggSymbol.indexOf(trimTarget) > -1) && (aggSymbols[aggSymbol].rank)) {
                         input = target;
                         var aggNode = {
                              aggSymbol: aggSymbol,
@@ -509,9 +517,11 @@ extend(Cursor, Elem, function(_) {
                         aggList.push(aggNode);
                     }
                 }
+                /*
                 // Single SmartMenu item should be autoinserted
                 if (aggList.length == 1) {
-                    /*
+                    console.log("'"+target+"'"+' length 1')
+                    
                     // Agg found
                     agg = aggSymbols[aggList[0].aggSymbol];
                     input = target;
@@ -526,7 +536,7 @@ extend(Cursor, Elem, function(_) {
                     node.insert(this);
                     this.lastAgg = node;
                     this.lastAgg.unsettle();
-                    */
+                    
                     // Hide SmartMenu
                     if (this.parent.JQ.find('.aC-container'))
                        this.parent.JQ.find('.aC-container').remove();
@@ -536,6 +546,7 @@ extend(Cursor, Elem, function(_) {
                     this.parent.JQ.find('.aC-container').remove();
                     menu.JQ.appendTo(this.parent.JQ);
                     menu.display();
+                    menu.printList();
                     
                     // Fix location above cursor
                     menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
@@ -559,13 +570,58 @@ extend(Cursor, Elem, function(_) {
                         
                     });
                 }
+                */
+                // Add list and display SmartMenu
+                menu = new Menu(aggList, input);
+                this.parent.JQ.find('.aC-container').remove();
+                menu.JQ.appendTo(this.parent.JQ);
+                var mode = 'left';
+                // Calculates how far (in %) the cursor is into the textbox
+                var cursorOffset = ((this.JQ.offset().left - 
+                                     this.parent.JQ.offset().left)/
+                                    this.parent.JQ.parent().width())*100;
+                if (cursorOffset > 50) {
+                    mode = 'right';
+                }
+                menu.display(mode);
+
+                // Fix location above cursor
+                menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+                menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
+                /*
+                console.log("cursor offset: "+this.JQ.offset().left+
+                            " textbox offset: "+this.parent.JQ.offset().left+
+                            " tb width: "+this.parent.JQ.parent().width());
+                console.log('cursor location: '+cursorOffset+" mode: "+mode);
+                */
+                // Setup Clicking
+                var clickedSymbol = "";
+                var c = this;
+                menu.JQ.find('.symbol').click(function(){
+                    clickedSymbol = aggSymbols[$(this).attr('title')];
+
+                    listEachReversed(start, c, function(e) {
+                        e.remove();
+                    });
+
+
+                    c.parent.JQ.find('.aC-container').remove();
+
+                    var node = new clickedSymbol.Tag('click', clickedSymbol);
+                    node.insert(c);
+
+                });
             } else {
                 if (this.parent.JQ.find('.aC-container'))
                    this.parent.JQ.find('.aC-container').remove();
             }
             return;
         }
-
+        // Hide SmartMenu
+        if (this.parent.JQ.find('.aC-container')) {
+            this.parent.JQ.find('.aC-container').remove();
+        }
+        
         listEachReversed(start, this, function(e) {
             e.remove();
         });
@@ -574,10 +630,6 @@ extend(Cursor, Elem, function(_) {
         node.insert(this);
         this.lastAgg = node;
         this.lastAgg.unsettle();
-
-        // Hide SmartMenu
-        if (this.parent.JQ.find('.aC-container'))
-           this.parent.JQ.find('.aC-container').remove();
     };
 
     _.expandAgg = function(agg, before) {

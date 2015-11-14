@@ -18,26 +18,50 @@ extend(Menu, Object, function(_) {
         this.searchterm = searchTerm;
     };
     
-    _.display = function() {
+    _.display = function(mode) {
         var mJQ = this.JQ;
         var symbolcount = 0;
         var firstposition = 0;
         var search = this.searchterm;
+        var maxLength = 0;
         this.sort();
         mJQ.find('.namerow').html(this.marquee(this.searchterm, this.list[0].aggSymbol));
-        this.list.forEach(function(item) {
-            var symbolposition = '';
-            if(++symbolcount == 1) 
-                symbolposition = 'symbolfirst list-row-hover';
-            mJQ.find('.resultsrow')
-                .css({'width': 1000+'px', 'left': 0+'px'})
-                .append('<span class="symbol '+symbolposition+
-                        '" title="'+item.aggSymbol+'">'
-                        +item.props.output+'</span>');
-        });
+        if (mode == 'left') {
+            this.list.forEach(function(item) {
+                var symbolposition = '';
+                if (item.aggSymbol.length > maxLength)
+                    maxLength = item.aggSymbol.length;
+                if(++symbolcount == 1) 
+                    symbolposition = 'symbolfirst list-row-hover';
+                mJQ.find('.resultsrow')
+                    .append('<span class="symbol '+symbolposition+
+                            '" title="'+item.aggSymbol+'">'
+                            +item.props.output+'</span>');
+            });
+            mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': 0+'px'});
+        } else {
+            for (var j=(this.list.length-1); j >= 0; j--) {
+                var item = this.list[j];
+                var symbolposition = '';
+                if (item.aggSymbol.length > maxLength)
+                    maxLength = item.aggSymbol.length;
+                if(++symbolcount == this.list.length) 
+                    symbolposition = 'symbolfirst list-row-hover';
+                mJQ.find('.resultsrow')
+                    .append('<span class="symbol '+symbolposition+
+                            '" title="'+item.aggSymbol+'">'
+                            +item.props.output+'</span>');
+            }
+            firstposition = this.list.length-1;
+        }
+        maxLength *= 8;
         if (symbolcount > 5) {
+            if (mode == 'right') {
+                var leftOffset = (this.list.length-5)*(-50);
+                mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': leftOffset+'px'});
+            }
             mJQ.find('.search_results')
-                .addClass('search-right')
+                .addClass('search-'+mode)
                 .css({'width': 332+'px'})
                 .attr({'data-str': this.searchterm,'data-num': 5});
             mJQ.find('.resultsholder')
@@ -49,8 +73,10 @@ extend(Menu, Object, function(_) {
             if (symbolcount == 1)
                 offset = 1;
             var menuWidth = 50*(symbolcount+offset);
+            if (maxLength > menuWidth)
+                menuWidth = maxLength;
             mJQ.find('.search_results')
-                .addClass('search-right')
+                .addClass('search-'+mode)
                 .css({'width': menuWidth+'px'})
                 .attr({'data-str': this.searchterm,'data-num': 5});
             mJQ.find('.resultsholder')
@@ -65,10 +91,19 @@ extend(Menu, Object, function(_) {
         });
         // Right Nav Button
         mJQ.find(".rightnav").click(function(){
+            var wraparound = false;
             var symbols = mJQ.find('.resultsrow').children();
             firstposition += 5;
-            if (firstposition >= symbols.length)
+            if (firstposition >= symbols.length) {
+                wraparound = true;
                 firstposition = 0;
+                if (mode == 'right') {
+                    firstposition = ((symbols.length % 5) - 1);
+                    if (firstposition < 0) {
+                        firstposition = 4;
+                    }
+                }
+            }
             for (var i = 0; i < symbols.length; i++) {
                 if ($(symbols[i]).hasClass("symbolfirst") ||
                     $(symbols[i]).hasClass("list-row-hover"))
@@ -85,11 +120,15 @@ extend(Menu, Object, function(_) {
                                               '<span class="resnamematch">'+
                                               search+
                                               '</span>'+after+'</span>');
-                    if (firstposition > 0)
+                    if (!wraparound) {//(firstposition > 0)
                         mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
-                    else {
-                        var rowLeftOffset = mJQ.find('.resultsrow').css('left');
-                        mJQ.find('.resultsrow').animate({left: '0px'}, 400);
+                        console.log('fp: '+firstposition+' i: '+i);
+                    } else {
+                        var pages = Math.ceil(symbols.length/5);
+                        mJQ.find('.resultsrow').animate({left: '+='+((pages-1)*250)+'px'}, 400);
+                        console.log('fp: '+firstposition+' i: '+i);
+                        
+                        //mJQ.find('.resultsrow').animate({left: '0px'}, 400);
                     }
                 }
             }
@@ -97,9 +136,19 @@ extend(Menu, Object, function(_) {
         // Left Nav Button
         mJQ.find(".leftnav").click(function(){
             var symbols = mJQ.find('.resultsrow').children();
+            var wraparound = false;
             firstposition -= 5;
-            if (firstposition < 0)
-                firstposition = symbols.length-5;
+            if (firstposition < 0) {
+                var symoffset = symbols.length % 5;
+                if (symoffset == 0) {
+                    symoffset = 5;
+                }
+                wraparound = true;
+                firstposition = symbols.length-symoffset;
+                if (mode=='right') {
+                    firstposition = symbols.length-1;
+                }
+            }
             for (var i = 0; i < symbols.length; i++) {
                 if ($(symbols[i]).hasClass("symbolfirst") ||
                     $(symbols[i]).hasClass("list-row-hover"))
@@ -116,11 +165,11 @@ extend(Menu, Object, function(_) {
                                               '<span class="resnamematch">'+
                                               search+
                                               '</span>'+after+'</span>');
-                    if (firstposition < symbols.length-6)
-                        mJQ.find('.resultsrow').animate({left: '+=250px'}, 400);
-                    else {
+                    if (wraparound) {
                         var pages = Math.ceil(symbols.length/5);
-                        mJQ.find('.resultsrow').animate({left: '-'+((pages-1)*250)+'px'}, 400);
+                        mJQ.find('.resultsrow').animate({left: '-='+((pages-1)*250)+'px'}, 400);
+                    } else {
+                        mJQ.find('.resultsrow').animate({left: '+=250px'}, 400);
                     }
                 }
             }
@@ -155,24 +204,16 @@ extend(Menu, Object, function(_) {
     _.sort = function() {
         var search = this.searchterm;
         this.list.sort(function (a, b) {
-            if (a.aggSymbol.indexOf(search) < b.aggSymbol.indexOf(search))
+            if (a.props.category == b.props.category) {
+                if (parseInt(a.props.rank) > parseInt(b.props.rank))
+                    return 1;
                 return -1;
-            if(a.aggSymbol.indexOf(search) > b.aggSymbol.indexOf(search))
-                return 1;
-            if (a.aggSymbol.indexOf(search) == b.aggSymbol.indexOf(search)) {
-                if (a.props.category > b.props.category) {
-                   return 1;
-                }
-                if (a.props.category < b.props.category) {
-                    return -1;
-                }
-                // Same category
-                if (a.props.category == b.props.category) {
-                    if (parseInt(a.props.rank) > parseInt(b.props.rank))
-                        return 1;
-                    return -1;
-                }
-                return 0;
+            }
+            if (a.props.category > b.props.category) {
+               return 1;
+            }
+            if (a.props.category < b.props.category) {
+                return -1;
             }
         });
     };
@@ -180,7 +221,7 @@ extend(Menu, Object, function(_) {
     // See sorting for testing purposes
     _.printList = function() {
         for (var i = 0; i < this.list.length; i++) {
-            console.log((i+1)+". "+this.list[i].aggSymbol+" "+this.list[i].props.rank);
+            console.log((i+1)+". "+this.list[i].aggSymbol+" "+this.list[i].props.rank+" "+this.list[i].props.category);
         }
     }
 });
