@@ -57,6 +57,8 @@ extend(Cursor, Elem, function(_) {
                     listEachReversed(this.menu.start, this, function(e) {
                         e.remove();
                     });
+                    if (this.parent.JQ.find('.aC-container'))
+                        this.parent.JQ.find('.aC-container').remove();
                     var node = new insert.Tag('Enter', insert);
                     node.insert(this);
                 }
@@ -81,10 +83,6 @@ extend(Cursor, Elem, function(_) {
             this.lastMenclose.settle();
         this.bubble('resize');
         this.show();
-        if(key == 'Enter') {
-            if (this.parent.JQ.find('.aC-container'))
-                this.parent.JQ.find('.aC-container').remove();
-        }
     };
 
     _.moveLeft = function() {
@@ -519,7 +517,8 @@ extend(Cursor, Elem, function(_) {
                 agg = aggSymbols[search];
                 input = search;
                 start = e;
-            } else if (search.length > 2) {
+            }
+            if (search.length > 2) {
                 for(var aggSymbol in aggSymbols)
                     if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
                         target = search;
@@ -527,6 +526,7 @@ extend(Cursor, Elem, function(_) {
                     }
              }
         });
+        /*
         if (!agg) {
             if (target) {
                 var trimTarget = target.trim();
@@ -540,60 +540,6 @@ extend(Cursor, Elem, function(_) {
                         aggList.push(aggNode);
                     }
                 }
-                /*
-                // Single SmartMenu item should be autoinserted
-                if (aggList.length == 1) {
-                    console.log("'"+target+"'"+' length 1')
-                    
-                    // Agg found
-                    agg = aggSymbols[aggList[0].aggSymbol];
-                    input = target;
-                    
-                    // Convert to Agg
-                    listEachReversed(start, this, function(e) {
-                        e.remove();
-                    });
-                    
-                    // Insert Agg into textbox
-                    var node = new agg.Tag(input, agg);
-                    node.insert(this);
-                    this.lastAgg = node;
-                    this.lastAgg.unsettle();
-                    
-                    // Hide SmartMenu
-                    if (this.parent.JQ.find('.aC-container'))
-                       this.parent.JQ.find('.aC-container').remove();
-                } else {
-                    // Add list and display SmartMenu
-                    menu = new Menu(aggList, input, start);
-                    this.parent.JQ.find('.aC-container').remove();
-                    menu.JQ.appendTo(this.parent.JQ);
-                    menu.display();
-                    menu.printList();
-                    
-                    // Fix location above cursor
-                    menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-                    menu.JQ.css('left', this.JQ.offset().left-this.parent.JQ.offset().left-40);
-                    
-                    // Setup Clicking
-                    var clickedSymbol = "";
-                    var c = this;
-                    menu.JQ.find('.symbol').click(function(){
-                        clickedSymbol = aggSymbols[$(this).attr('title')];
-                        
-                        listEachReversed(start, c, function(e) {
-                            e.remove();
-                        });
-                        
-                        
-                        c.parent.JQ.find('.aC-container').remove();
-
-                        var node = new clickedSymbol.Tag('click', clickedSymbol);
-                        node.insert(c);
-                        
-                    });
-                }
-                */
                 // Add list and display SmartMenu
                 this.menu = new Menu(aggList, input, start);
                 this.parent.JQ.find('.aC-container').remove();
@@ -615,12 +561,7 @@ extend(Cursor, Elem, function(_) {
                     leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
                 }
                 this.menu.JQ.css('left', leftOffset);
-                /*
-                console.log("cursor offset: "+this.JQ.offset().left+
-                            " textbox offset: "+this.parent.JQ.offset().left+
-                            " tb width: "+this.parent.JQ.parent().width());
-                console.log('cursor location: '+cursorOffset+" mode: "+mode);
-                */
+                
                 // Setup Clicking
                 var clickedSymbol = "";
                 var c = this;
@@ -643,10 +584,68 @@ extend(Cursor, Elem, function(_) {
             }
             return;
         }
+        */
+        if (target && target != input) {
+            var trimTarget = target.trim();
+            for(var aggSymbol in aggSymbols) {
+                if ((aggSymbol.indexOf(trimTarget) > -1) && (aggSymbols[aggSymbol].rank)) {
+                    input = target;
+                    var aggNode = {
+                         aggSymbol: aggSymbol,
+                         props: aggSymbols[aggSymbol]
+                    }
+                    aggList.push(aggNode);
+                }
+            }
+            // Add list and display SmartMenu
+            this.menu = new Menu(aggList, input, start);
+            this.parent.JQ.find('.aC-container').remove();
+            this.menu.JQ.appendTo(this.parent.JQ);
+            var mode = 'left';
+            // Calculates how far (in %) the cursor is into the textbox
+            var cursorOffset = ((this.JQ.offset().left - 
+                                 this.parent.JQ.offset().left)/
+                                this.parent.JQ.parent().width())*100;
+            if (cursorOffset > 50) {
+                mode = 'right';
+            }
+            this.menu.display(mode);
+
+            // Fix location above cursor
+            this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+            var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
+            if (mode == 'right') {
+                leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
+            }
+            this.menu.JQ.css('left', leftOffset);
+
+            // Setup Clicking
+            var clickedSymbol = "";
+            var c = this;
+            this.menu.JQ.find('.symbol').click(function(){
+                clickedSymbol = aggSymbols[$(this).attr('title')];
+
+                listEachReversed(start, c, function(e) {
+                    e.remove();
+                });
+
+                c.parent.JQ.find('.aC-container').remove();
+
+                var node = new clickedSymbol.Tag('click', clickedSymbol);
+                node.insert(c);
+
+            });
+            return;
+        } 
+        
         // Hide SmartMenu
         if (this.parent.JQ.find('.aC-container')) {
             this.parent.JQ.find('.aC-container').remove();
         }
+        
+        
+        if (!agg)
+            return
         
         listEachReversed(start, this, function(e) {
             e.remove();
@@ -664,27 +663,6 @@ extend(Cursor, Elem, function(_) {
 
         var cursor = this;
         var first = null;
-        
-        /*
-        var aggList = [];
-        // Reengage search of the SmartMenu
-        for(var aggSymbol in aggSymbols) {
-            if (aggSymbol.substr(0, agg.input.length) == agg.input) {
-                // Add symbol to SmartMenu candidate list
-                var aggNode = {
-                     aggSymbol: aggSymbol,
-                     props: aggSymbols[aggSymbol]
-                }
-                aggList.push(aggNode);
-            }
-        }
-        if (aggList) {
-            // TODO: Display SmartMenu
-            aggList.forEach(function(a) {
-                console.log(a.aggSymbol);
-            });
-        }
-        */
         
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);
