@@ -99,7 +99,6 @@ extend(Menu, Object, function(_) {
         // Right Nav Button
         mJQ.find(".rightnav").click(function(){
             var curr = mJQ.find('.list-row-hover');
-            var left = mJQ.find('.resultsrow').css('left');
             var items = mJQ.find('.resultsrow').children();
             var marquee = '';
             var currIndex = items.index(curr);
@@ -137,44 +136,39 @@ extend(Menu, Object, function(_) {
         });
         // Left Nav Button
         mJQ.find(".leftnav").click(function(){
-            var symbols = mJQ.find('.resultsrow').children();
-            var wraparound = false;
-            firstposition -= 5;
-            if (firstposition < 0) {
-                var symoffset = symbols.length % 5;
-                if (symoffset == 0) {
-                    symoffset = 5;
+            var curr = mJQ.find('.list-row-hover');
+            var items = mJQ.find('.resultsrow').children();
+            var marquee = '';
+            var currIndex = items.index(curr);
+            curr.css('color', '#FFFFFF').removeClass('list-row-hover');
+            var nextIndex = (Math.floor(currIndex/5)-1)*5;
+            if (mode == 'left') {
+                if (currIndex >= 5) {
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: '+=250px'}, 400);
+                } else {
+                    nextIndex = (items.length-1) - ((items.length-1)%5);
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: '-='+((Math.ceil(items.length/5)-1)*250)+'px'}, 400);
                 }
-                wraparound = true;
-                firstposition = symbols.length-symoffset;
-                if (mode=='right') {
-                    firstposition = symbols.length-1;
-                }
-            }
-            for (var i = 0; i < symbols.length; i++) {
-                if ($(symbols[i]).hasClass("symbolfirst") ||
-                    $(symbols[i]).hasClass("list-row-hover"))
-                    $(symbols[i]).css('color', '#FFFFFF').removeClass("symbolfirst list-row-hover");
-                if (i == firstposition) {
-                    $(symbols[i]).css('color', '#55D7FF').addClass('symbolfirst list-row-hover');
-                    var before = "";
-                    var after = "";
-                    var symbol = $(symbols[i]).attr('title');
-                    var startIndex = symbol.indexOf(search);
-                    before = symbol.substr(0, startIndex);
-                    after = symbol.substr(before.length+search.length);
-                    mJQ.find('.namerow').html('<span nowrap>'+before+
-                                              '<span class="resnamematch">'+
-                                              search+
-                                              '</span>'+after+'</span>');
-                    if (wraparound) {
-                        var pages = Math.ceil(symbols.length/5);
-                        mJQ.find('.resultsrow').animate({left: '-='+((pages-1)*250)+'px'}, 400);
-                    } else {
-                        mJQ.find('.resultsrow').animate({left: '+=250px'}, 400);
-                    }
+            } else {
+                var resetIndex = ((items.length-1)%5);
+                var resetOffset = '+='+((Math.ceil(items.length/5)-1)*250);
+                nextIndex = ((Math.floor(currIndex/5)+1)*5)+resetIndex;
+                if (currIndex < items.length-5) {
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                } else {
+                    nextIndex = resetIndex;
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: resetOffset+'px'}, 400);
                 }
             }
+            mJQ.find('.namerow').html(menu.marquee(search, marquee));
         });
         mJQ.find('.symbol').mouseover(function(){
            mJQ.find('.symbol').each(function() {

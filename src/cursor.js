@@ -148,7 +148,7 @@ extend(Cursor, Elem, function(_) {
 
     _.movePrevRow = function() {
         var parent = this.parent;
-        if (parent.JQ.find('.aC-container')) {
+        if (parent.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
             return;
         }
@@ -167,7 +167,7 @@ extend(Cursor, Elem, function(_) {
 
     _.moveNextRow = function() {
         var parent = this.parent;
-        if (parent.JQ.find('.aC-container')) {
+        if (parent.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
         }
         if (parent.isRoot && this.isLastChild())
