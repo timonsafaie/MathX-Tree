@@ -154,6 +154,9 @@ extend(Cursor, Elem, function(_) {
 
     _.moveNextRow = function() {
         var parent = this.parent;
+        if (parent.JQ.find('.aC-container')) {
+            this.menu.moveRight();
+        }
         if (parent.isRoot && this.isLastChild())
             return;
         var next = this.next;

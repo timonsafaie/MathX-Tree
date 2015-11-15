@@ -11,6 +11,7 @@ var Menu = function(list, searchTerm, start) {
     this.list = list;
     this.searchterm = searchTerm;
     this.start = start;
+    this.mode = '';
 };
 
 extend(Menu, Object, function(_) {
@@ -28,6 +29,7 @@ extend(Menu, Object, function(_) {
         var firstposition = 0;
         var search = this.searchterm;
         var maxLength = 0;
+        this.mode = mode;
         this.sort();
         mJQ.find('.namerow').html(this.marquee(this.searchterm, this.list[0].aggSymbol));
         if (mode == 'left') {
@@ -199,6 +201,100 @@ extend(Menu, Object, function(_) {
         return '<span nowrap>'+firstpart+
                '<span class="resnamematch">'+search+
                '</span>'+lastpart+'</span>';
+    };
+    
+    _.moveRight = function() {
+        var curr = this.JQ.find('.list-row-hover');
+        var left = this.JQ.find('.resultsrow').css('left');
+        var items = this.JQ.find('.resultsrow').children();
+        var marquee = '';
+        curr.removeClass('list-row-hover');
+        if (this.mode == 'left') {
+            var currIndex = items.index(curr);
+            if (currIndex == items.length-1) {
+                $(items[0]).addClass('list-row-hover');
+                marquee = $(items[0]).attr('title');
+            } else {
+                curr.next().addClass('list-row-hover');
+                marquee = curr.next().attr('title');
+            }
+            if (items.length > 5) {
+                if (currIndex < items.length-1) {
+                    if ((currIndex+1)%5 == 0) {
+                    this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                    }
+                } else {
+                    this.JQ.find('.resultsrow').animate({left: '0px'}, 400);
+                }
+            }
+        }
+        if (this.mode == 'right') {
+            var currIndex = items.index(curr);
+            if (currIndex < items.length-1) {
+                curr.next().addClass('list-row-hover');
+                marquee = curr.next().attr('title');
+            } else {
+                $(items[0]).addClass('list-row-hover');
+                marquee = $(items[0]).attr('title');
+            }
+            if (items.length > 5) {
+                if (currIndex < items.length-1) {
+                    if ((currIndex+1)%5 == items.length%5) {
+                        this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                    }
+                } else {
+                    this.JQ.find('.resultsrow').animate({left: '+='+((Math.ceil(items.length/5)-1)*250)+'px'}, 400);
+                }
+            }
+        }
+        this.JQ.find('.namerow').html(this.marquee(this.searchterm, marquee));
+    };
+    
+    _.moveLeft = function() {
+        var curr = this.JQ.find('.list-row-hover');
+        var left = this.JQ.find('.resultsrow').css('left');
+        var items = this.JQ.find('.resultsrow').children();
+        var marquee = '';
+        curr.removeClass('list-row-hover');
+        if (this.mode == 'left') {
+            var currIndex = items.index(curr);
+            if (currIndex == items.length-1) {
+                $(items[0]).addClass('list-row-hover');
+                marquee = $(items[0]).attr('title');
+            } else {
+                curr.next().addClass('list-row-hover');
+                marquee = curr.next().attr('title');
+            }
+            if (items.length > 5) {
+                if (currIndex < items.length-1) {
+                    if ((currIndex+1)%5 == 0) {
+                    this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                    }
+                } else {
+                    this.JQ.find('.resultsrow').animate({left: '0px'}, 400);
+                }
+            }
+        }
+        if (this.mode == 'right') {
+            var currIndex = items.index(curr);
+            if (currIndex < items.length-1) {
+                curr.next().addClass('list-row-hover');
+                marquee = curr.next().attr('title');
+            } else {
+                $(items[0]).addClass('list-row-hover');
+                marquee = $(items[0]).attr('title');
+            }
+            if (items.length > 5) {
+                if (currIndex < items.length-1) {
+                    if ((currIndex+1)%5 == items.length%5) {
+                        this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                    }
+                } else {
+                    this.JQ.find('.resultsrow').animate({left: '+='+((Math.ceil(items.length/5)-1)*250)+'px'}, 400);
+                }
+            }
+        }
+        this.JQ.find('.namerow').html(this.marquee(this.searchterm, marquee));
     };
     
     _.sort = function() {
