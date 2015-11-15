@@ -24,7 +24,8 @@ extend(Menu, Object, function(_) {
         this.start = start;
     }
     _.display = function(mode) {
-        var mJQ = this.JQ;
+        var menu = this;
+        var mJQ = menu.JQ;
         var symbolcount = 0;
         var firstposition = 0;
         var search = this.searchterm;
@@ -97,43 +98,42 @@ extend(Menu, Object, function(_) {
         });
         // Right Nav Button
         mJQ.find(".rightnav").click(function(){
-            var wraparound = false;
-            var symbols = mJQ.find('.resultsrow').children();
-            firstposition += 5;
-            if (firstposition >= symbols.length) {
-                wraparound = true;
-                firstposition = 0;
-                if (mode == 'right') {
-                    firstposition = ((symbols.length % 5) - 1);
-                    if (firstposition < 0) {
-                        firstposition = 4;
-                    }
+            var curr = mJQ.find('.list-row-hover');
+            var left = mJQ.find('.resultsrow').css('left');
+            var items = mJQ.find('.resultsrow').children();
+            var marquee = '';
+            var currIndex = items.index(curr);
+            curr.css('color', '#FFFFFF').removeClass('list-row-hover');
+            var nextIndex = (Math.floor(currIndex/5)+1)*5;
+            var resetIndex = 0;
+            var resetOffset = 0;
+            if (mode == 'left') {
+                if (nextIndex < items.length) {
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                } else {
+                    nextIndex = resetIndex;
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: resetOffset+'px'}, 400);
+                }
+            } else {
+                resetIndex = ((items.length-1)%5);
+                resetOffset = '+='+((Math.ceil(items.length/5)-1)*250);
+                nextIndex = ((Math.floor(currIndex/5)+1)*5)+resetIndex;
+                if (currIndex < items.length-5) {
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                } else {
+                    nextIndex = resetIndex;
+                    marquee = $(items[nextIndex]).attr('title');
+                    $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
+                    mJQ.find('.resultsrow').animate({left: resetOffset+'px'}, 400);
                 }
             }
-            for (var i = 0; i < symbols.length; i++) {
-                if ($(symbols[i]).hasClass("symbolfirst") ||
-                    $(symbols[i]).hasClass("list-row-hover"))
-                    $(symbols[i]).css('color', '#FFFFFF').removeClass("symbolfirst list-row-hover");
-                if (i == firstposition) {
-                    $(symbols[i]).css('color', '#55D7FF').addClass('symbolfirst list-row-hover');
-                    var before = "";
-                    var after = "";
-                    var symbol = $(symbols[i]).attr('title');
-                    var startIndex = symbol.indexOf(search);
-                    before = symbol.substr(0, startIndex);
-                    after = symbol.substr(before.length+search.length);
-                    mJQ.find('.namerow').html('<span nowrap>'+before+
-                                              '<span class="resnamematch">'+
-                                              search+
-                                              '</span>'+after+'</span>');
-                    if (!wraparound) {//(firstposition > 0)
-                        mJQ.find('.resultsrow').animate({left: '-=250px'}, 400);
-                    } else {
-                        var pages = Math.ceil(symbols.length/5);
-                        mJQ.find('.resultsrow').animate({left: '+='+((pages-1)*250)+'px'}, 400);
-                    }
-                }
-            }
+            mJQ.find('.namerow').html(menu.marquee(search, marquee));
         });
         // Left Nav Button
         mJQ.find(".leftnav").click(function(){
@@ -205,7 +205,6 @@ extend(Menu, Object, function(_) {
     
     _.moveRight = function() {
         var curr = this.JQ.find('.list-row-hover');
-        var left = this.JQ.find('.resultsrow').css('left');
         var items = this.JQ.find('.resultsrow').children();
         var marquee = '';
         curr.css('color', '#FFFFFF').removeClass('list-row-hover');
@@ -252,7 +251,6 @@ extend(Menu, Object, function(_) {
     
     _.moveLeft = function() {
         var curr = this.JQ.find('.list-row-hover');
-        var left = this.JQ.find('.resultsrow').css('left');
         var items = this.JQ.find('.resultsrow').children();
         var marquee = '';
         curr.css('color', '#FFFFFF').removeClass('list-row-hover');
