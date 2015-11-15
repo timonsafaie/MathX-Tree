@@ -1,4 +1,4 @@
-var Menu = function(list, searchTerm) {
+var Menu = function(list, searchTerm, start) {
     this.JQ = $('<div class="aC-container">'+
                 '<div class="aC-results">'+
                 '<span class="search_results">'+
@@ -10,6 +10,7 @@ var Menu = function(list, searchTerm) {
     // List of found items
     this.list = list;
     this.searchterm = searchTerm;
+    this.start = start;
 };
 
 extend(Menu, Object, function(_) {
@@ -18,6 +19,9 @@ extend(Menu, Object, function(_) {
         this.searchterm = searchTerm;
     };
     
+    _.setStart = function(start) {
+        this.start = start;
+    }
     _.display = function(mode) {
         var mJQ = this.JQ;
         var symbolcount = 0;

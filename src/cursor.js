@@ -16,6 +16,7 @@ var Cursor = function(root) {
     this.root = root;
     this.JQ = $('<span class="mX-cursor">&#8203;</span>');
     this.selection = {start: null, end: null};
+    this.menu = null;
 };
 
 extend(Cursor, Elem, function(_) {
@@ -52,6 +53,17 @@ extend(Cursor, Elem, function(_) {
         var prev = this.prev;
         var next = this.next;
         if (keepSelections.indexOf(key) !== -1) {
+            if (key == 'Enter') {
+                if (this.parent.JQ.find('.aC-container')) {
+                    // Insert highlighted Symbol
+                    var insert = aggSymbols[this.menu.JQ.find('.list-row-hover').attr('title')];
+                    listEachReversed(this.menu.start, this, function(e) {
+                        e.remove();
+                    });
+                    var node = new insert.Tag('Enter', insert);
+                    node.insert(this);
+                }
+            }
             while (prev.selected) {
                 prev.deSelect();
                 prev = prev.prev;
@@ -78,6 +90,10 @@ extend(Cursor, Elem, function(_) {
             this.lastMenclose.settle();
         this.bubble('resize');
         this.show();
+        if(key == 'Enter') {
+            if (this.parent.JQ.find('.aC-container'))
+                this.parent.JQ.find('.aC-container').remove();
+        }
     };
 
     _.moveLeft = function() {
@@ -243,16 +259,13 @@ extend(Cursor, Elem, function(_) {
             if ((e instanceof Mi) || (e instanceof Mspace)) {
                 if (e.input.length == 1) 
                     search = e.input + search;
-                else
-                    start = e;
-            } else {
-                start = e;
             }
             if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols) {
                     if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
                         // Add symbol to SmartMenu candidate list
                         target = search;
+                        start = e;
                     }
                 }
              }
@@ -273,8 +286,8 @@ extend(Cursor, Elem, function(_) {
             if (this.parent.JQ.find('.aC-container')) {
                 this.parent.JQ.find('.aC-container').remove();
             }
-            var menu = new Menu(aggList, target);
-            menu.JQ.appendTo(this.parent.JQ);
+            this.menu = new Menu(aggList, target, start);
+            this.menu.JQ.appendTo(this.parent.JQ);
             var mode = 'left';
             // Calculates how far (in %) the cursor is into the textbox
             var cursorOffset = ((this.JQ.offset().left - 
@@ -283,20 +296,20 @@ extend(Cursor, Elem, function(_) {
             if (cursorOffset > 50) {
                 mode = 'right';
             }
-            menu.display(mode);
+            this.menu.display(mode);
             
             // Fix location above cursor
-            menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+            this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
             var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
             if (mode == 'right') {
-                leftOffset -= (menu.JQ.find('.search_results').width()-(3*40));
+                leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
             }
-            menu.JQ.css('left', leftOffset);
+            this.menu.JQ.css('left', leftOffset);
 
             // Setup Clicking
             var clickedSymbol = "";
             var c = this;
-            menu.JQ.find('.symbol').click(function(){
+            this.menu.JQ.find('.symbol').click(function(){
                 clickedSymbol = aggSymbols[$(this).attr('title')];
 
                 listEachReversed(start, c, function(e) {
@@ -486,7 +499,7 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.reduceAgg = function() {
-        var agg, input, menu;
+        var agg, input;
         
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
@@ -507,7 +520,6 @@ extend(Cursor, Elem, function(_) {
                     }
              }
         });
-        
         if (!agg) {
             if (target) {
                 var trimTarget = target.trim();
@@ -546,7 +558,7 @@ extend(Cursor, Elem, function(_) {
                        this.parent.JQ.find('.aC-container').remove();
                 } else {
                     // Add list and display SmartMenu
-                    menu = new Menu(aggList, input);
+                    menu = new Menu(aggList, input, start);
                     this.parent.JQ.find('.aC-container').remove();
                     menu.JQ.appendTo(this.parent.JQ);
                     menu.display();
@@ -576,9 +588,9 @@ extend(Cursor, Elem, function(_) {
                 }
                 */
                 // Add list and display SmartMenu
-                menu = new Menu(aggList, input);
+                this.menu = new Menu(aggList, input, start);
                 this.parent.JQ.find('.aC-container').remove();
-                menu.JQ.appendTo(this.parent.JQ);
+                this.menu.JQ.appendTo(this.parent.JQ);
                 var mode = 'left';
                 // Calculates how far (in %) the cursor is into the textbox
                 var cursorOffset = ((this.JQ.offset().left - 
@@ -587,15 +599,15 @@ extend(Cursor, Elem, function(_) {
                 if (cursorOffset > 50) {
                     mode = 'right';
                 }
-                menu.display(mode);
+                this.menu.display(mode);
 
                 // Fix location above cursor
-                menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
+                this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
                 var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
                 if (mode == 'right') {
-                    leftOffset -= (menu.JQ.find('.search_results').width()-(3*40));
+                    leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
                 }
-                menu.JQ.css('left', leftOffset);
+                this.menu.JQ.css('left', leftOffset);
                 /*
                 console.log("cursor offset: "+this.JQ.offset().left+
                             " textbox offset: "+this.parent.JQ.offset().left+
@@ -605,13 +617,12 @@ extend(Cursor, Elem, function(_) {
                 // Setup Clicking
                 var clickedSymbol = "";
                 var c = this;
-                menu.JQ.find('.symbol').click(function(){
+                this.menu.JQ.find('.symbol').click(function(){
                     clickedSymbol = aggSymbols[$(this).attr('title')];
 
                     listEachReversed(start, c, function(e) {
                         e.remove();
                     });
-
 
                     c.parent.JQ.find('.aC-container').remove();
 
