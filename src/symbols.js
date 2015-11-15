@@ -128,7 +128,10 @@ var aggSymbols = {
     'limit': {Tag: Munder, output: 'lim', category: 'Function', rank: "21"},
     'sqrt':  {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}, category: 'Function', rank: "22"},
     // 'root': {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}},
-
+    
+    "nary intersection":    {Tag: Munderover, output: "&bigcap;", category: "Set", rank: "2"},
+    "nary union":           {Tag: Munderover, output: "&bigcup;", category: "Set", rank: "5"},
+    
     'sin':     {Tag: Mi, css: {padding: '0 0.1em 0 0'}},
     'sinh':    {Tag: Mi, css: {padding: '0 0.1em 0 0'}},
     'arcsin':  {Tag: Mi, css: {padding: '0 0.1em 0 0'}},
