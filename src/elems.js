@@ -138,7 +138,7 @@ extend(Mrow, Elem, function(_, _super) {
     _.prependCursor = function(cursor) {
         cursor.moveAfter(this.children);
         if (cursor.isLastChild())
-            this.JQ.prepend(cursor.JQ);
+            this.children.JQ.prepend(cursor.JQ);
         else
             cursor.JQ.insertBefore(cursor.next.JQ);
         return this.cursorStay;
@@ -147,7 +147,7 @@ extend(Mrow, Elem, function(_, _super) {
     _.appendCursor = function(cursor) {
         cursor.moveBefore(this.children);
         if (cursor.isFirstChild())
-            this.JQ.prepend(cursor.JQ);
+            this.children.JQ.prepend(cursor.JQ);
         else
             cursor.JQ.insertAfter(cursor.prev.JQ);
         return this.cursorStay;

@@ -129,6 +129,6 @@ extend(MathInput, Object, function(_) {
     };
 
     _.dumpSavedSelection = function() {
-        return dump(this.cursor.savedSelection, 0, '  ');
+        return dump(clipBoard, 0, '  ');
     };
 });

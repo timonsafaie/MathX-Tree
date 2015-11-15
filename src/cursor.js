@@ -20,7 +20,7 @@ var Cursor = function(root) {
 };
 
 extend(Cursor, Elem, function(_) {
-    var keepSelections = [
+    var cancelSelectKeys = [
         'Left',
         'Right',
         'Tab',
@@ -32,9 +32,6 @@ extend(Cursor, Elem, function(_) {
         'Enter',
         'Click',
         'Select',
-        'Ctrl-C',
-        'Ctrl-X',
-        'Ctrl-Esc'
     ];
 
     _.show = function() {
@@ -52,7 +49,7 @@ extend(Cursor, Elem, function(_) {
 
         var prev = this.prev;
         var next = this.next;
-        if (keepSelections.indexOf(key) !== -1) {
+        if (cancelSelectKeys.indexOf(key) !== -1) {
             if (key == 'Enter') {
                 if (this.parent.JQ.find('.aC-container')) {
                     // Insert highlighted Symbol
@@ -64,15 +61,9 @@ extend(Cursor, Elem, function(_) {
                     node.insert(this);
                 }
             }
-            while (prev.selected) {
-                prev.deSelect();
-                prev = prev.prev;
-            }
-            while (next.selected) {
-                next.deSelect();
-                next = next.next;
-            }
+            this.resetSelection();
         }
+
         if (this.lastAgg && key !== 'Backspace') {
             this.lastAgg.settle();
             delete this.lastAgg;
@@ -214,25 +205,6 @@ extend(Cursor, Elem, function(_) {
             down.prependCursor(this);
     };
 
-    _.delSelection = function() {
-        var prev = this.prev;
-        var next = this.next;
-        var deleted = false;
-        while (prev.selected) {
-            prev = prev.prev;
-            prev.next.remove();
-            deleted = true;
-        }
-        while (next.selected) {
-            next = next.next;
-            next.prev.remove();
-            deleted = true;
-        }
-        if (deleted)
-            this.selection = {start: null, end: null};
-        return deleted;
-    };
-
     _.delLeft = function() {
         if (this.delSelection())
             return;
@@ -244,10 +216,9 @@ extend(Cursor, Elem, function(_) {
         if (this.isFirstChild())
             return;
         var prev = this.prev;
-        if (prev instanceof Mrow && !prev.selected) {
-            prev.select();
-            return;
-        }
+        if (prev instanceof Mrow && !prev.selected)
+            return this.setSelection(prev, prev);
+
         prev.putCursorBefore(this);
         prev.remove();
         // Update SmartMenu
@@ -333,10 +304,9 @@ extend(Cursor, Elem, function(_) {
         if (this.isLastChild())
             return;
         var next = this.next;
-        if (next instanceof Mrow && !next.selected) {
-            next.select();
-            return;
-        }
+        if (next instanceof Mrow && !next.selected)
+            return this.setSelection(next, next);
+
         next.putCursorBefore(this);
         next.remove();
     };
@@ -381,24 +351,34 @@ extend(Cursor, Elem, function(_) {
             this.moveLeft();
     };
 
-    function select(sel) {
-        if (!sel.start)
+    _.resetSelection = function() {
+        if (!this.selection.start)
             return;
-        listEach(sel.start, sel.end.next, function(elem) {
+        var start = this.selection.start;
+        var end = this.selection.end.next;
+        listEach(start, end, function(elem) {
+            elem.deSelect();
+        });
+        this.selection = {start: null, end: null};
+    };
+
+    _.setSelection = function(start, end) {
+        if (!start)
+            return;
+        this.selection = {start: start, end: end};
+        listEach(start, end.next, function(elem) {
             elem.select();
         });
     }
-    function deSelect(sel) {
-        if (!sel.start)
-            return;
-        listEach(sel.start, sel.end.next, function(elem) {
-            elem.deSelect();
-        });
-    }
 
-    _.resetSelection = function() {
-        deSelect(this.selection);
+    _.delSelection = function() {
+        if (!this.selection.start)
+            return false;
+        listEach(this.selection.start, this.selection.end.next, function(elem) {
+            elem.remove();
+        });
         this.selection = {start: null, end: null};
+        return true;
     };
 
     _.updateSelection = function(startX, startY, endX, endY) {
@@ -415,10 +395,9 @@ extend(Cursor, Elem, function(_) {
         if (rec.right - rec.left < 3 && rec.bottom - rec.top < 3)
             return;
 
-        this.selection = this.getSelection(rec, this.root);
+        this.getSelection(rec, this.root);
         if (!this.selection.start)
             return;
-        select(this.selection);
 
         if (startX === rec.left) {
             this.selection.end.putCursorAfter(this);
@@ -454,12 +433,12 @@ extend(Cursor, Elem, function(_) {
         });
 
         if (elems.length === 0)
-            return {start: null, end: null};
+            return;
 
         if (elems.length > 1 || !elems[0].hasChild()) {
             if (node.cursorStay === false)
-                return {start: node, end: node};
-            return {start: elems[0], end: elems[elems.length-1]};
+                return this.setSelection(node, node);
+            return this.setSelection(elems[0], elems[elems.length-1]);
         }
 
         return this.getSelection(rec, elems[0]);
@@ -476,6 +455,8 @@ extend(Cursor, Elem, function(_) {
             var copy = elem.copy();
             copy.addBefore(clipBoard.children);
         });
+
+        this.resetSelection();
     };
 
     _.pasteSelection = function() {
@@ -494,7 +475,17 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.cutSelection = function() {
-        this.copySelection();
+        if (!this.selection.start)
+            return;
+
+        clipBoard.reset();
+        var start = this.selection.start;
+        var end = this.selection.end.next;
+        listEach(start, end, function(elem) {
+            var copy = elem.copy();
+            copy.addBefore(clipBoard.children);
+        });
+
         this.delSelection();
     };
 
