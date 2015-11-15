@@ -15,7 +15,7 @@ SOURCES = \
 	$(SRC_DIR)/entry.js
 
 CSS_DIR = $(SRC_DIR)/css
-FONT_DIR = $(SRC_DIR)/font
+FONT_DIR = $(SRC_DIR)/font/Symbola-Lite
 
 BUILD_DIR = ./build
 BUILD_JS = $(BUILD_DIR)/mathx-tree.js
