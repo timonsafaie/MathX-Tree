@@ -70,7 +70,8 @@ var atomSymbols = [
     {input: '^',             Tag: Msup},
     {input: '_',             Tag: Msub},
     {input: /^[0-9.]$/,      Tag: Mn},
-    {input: /^[+\-|\\]$/,    Tag: Mo}
+    {input: /^[:;,'"$@#%&!=?]$/,    Tag: Mo},
+    {input: /^[+\-|\\]$/,           Tag: Mo}
 ];
 
 var aggSymbols = {
