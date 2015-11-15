@@ -208,14 +208,14 @@ extend(Menu, Object, function(_) {
         var left = this.JQ.find('.resultsrow').css('left');
         var items = this.JQ.find('.resultsrow').children();
         var marquee = '';
-        curr.removeClass('list-row-hover');
+        curr.css('color', '#FFFFFF').removeClass('list-row-hover');
         if (this.mode == 'left') {
             var currIndex = items.index(curr);
             if (currIndex == items.length-1) {
-                $(items[0]).addClass('list-row-hover');
+                $(items[0]).css('color', '#55D7FF').addClass('list-row-hover');
                 marquee = $(items[0]).attr('title');
             } else {
-                curr.next().addClass('list-row-hover');
+                curr.next().css('color', '#55D7FF').addClass('list-row-hover');
                 marquee = curr.next().attr('title');
             }
             if (items.length > 5) {
@@ -231,10 +231,10 @@ extend(Menu, Object, function(_) {
         if (this.mode == 'right') {
             var currIndex = items.index(curr);
             if (currIndex < items.length-1) {
-                curr.next().addClass('list-row-hover');
+                curr.next().css('color', '#55D7FF').addClass('list-row-hover');
                 marquee = curr.next().attr('title');
             } else {
-                $(items[0]).addClass('list-row-hover');
+                $(items[0]).css('color', '#55D7FF').addClass('list-row-hover');
                 marquee = $(items[0]).attr('title');
             }
             if (items.length > 5) {
@@ -255,42 +255,42 @@ extend(Menu, Object, function(_) {
         var left = this.JQ.find('.resultsrow').css('left');
         var items = this.JQ.find('.resultsrow').children();
         var marquee = '';
-        curr.removeClass('list-row-hover');
+        curr.css('color', '#FFFFFF').removeClass('list-row-hover');
         if (this.mode == 'left') {
             var currIndex = items.index(curr);
-            if (currIndex == items.length-1) {
-                $(items[0]).addClass('list-row-hover');
+            if (currIndex == 0) {
+                $(items[items.length-1]).css('color', '#55D7FF').addClass('list-row-hover');
                 marquee = $(items[0]).attr('title');
             } else {
-                curr.next().addClass('list-row-hover');
-                marquee = curr.next().attr('title');
+                curr.prev().css('color', '#55D7FF').addClass('list-row-hover');
+                marquee = curr.prev().attr('title');
             }
             if (items.length > 5) {
-                if (currIndex < items.length-1) {
-                    if ((currIndex+1)%5 == 0) {
-                    this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                if (currIndex > 0) {
+                    if ((currIndex)%5 == 0) {
+                    this.JQ.find('.resultsrow').animate({left: '+=250px'}, 400);
                     }
                 } else {
-                    this.JQ.find('.resultsrow').animate({left: '0px'}, 400);
+                    this.JQ.find('.resultsrow').animate({left: '-'+(Math.ceil(items.length/5)-1)*250+'px'}, 400);
                 }
             }
         }
         if (this.mode == 'right') {
             var currIndex = items.index(curr);
-            if (currIndex < items.length-1) {
-                curr.next().addClass('list-row-hover');
-                marquee = curr.next().attr('title');
+            if (currIndex > 0) {
+                curr.prev().css('color', '#55D7FF').addClass('list-row-hover');
+                marquee = curr.prev().attr('title');
             } else {
-                $(items[0]).addClass('list-row-hover');
-                marquee = $(items[0]).attr('title');
+                $(items[items.length-1]).css('color', '#55D7FF').addClass('list-row-hover');
+                marquee = $(items[items.length-1]).attr('title');
             }
             if (items.length > 5) {
-                if (currIndex < items.length-1) {
-                    if ((currIndex+1)%5 == items.length%5) {
-                        this.JQ.find('.resultsrow').animate({left: '-=250px'}, 400);
+                if (currIndex > 0) {
+                    if ((currIndex)%5 == items.length%5) {
+                        this.JQ.find('.resultsrow').animate({left: '+=250px'}, 400);
                     }
                 } else {
-                    this.JQ.find('.resultsrow').animate({left: '+='+((Math.ceil(items.length/5)-1)*250)+'px'}, 400);
+                    this.JQ.find('.resultsrow').animate({left: '-='+((Math.ceil(items.length/5)-1)*250)+'px'}, 400);
                 }
             }
         }

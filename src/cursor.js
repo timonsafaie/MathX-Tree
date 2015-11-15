@@ -88,39 +88,48 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveLeft = function() {
-        var stay;
-        if (this.isFirstChild()) {
-            var parent = this.parent;
-            if (parent.isRoot)
-                return;
-            stay = parent.putCursorBefore(this);
+        if (this.parent.JQ.find('.aC-container').children().length > 0) {
+            this.menu.moveLeft();
         } else {
-            var prev = this.prev;
-            if (prev instanceof Mrow)
-                stay = prev.appendCursor(this);
-            else
-                stay = prev.putCursorBefore(this);
+            var stay;
+            if (this.isFirstChild()) {
+                var parent = this.parent;
+                if (parent.isRoot)
+                    return;
+                stay = parent.putCursorBefore(this);
+            } else {
+                var prev = this.prev;
+                if (prev instanceof Mrow)
+                    stay = prev.appendCursor(this);
+                else
+                    stay = prev.putCursorBefore(this);
+            }
+            if (!stay)
+                this.moveLeft();
         }
-        if (!stay)
-            this.moveLeft();
     };
 
     _.moveRight = function() {
-        var stay;
-        if (this.isLastChild()) {
-            var parent = this.parent;
-            if (parent.isRoot)
-                return;
-            stay = parent.putCursorAfter(this);
+        if (this.parent.JQ.find('.aC-container').children().length > 0) {
+            this.menu.moveRight();
         } else {
-            var next = this.next;
-            if (next instanceof Mrow)
-                stay = next.prependCursor(this);
-            else
-                stay = next.putCursorAfter(this);
+            var stay;
+            if (this.isLastChild()) {
+                var parent = this.parent;
+                if (parent.isRoot)
+                    return;
+                stay = parent.putCursorAfter(this);
+            } else {
+                var next = this.next;
+                if (next instanceof Mrow)
+                    stay = next.prependCursor(this);
+                else
+                    stay = next.putCursorAfter(this);
+            }
+            if (!stay)
+                this.moveRight();
         }
-        if (!stay)
-            this.moveRight();
+        
     };
 
     _.moveFirst = function() {
@@ -139,6 +148,10 @@ extend(Cursor, Elem, function(_) {
 
     _.movePrevRow = function() {
         var parent = this.parent;
+        if (parent.JQ.find('.aC-container')) {
+            this.menu.moveLeft();
+            return;
+        }
         if (parent.isRoot && this.isFirstChild())
             return;
         var prev = this.prev;
