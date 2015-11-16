@@ -543,14 +543,14 @@ extend(Cursor, Elem, function(_) {
         var aggList = [];
         listEachReversed(start, this, function(e) {
             search = e.input + search;
-            if (aggSymbols.hasOwnProperty(search)) {
-                agg = aggSymbols[search];
+            if (aggSymbols.hasOwnProperty(search.trim())) {
+                agg = aggSymbols[search.trim()];
                 input = search;
                 start = e;
             }
-            if (search.length > 2) {
+            if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols)
-                    if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
+                    if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
                         target = search;
                         start = e;
                     }
