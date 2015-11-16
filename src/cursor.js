@@ -51,14 +51,18 @@ extend(Cursor, Elem, function(_) {
         var next = this.next;
         if (cancelSelectKeys.indexOf(key) !== -1) {
             if (key == 'Enter') {
-                if (this.parent.JQ.find('.aC-container')) {
+                var mx = this.parent;
+                while (mx.JQ.attr('class') != 'mX-container') {
+                    mx = mx.parent;
+                }
+                if (mx.JQ.find('.aC-container').children().length > 0) {
                     // Insert highlighted Symbol
                     var insert = aggSymbols[this.menu.JQ.find('.list-row-hover').attr('title')];
                     listEachReversed(this.menu.start, this, function(e) {
                         e.remove();
                     });
-                    if (this.parent.JQ.find('.aC-container'))
-                        this.parent.JQ.find('.aC-container').remove();
+                    if (mx.JQ.find('.aC-container').children().length > 0)
+                        mx.JQ.find('.aC-container').remove();
                     var node = new insert.Tag('Enter', insert);
                     node.insert(this);
                 }
@@ -86,7 +90,11 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveLeft = function() {
-        if (this.parent.JQ.find('.aC-container').children().length > 0) {
+        var mx = this.parent;
+        while (mx.JQ.attr('class') != 'mX-container') {
+            mx = mx.parent;
+        }
+        if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
         } else {
             var stay;
@@ -108,7 +116,11 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveRight = function() {
-        if (this.parent.JQ.find('.aC-container').children().length > 0) {
+        var mx = this.parent;
+        while (mx.JQ.attr('class') != 'mX-container') {
+            mx = mx.parent;
+        }
+        if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
         } else {
             var stay;
@@ -146,7 +158,11 @@ extend(Cursor, Elem, function(_) {
 
     _.movePrevRow = function() {
         var parent = this.parent;
-        if (parent.JQ.find('.aC-container').children().length > 0) {
+        var mx = parent;
+        while (mx.JQ.attr('class') != 'mX-container') {
+            mx = mx.parent;
+        }
+        if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
             return;
         }
@@ -165,8 +181,13 @@ extend(Cursor, Elem, function(_) {
 
     _.moveNextRow = function() {
         var parent = this.parent;
-        if (parent.JQ.find('.aC-container').children().length > 0) {
+        var mx = parent;
+        while (mx.JQ.attr('class') != 'mX-container') {
+            mx = mx.parent;
+        }
+        if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
+            return;
         }
         if (parent.isRoot && this.isLastChild())
             return;
@@ -236,6 +257,10 @@ extend(Cursor, Elem, function(_) {
         prev.putCursorBefore(this);
         prev.remove();
         // Update SmartMenu
+        var parent = this.parent;
+        while (parent.JQ.attr('class') != 'mX-container') {
+            parent = parent.parent;
+        }
         var start = this.parent.firstChild();
         var search ='';
         var target = '';
@@ -268,24 +293,24 @@ extend(Cursor, Elem, function(_) {
         }
         if (aggList.length > 0) {
             // Add list and display SmartMenu
-            if (this.parent.JQ.find('.aC-container')) {
-                this.parent.JQ.find('.aC-container').remove();
+            if (parent.JQ.find('.aC-container')) {
+                parent.JQ.find('.aC-container').remove();
             }
             this.menu = new Menu(aggList, target, start);
-            this.menu.JQ.appendTo(this.parent.JQ);
+            this.menu.JQ.appendTo(parent.JQ);
             var mode = 'left';
             // Calculates how far (in %) the cursor is into the textbox
             var cursorOffset = ((this.JQ.offset().left - 
-                                 this.parent.JQ.offset().left)/
-                                this.parent.JQ.parent().width())*100;
+                                 parent.JQ.offset().left)/
+                                 parent.JQ.parent().width())*100;
             if (cursorOffset > 50) {
                 mode = 'right';
             }
             this.menu.display(mode);
             
             // Fix location above cursor
-            this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-            var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
+            this.menu.JQ.css('top', this.JQ.offset().top-parent.JQ.offset().top-40);
+            var leftOffset = this.JQ.offset().left-parent.JQ.offset().left-(2*40);
             if (mode == 'right') {
                 leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
             }
@@ -304,11 +329,11 @@ extend(Cursor, Elem, function(_) {
                 var node = new clickedSymbol.Tag('click', clickedSymbol);
                 node.insert(c);
 
-                c.parent.JQ.find('.aC-container').remove();
+                parent.JQ.find('.aC-container').remove();
             });
         } else {
-            if (this.parent.JQ.find('.aC-container'))
-                   this.parent.JQ.find('.aC-container').remove();
+            if (parent.JQ.find('.aC-container'))
+                   parent.JQ.find('.aC-container').remove();
         }
     };
 
@@ -506,6 +531,11 @@ extend(Cursor, Elem, function(_) {
     _.reduceAgg = function() {
         var agg, input;
         
+        var parent = this.parent;
+        while (parent.JQ.attr('class') != 'mX-container') {
+            parent = parent.parent;
+        }
+
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
@@ -526,6 +556,7 @@ extend(Cursor, Elem, function(_) {
                     }
              }
         });
+        //console.log('start: '+start.input+' target: '+target+' input: '+input);
         /*
         if (!agg) {
             if (target) {
@@ -599,21 +630,21 @@ extend(Cursor, Elem, function(_) {
             }
             // Add list and display SmartMenu
             this.menu = new Menu(aggList, input, start);
-            this.parent.JQ.find('.aC-container').remove();
-            this.menu.JQ.appendTo(this.parent.JQ);
+            parent.JQ.find('.aC-container').remove();
+            this.menu.JQ.appendTo(parent.JQ);
             var mode = 'left';
             // Calculates how far (in %) the cursor is into the textbox
             var cursorOffset = ((this.JQ.offset().left - 
-                                 this.parent.JQ.offset().left)/
-                                this.parent.JQ.parent().width())*100;
+                                 parent.JQ.offset().left)/
+                                 parent.JQ.parent().width())*100;
             if (cursorOffset > 50) {
                 mode = 'right';
             }
             this.menu.display(mode);
 
             // Fix location above cursor
-            this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-            var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
+            this.menu.JQ.css('top', this.JQ.offset().top-parent.JQ.offset().top-40);
+            var leftOffset = this.JQ.offset().left-parent.JQ.offset().left-(2*40);
             if (mode == 'right') {
                 leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
             }
@@ -629,7 +660,7 @@ extend(Cursor, Elem, function(_) {
                     e.remove();
                 });
 
-                c.parent.JQ.find('.aC-container').remove();
+                parent.JQ.find('.aC-container').remove();
 
                 var node = new clickedSymbol.Tag('click', clickedSymbol);
                 node.insert(c);
@@ -639,8 +670,8 @@ extend(Cursor, Elem, function(_) {
         } 
         
         // Hide SmartMenu
-        if (this.parent.JQ.find('.aC-container')) {
-            this.parent.JQ.find('.aC-container').remove();
+        if (parent.JQ.find('.aC-container')) {
+            parent.JQ.find('.aC-container').remove();
         }
         
         
