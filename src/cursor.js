@@ -272,16 +272,18 @@ extend(Cursor, Elem, function(_) {
             }
             if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols) {
-                    if ((aggSymbol.indexOf(search) > -1) && (aggSymbols[aggSymbol].rank)) {
+                    if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
                         // Add symbol to SmartMenu candidate list
                         target = search;
-                        start = e;
+                        if (search == search.trim())
+                            start = e;
                     }
                 }
              }
         });
         if (target) {
             for (var aggSymbol in aggSymbols) {
+                target = target.trim();
                 if ((aggSymbol.indexOf(target) > -1) && (aggSymbols[aggSymbol].rank)) {
                     var aggNode = {
                          aggSymbol: aggSymbol,
@@ -546,13 +548,15 @@ extend(Cursor, Elem, function(_) {
             if (aggSymbols.hasOwnProperty(search.trim())) {
                 agg = aggSymbols[search.trim()];
                 input = search;
-                start = e;
+                if (search == search.trim())
+                    start = e;
             }
             if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols)
                     if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
                         target = search;
-                        start = e;
+                        if (search == search.trim())
+                            start = e;
                     }
              }
         });
@@ -629,7 +633,7 @@ extend(Cursor, Elem, function(_) {
                 }
             }
             // Add list and display SmartMenu
-            this.menu = new Menu(aggList, input, start);
+            this.menu = new Menu(aggList, trimTarget, start);
             parent.JQ.find('.aC-container').remove();
             this.menu.JQ.appendTo(parent.JQ);
             var mode = 'left';
