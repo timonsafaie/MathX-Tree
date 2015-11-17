@@ -1,5 +1,5 @@
 // auto-generated
-var _aggSymbols = {
+var aggSymbols2 = {
     "left arrow": {Tag: Mi, output: "&larr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "1"},
     "right arrow": {Tag: Mi, output: "&rarr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "2"},
     "left right arrow": {Tag: Mi, output: "&harr;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "3"},
@@ -62,9 +62,9 @@ var _aggSymbols = {
     "left perpendicular": {Tag: Mi, output: "&#8867;", family: "symbol", category: "Geometry", rank: "12"},
     "right perpendicular": {Tag: Mi, output: "&#8866;", family: "symbol", category: "Geometry", rank: "13"},
     "triangle": {Tag: Mi, output: "&#9651;", family: "symbol", category: "Geometry", rank: "14"},
-    "alpha": {Tag: Mi, output: "&alpha;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "1"},
-    "beta": {Tag: Mi, output: "&#x1d6fd;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "2"},
-    "gamma": {Tag: Mi, output: "&#x1d6fe;", css: {"padding":"0 .15em 0 0"}, family: "symbol", category: "Greek", rank: "3"},
+    "alpha": {Tag: Mi, output: "&alpha;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "1", version: "basic"},
+    "beta": {Tag: Mi, output: "&#x1d6fd;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "2", version: "basic"},
+    "gamma": {Tag: Mi, output: "&#x1d6fe;", css: {"padding":"0 .15em 0 0"}, family: "symbol", category: "Greek", rank: "3", version: "basic"},
     "delta": {Tag: Mi, output: "&#x1d6ff;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "4"},
     "epsilon": {Tag: Mi, output: "&#x1d700;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "5"},
     "zeta": {Tag: Mi, output: "&#x1d701;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "6"},
@@ -77,7 +77,7 @@ var _aggSymbols = {
     "nu": {Tag: Mi, output: "&#x1d708;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "13"},
     "xi": {Tag: Mi, output: "&#x1d709;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "14"},
     "omicron": {Tag: Mi, output: "&#x1d70a;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "15"},
-    "pi": {Tag: Mi, output: "&#x1d70b;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "16"},
+    "pi": {Tag: Mi, output: "&#x1d70b;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "16", version: "basic"},
     "rho": {Tag: Mi, output: "&#x1d70c;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "17"},
     "sigma": {Tag: Mi, output: "&#x1d70e;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "18"},
     "tau": {Tag: Mi, output: "&#x1d70f;", css: {"padding":"0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "19"},
@@ -142,14 +142,14 @@ var _aggSymbols = {
     "congruent": {Tag: Mi, output: "&cong;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "5"},
     "equivalent": {Tag: Mi, output: "&equiv;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "6"},
     "questioned equal": {Tag: Mi, output: "&#8799;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "7"},
-    "not equal": {Tag: Mi, output: "&ne;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "8"},
+    "not equal": {Tag: Mi, output: "&ne;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "8", version: "basic"},
     "not almost equal": {Tag: Mi, output: "&#8777;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "9"},
     "not asymptotically equal": {Tag: Mi, output: "&#8772;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "10"},
     "not identical": {Tag: Mi, output: "&#8802;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "11"},
     "not equivalent": {Tag: Mi, output: "&#8802;", css: {"padding":"0 .2em 0 .2em"}, family: "symbol", category: "Relation", rank: "12"},
     "proportion": {Tag: Mi, output: "&prop;", family: "symbol", category: "Relation", rank: "13"},
-    "less than or equal": {Tag: Mi, output: "&#8804;", family: "symbol", category: "Relation", rank: "14"},
-    "greater than or equal ": {Tag: Mi, output: "&#8805;", family: "symbol", category: "Relation", rank: "15"},
+    "less than or equal": {Tag: Mi, output: "&#8804;", family: "symbol", category: "Relation", rank: "14", version: "basic"},
+    "greater than or equal ": {Tag: Mi, output: "&#8805;", family: "symbol", category: "Relation", rank: "15", version: "basic"},
     "intersection": {Tag: Mi, output: "&cap;", css: {"padding":"0 .35em 0 .35em"}, family: "symbol", category: "Set", rank: "1"},
     "double intersection": {Tag: Mi, output: "&#8915;", css: {"padding":"0 .35em 0 .35em"}, family: "symbol", category: "Set", rank: "3"},
     "union": {Tag: Mi, output: "&cup;", css: {"padding":"0 .35em 0 .35em"}, family: "symbol", category: "Set", rank: "4"},
@@ -192,6 +192,5 @@ var _aggSymbols = {
     "infinity": {Tag: Mi, output: "&infin;", family: "symbol", category: "Special Character", rank: "1"},
     "h bar": {Tag: Mi, output: "&#x210f;", family: "symbol", category: "Special Character", rank: "2"},
     "Planck constant": {Tag: Mi, output: "&#x210e;", family: "symbol", category: "Special Character", rank: "3"},
-    "weierstrass power set": {Tag: Mi, output: "&weierp;", family: "symbol", category: "Special Character", rank: "4"},
-    null: null
+    "weierstrass power set": {Tag: Mi, output: "&weierp;", family: "symbol", category: "Special Character", rank: "4"}
 }

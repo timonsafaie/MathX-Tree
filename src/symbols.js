@@ -74,13 +74,13 @@ var atomSymbols = [
     {input: /^[+\-|\\]$/,           Tag: Mo}
 ];
 
-var aggSymbols = {
-    '+-':                 {Tag: Mo, output: '&pm;'},
+var aggSymbols1 = {
+    '+-':                 {Tag: Mo, output: '&pm;', version: "basic"},
     '-+':                 {Tag: Mo, output: '&mp;'},
-    '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'}},
-    '>=':                 {Tag: Mo, output: '&geq;', css: {padding: '0 .2em'}},
+    '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'}, version: "basic"},
+    '>=':                 {Tag: Mo, output: '&geq;', css: {padding: '0 .2em'}, version: "basic"},
     '=>':                 {Tag: Mo, output: '&rArr;'},
-    '->':                 {Tag: Mo, output: '&rarr;'},
+    '->':                 {Tag: Mo, output: '&rarr;', version: "basic"},
     '<-':                 {Tag: Mo, output: '&larr;'},
     '->':                 {Tag: Mo, output: '&rarr;'},
     '<->':                {Tag: Mo, output: '&harr;'},
@@ -121,7 +121,7 @@ var aggSymbols = {
     'cup product':         {Tag: Munderover, output: '&bigsqcup;', category: 'Function', rank: "17"},
     'cap product':         {Tag: Munderover, output: '&sqcap;', category: 'Function', rank: "18"},
 
-    'sum':                {Tag: Munderover, output: '&Sum;', category: 'Function', rank: "19"},
+    'sum':                {Tag: Munderover, output: '&Sum;', category: 'Function', rank: "19", version: "basic"},
     'direct sum':          {Tag: Munderover, output: '&#8853;', category: 'Function', rank: "20"},
 
     'lim':   {Tag: Munder, output: 'lim', category: 'Function', rank: "21"},
@@ -171,7 +171,16 @@ var aggSymbols = {
     'tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}}
 };
 
-for (var key in _aggSymbols) {
-    if (_aggSymbols.hasOwnProperty(key))
-        aggSymbols[key] = _aggSymbols[key];
+var aggSymbols = {};
+
+function addAggSymbols(dict) {
+    for (var key in dict) {
+        if (dict.hasOwnProperty(key)) {
+            if (version === 'basic' && dict[key].version !== 'basic')
+                continue;
+            aggSymbols[key] = dict[key];
+        }
+    }
 }
+addAggSymbols(aggSymbols1);
+addAggSymbols(aggSymbols2);
