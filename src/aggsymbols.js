@@ -1,6 +1,6 @@
 // auto-generated
 var aggSymbols2 = {
-        "left arrow": {Tag: Mi, output: "&larr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "1", latex: "\\leftarrow"},
+    "left arrow": {Tag: Mi, output: "&larr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "1", latex: "\\leftarrow"},
     "right arrow": {Tag: Mi, output: "&rarr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "2", latex: "\\rightarrow"},
     "left right arrow": {Tag: Mi, output: "&harr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "3", latex: "\\leftrightarrow"},
     "map": {Tag: Mi, output: "&#8614;", family: "symbol", category: "Arrow", rank: "4", latex: "\\mapsto"},
