@@ -1,3 +1,3 @@
 (function() {
 
-var version = 'basic';
+var version = 'full';
