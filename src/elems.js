@@ -3,13 +3,12 @@ allElems = {};
 
 var Elem = function(tag, input, info) {
     Node.call(this);
-    this.tag = tag;
+    this.tag = (tag)? tag : 'mrow';
     this.input = input;
     this.output = input;
     this.info = info;
     if (info && info.output !== undefined)
         this.output = info.output;
-
     this.id = elemId++;
     allElems[this.id] = this;
 
@@ -65,36 +64,25 @@ extend(Elem, Node, function(_, _super) {
         this.selected = false;
         this.JQ.removeClass('mx-selected');
     };
-
-    // Temporary Target Highlighting
-    // inplace of SmartMenu display
-    /*
-    _.showMenu = function() {
-        this.showMenu = true;
-        this.JQ.addClass('showMenu');
-    };
-    
-    _.hideMenu = function() {
-        this.showMenu = false;
-        this.JQ.removeClass('showMenu');
-    };
-    */
 });
 
 var Mi = function(input, info) {
     Elem.call(this, 'mi', input, info);
+    this.JQ.attr('data-value', input);
 };
 
 extend(Mi, Elem);
 
 var Mo = function(input, info) {
     Elem.call(this, 'mo', input, info);
+    this.JQ.attr('data-value', input);
 };
 
 extend(Mo, Elem);
 
 var Mn = function(input, info) {
     Elem.call(this, 'mn', input, info);
+    this.JQ.attr('data-value', input);
 };
 
 extend(Mn, Elem);
@@ -298,7 +286,7 @@ var Munder = function(input, info) {
 extend(Munder, Mrow);
 
 var Mover = function(input, info) {
-    Mrow.call(this, 'munder', input, info);
+    Mrow.call(this, 'mover', input, info);
 
     this.JQ = $('<span class="mover">' +
                 '<span class="mover-sym">' + this.output + '</span>' +
@@ -360,8 +348,8 @@ var Mfrac = function(input, info) {
     Mrow.call(this, 'mfrac', input, info);
     this.cursorStay = false;
 
-    this.over = new Mover();
-    this.under = new Munder();
+    this.over = new Mrow();
+    this.under = new Mrow();
     this.over.addBefore(this.children);
     this.under.addBefore(this.children);
 
