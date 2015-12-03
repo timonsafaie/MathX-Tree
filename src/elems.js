@@ -113,8 +113,6 @@ extend(Mrow, Elem, function(_, _super) {
         cursor.moveAfter(this.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.children.JQ);
-        if (this.repose)
-            this.repose();
     };
 
     _.copy = function() {
@@ -164,12 +162,17 @@ var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
 
     this.JQ = $('<sub class="und-holder"><span>&#8203;</span></sub>');
-    this.JQ.css({verticalAlign: '-0.325em', fontSize: '0.72em'});
+    this.JQ.css('font-size', '0.72em');
 
     this.children.JQ = this.JQ;
 };
 
 extend(Msub, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        this.repose();
+    };
+
     _.putCursorBefore = function(cursor) {
         var prev = this.prev;
         return _super.putCursorBefore.call(this, cursor) && !(prev instanceof Msup);
@@ -182,8 +185,14 @@ extend(Msub, Mrow, function(_, _super) {
 
     _.repose = function() {
         var prev = this.prev;
-        if (prev instanceof Msup)
+        if (prev instanceof Msup) {
             this.JQ.css('margin-left', -prev.JQ.width());
+            prev = prev.prev;
+        }
+        if (prev.JQ) {
+            var height = prev.JQ.outerHeight() * -0.325;
+            this.JQ.css('vertical-align', height);
+        }
     };
 
     _.resize = function() {
@@ -197,12 +206,17 @@ var Msup = function(input, info) {
     Mrow.call(this, 'msup', input, info);
 
     this.JQ = $('<sup class="exp-holder"><span>&#8203;</span></sup>');
-    this.JQ.css({verticalAlign: '0.625em', fontSize: '0.72em'});
+    this.JQ.css('font-size', '0.72em');
 
     this.children.JQ = this.JQ;
 };
 
 extend(Msup, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        this.repose();
+    };
+
     _.putCursorBefore = function(cursor) {
         var prev = this.prev;
         return _super.putCursorBefore.call(this, cursor) && !(prev instanceof Msub);
@@ -215,8 +229,14 @@ extend(Msup, Mrow, function(_, _super) {
 
     _.repose = function() {
         var prev = this.prev;
-        if (prev instanceof Msub)
+        if (prev instanceof Msub) {
             this.JQ.css('margin-left', -prev.JQ.width());
+            prev = prev.prev;
+        }
+        if (prev.JQ) {
+            var height = prev.JQ.outerHeight() * 0.5;
+            this.JQ.css('vertical-align', height);
+        }
     };
 
     _.resize = function() {
@@ -425,7 +445,7 @@ var Menclose = function(input, info) {
     this.menclosed.addBefore(this.children);
     this.mclose.addBefore(this.children);
 
-    this.JQ = $('<span>' +
+    this.JQ = $('<span class="brack-holder">' +
                 '<span class="mX mopen">' + this.mopen.output + '</span>' +
                 '<span class="brack-holder menclosed"></span>' +
                 '<span class="mX mclose unsettled">' + this.mclose.output + '</span>' +

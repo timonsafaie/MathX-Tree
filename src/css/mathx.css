@@ -37,6 +37,13 @@
   width: 0.2em;
 }
 
+.mopen {
+    vertical-align: 0.2em;
+}
+.mclose {
+    vertical-align: 0.2em;
+}
+
 .munder {
   display:inline-block;
   vertical-align:-1em;
@@ -871,11 +878,6 @@
   vertical-align: bottom;
   transform-origin: bottom center;
 }
-
-
-
-
-
 
 /*  sub/sup */
 .exp, .und {
