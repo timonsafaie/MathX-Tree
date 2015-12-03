@@ -479,6 +479,19 @@ extend(Menclose, Mrow, function(_, _super) {
         var transform = 'scale(1, ' + scale + ')';
         this.mopen.JQ.css({transform: transform});
         this.mclose.JQ.css({transform: transform});
+
+        var next = this.next;
+        if (next instanceof Msup) {
+            next.repose();
+            next = next.next;
+            if (next instanceof Msub)
+                next.repose();
+        } else if (next instanceof Msub) {
+            next.repose();
+            next = next.next;
+            if (next instanceof Msup)
+                next.repose();
+        }
     };
 
     _.resetMclose = function(mclose) {
