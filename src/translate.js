@@ -1,17 +1,25 @@
 function serialize(node, level, indent) {
-    var result = indent.repeat(level);
-    if (node.tag == 'root')
-        node.tag = 'math';
-    result += '<' + node.tag + '>';
-    if (node instanceof Mrow) {
-        var start = node.children.next;
-        var end = node.children;
-        result += listFold(start, end, '\n', serialize, level+1, indent);
+    var result = "";
+    if (node.tag != 'mopen' && node.tag != 'mclose') {
         result += indent.repeat(level);
-    } else {
-        result += node.input;
+        if (node.tag == 'root')
+            node.tag = 'math';
+        result += '<' + node.tag + '>';
+        if (node instanceof Mrow) {
+            var start = node.children.next;
+            var end = node.children;
+            if (node instanceof Menclose) {
+                result = result.substr(0, result.length-2)+' open="'+start.input+'"';
+                result += ' close="'+end.prev.input+'"';
+                result += '>';
+            }
+            result += listFold(start, end, '\n', serialize, level+1, indent);
+            result += indent.repeat(level);
+        } else {
+            result += node.input;
+        }
+        result += '</' + node.tag + '>\n';
     }
-    result += '</' + node.tag + '>\n';
     return result;
 }
 
@@ -57,7 +65,13 @@ function toLatex(node) {
                 result += '\\sqrt{';
                 enclose = '}';
                 break;
-            case 'menclose':
+            case 'mfenced':
+                var left = (start.input == "{")? "\\{" : start.input;
+                var right = (end.prev.input == "}")? "\\}" : end.prev.input;
+                result += '\\left'+left;
+                result += toLatex(node.children.next.next);
+                result += '\\right'+right;
+                skip = true;
                 break;
         }
         if (!skip)

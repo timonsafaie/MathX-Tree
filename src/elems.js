@@ -413,13 +413,13 @@ extend(Mclose, Elem, function(_, _super) {
 });
 
 var Menclose = function(input, info) {
-    Mrow.call(this, 'menclose', input, info);
+    Mrow.call(this, 'mfenced', input, info);
     this.settled = false;
     this.cursorStay = false;
 
     this.mopen = new Elem('mopen', input, info);
     this.mclose = new Mclose(info.closeInfo.input, info.closeInfo);
-    this.menclosed = new Mrow('menclosed');
+    this.menclosed = new Mrow('mrow');
 
     this.mopen.addBefore(this.children);
     this.menclosed.addBefore(this.children);
