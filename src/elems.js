@@ -454,7 +454,8 @@ extend(Menclose, Mrow, function(_, _super) {
     };
 
     _.resize = function() {
-        var scale = this.menclosed.JQ.outerHeight()/+this.menclosed.JQ.css('fontSize').slice(0,-2);
+        var $enclosed = this.menclosed.children.JQ;
+        var scale = $enclosed.outerHeight()/+$enclosed.css('fontSize').slice(0,-2);
         var transform = 'scale(1, ' + scale + ')';
         this.mopen.JQ.css({transform: transform});
         this.mclose.JQ.css({transform: transform});
