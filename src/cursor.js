@@ -57,13 +57,17 @@ extend(Cursor, Elem, function(_) {
                 }
                 if (mx.JQ.find('.aC-container').children().length > 0) {
                     // Insert highlighted Symbol
-                    var insert = aggSymbols[this.menu.JQ.find('.list-row-hover').attr('title')];
+                    var symbol = this.menu.JQ.find('.list-row-hover').attr('title');
+                    var insert = aggSymbols[symbol];
+                    
                     listEachReversed(this.menu.start, this, function(e) {
                         e.remove();
                     });
+                    
                     if (mx.JQ.find('.aC-container').children().length > 0)
                         mx.JQ.find('.aC-container').remove();
-                    var node = new insert.Tag('Enter', insert);
+                    
+                    var node = new insert.Tag(symbol, insert);
                     node.insert(this);
                 }
             }
@@ -560,66 +564,7 @@ extend(Cursor, Elem, function(_) {
                     }
              }
         });
-        //console.log('start: '+start.input+' target: '+target+' input: '+input);
-        /*
-        if (!agg) {
-            if (target) {
-                var trimTarget = target.trim();
-                for(var aggSymbol in aggSymbols) {
-                    if ((aggSymbol.indexOf(trimTarget) > -1) && (aggSymbols[aggSymbol].rank)) {
-                        input = target;
-                        var aggNode = {
-                             aggSymbol: aggSymbol,
-                             props: aggSymbols[aggSymbol]
-                        }
-                        aggList.push(aggNode);
-                    }
-                }
-                // Add list and display SmartMenu
-                this.menu = new Menu(aggList, input, start);
-                this.parent.JQ.find('.aC-container').remove();
-                this.menu.JQ.appendTo(this.parent.JQ);
-                var mode = 'left';
-                // Calculates how far (in %) the cursor is into the textbox
-                var cursorOffset = ((this.JQ.offset().left - 
-                                     this.parent.JQ.offset().left)/
-                                    this.parent.JQ.parent().width())*100;
-                if (cursorOffset > 50) {
-                    mode = 'right';
-                }
-                this.menu.display(mode);
-
-                // Fix location above cursor
-                this.menu.JQ.css('top', this.JQ.offset().top-this.parent.JQ.offset().top-40);
-                var leftOffset = this.JQ.offset().left-this.parent.JQ.offset().left-(2*40);
-                if (mode == 'right') {
-                    leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
-                }
-                this.menu.JQ.css('left', leftOffset);
-                
-                // Setup Clicking
-                var clickedSymbol = "";
-                var c = this;
-                this.menu.JQ.find('.symbol').click(function(){
-                    clickedSymbol = aggSymbols[$(this).attr('title')];
-
-                    listEachReversed(start, c, function(e) {
-                        e.remove();
-                    });
-
-                    c.parent.JQ.find('.aC-container').remove();
-
-                    var node = new clickedSymbol.Tag('click', clickedSymbol);
-                    node.insert(c);
-
-                });
-            } else {
-                if (this.parent.JQ.find('.aC-container'))
-                   this.parent.JQ.find('.aC-container').remove();
-            }
-            return;
-        }
-        */
+        
         if (target && target != input) {
             var trimTarget = target.trim();
             for(var aggSymbol in aggSymbols) {
@@ -658,7 +603,8 @@ extend(Cursor, Elem, function(_) {
             var clickedSymbol = "";
             var c = this;
             this.menu.JQ.find('.symbol').click(function(){
-                clickedSymbol = aggSymbols[$(this).attr('title')];
+                var symbol = $(this).attr('title');
+                clickedSymbol = aggSymbols[symbol];
 
                 listEachReversed(start, c, function(e) {
                     e.remove();
@@ -666,7 +612,7 @@ extend(Cursor, Elem, function(_) {
 
                 parent.JQ.find('.aC-container').remove();
 
-                var node = new clickedSymbol.Tag('click', clickedSymbol);
+                var node = new clickedSymbol.Tag(symbol, clickedSymbol);
                 node.insert(c);
 
             });
@@ -690,6 +636,7 @@ extend(Cursor, Elem, function(_) {
         node.insert(this);
         this.lastAgg = node;
         this.lastAgg.unsettle();
+            
     };
 
     _.expandAgg = function(agg, before) {
