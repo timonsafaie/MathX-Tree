@@ -16,7 +16,10 @@ function serialize(node, level, indent) {
             result += listFold(start, end, '\n', serialize, level+1, indent);
             result += indent.repeat(level);
         } else {
-            result += node.input;
+            var cmd = node.input;
+            if (aggSymbols[node.input])
+                cmd = aggSymbols[node.input].output;
+            result += cmd;
         }
         result += '</' + node.tag + '>\n';
     }
@@ -78,7 +81,7 @@ function toLatex(node) {
             result += listFold(start, end, delimiter, toLatex);
         result += enclose;
     } else if (node instanceof Mspace) {
-        result += '\\';
+        result += '\\ ';
     } else {
         var cmd = node.input;
         if (aggSymbols[node.input])
