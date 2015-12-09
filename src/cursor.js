@@ -209,16 +209,16 @@ extend(Cursor, Elem, function(_) {
     _.moveUp = function() {
         var parent = this.parent;
         var up = null;
-        if (parent instanceof Msub) {
-            if (parent.next instanceof Msup)
+        if (parent.tag === 'msub') {
+            if (parent.next.tag === 'msup')
                 up = parent.next;
-            else if (parent.prev instanceof Msup)
+            else if (parent.prev.tag === 'msup')
                 up = parent.prev;
         }
-        if (parent instanceof Munder) {
-            if (parent.next instanceof Mover)
+        if (parent.tag === 'munder') {
+            if (parent.next.tag === 'mover')
                 up = parent.next;
-            if (parent.prev instanceof Mover)
+            if (parent.prev.tag === 'mover')
                 up = parent.prev
         }
         if (up !== null)
@@ -228,16 +228,16 @@ extend(Cursor, Elem, function(_) {
     _.moveDown = function() {
         var parent = this.parent;
         var down = null;
-        if (parent instanceof Msup) {
-            if (parent.next instanceof Msub)
+        if (parent.tag === 'msup') {
+            if (parent.next.tag === 'msub')
                 down = parent.next;
-            else if (parent.prev instanceof Msub)
+            else if (parent.prev.tag === 'msub')
                 down = parent.prev;
         }
-        if (parent instanceof Mover) {
-            if (parent.next instanceof Munder)
+        if (parent.tag === 'mover') {
+            if (parent.next.tag === 'munder')
                 down = parent.next;
-            if (parent.prev instanceof Munder)
+            if (parent.prev.tag === 'munder')
                 down = parent.prev
         }
         if (down !== null)
