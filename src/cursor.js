@@ -298,30 +298,10 @@ extend(Cursor, Elem, function(_) {
             }
         }
         if (aggList.length > 0) {
-            // Add list and display SmartMenu
-            if (parent.JQ.find('.aC-container')) {
-                parent.JQ.find('.aC-container').remove();
-            }
-            this.menu = new Menu(aggList, target, start);
-            this.menu.JQ.appendTo(parent.JQ);
-            var mode = 'left';
-            // Calculates how far (in %) the cursor is into the textbox
-            var cursorOffset = ((this.JQ.offset().left - 
-                                 parent.JQ.offset().left)/
-                                 parent.JQ.parent().width())*100;
-            if (cursorOffset > 50) {
-                mode = 'right';
-            }
-            this.menu.display(mode);
+            this.menu = new Menu(aggList, target, start, parent);
+            this.menu.display();
             
-            // Fix location above cursor
-            this.menu.JQ.css('top', this.JQ.offset().top-parent.JQ.offset().top-40);
-            var leftOffset = this.JQ.offset().left-parent.JQ.offset().left-(2*40);
-            if (mode == 'right') {
-                leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
-            }
-            this.menu.JQ.css('left', leftOffset);
-
+            
             // Setup Clicking
             var clickedSymbol = "";
             var c = this;
@@ -337,6 +317,7 @@ extend(Cursor, Elem, function(_) {
 
                 parent.JQ.find('.aC-container').remove();
             });
+            
         } else {
             if (parent.JQ.find('.aC-container'))
                    parent.JQ.find('.aC-container').remove();
@@ -564,7 +545,6 @@ extend(Cursor, Elem, function(_) {
                     }
              }
         });
-        
         if (target && target != input) {
             var trimTarget = target.trim();
             for(var aggSymbol in aggSymbols) {
@@ -578,45 +558,27 @@ extend(Cursor, Elem, function(_) {
                 }
             }
             // Add list and display SmartMenu
-            this.menu = new Menu(aggList, trimTarget, start);
-            parent.JQ.find('.aC-container').remove();
-            this.menu.JQ.appendTo(parent.JQ);
-            var mode = 'left';
-            // Calculates how far (in %) the cursor is into the textbox
-            var cursorOffset = ((this.JQ.offset().left - 
-                                 parent.JQ.offset().left)/
-                                 parent.JQ.parent().width())*100;
-            if (cursorOffset > 50) {
-                mode = 'right';
-            }
-            this.menu.display(mode);
-
-            // Fix location above cursor
-            this.menu.JQ.css('top', this.JQ.offset().top-parent.JQ.offset().top-40);
-            var leftOffset = this.JQ.offset().left-parent.JQ.offset().left-(2*40);
-            if (mode == 'right') {
-                leftOffset -= (this.menu.JQ.find('.search_results').width()-(3*40));
-            }
-            this.menu.JQ.css('left', leftOffset);
-
+            this.menu = new Menu(aggList, trimTarget, start, parent);
+            this.menu.display();
+            
             // Setup Clicking
-            var clickedSymbol = "";
             var c = this;
             this.menu.JQ.find('.symbol').click(function(){
-                var symbol = $(this).attr('title');
-                clickedSymbol = aggSymbols[symbol];
-
+                c.hide();
+                
                 listEachReversed(start, c, function(e) {
                     e.remove();
                 });
-
-                parent.JQ.find('.aC-container').remove();
-
-                var node = new clickedSymbol.Tag(symbol, clickedSymbol);
+                
+                var node = c.menu.click(this);
                 node.insert(c);
-
+                
+                c.resetSelection();
+                c.show();
             });
+            
             return;
+            
         } 
         
         // Hide SmartMenu

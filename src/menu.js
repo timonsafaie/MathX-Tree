@@ -1,4 +1,4 @@
-var Menu = function(list, searchTerm, start) {
+var Menu = function(list, searchTerm, start, attachTo) {
     this.JQ = $('<div class="aC-container">'+
                 '<div class="aC-results">'+
                 '<span class="search_results">'+
@@ -11,7 +11,8 @@ var Menu = function(list, searchTerm, start) {
     this.list = list;
     this.searchterm = searchTerm;
     this.start = start;
-    this.mode = '';
+    this.attachTo = attachTo;
+    this.mode = 'left';
 };
 
 extend(Menu, Object, function(_) {
@@ -23,17 +24,35 @@ extend(Menu, Object, function(_) {
     _.setStart = function(start) {
         this.start = start;
     }
-    _.display = function(mode) {
+    _.display = function() {
         var menu = this;
         var mJQ = menu.JQ;
+        var parent = this.attachTo;
         var symbolcount = 0;
         var firstposition = 0;
         var search = this.searchterm;
         var maxLength = 0;
-        this.mode = mode;
         this.sort();
+        
+        // Reset state by clearing out any old SmartMenues
+        if (parent.JQ.find('.aC-container')) {
+            parent.JQ.find('.aC-container').remove();
+        }
+        
+        // Attach SmartMenu to Textbox
+        mJQ.appendTo(parent.JQ);
+        
+        // Calculates how far (in %) the cursor is into the textbox
+        var cursorOffset = ((parent.JQ.find('.mX-cursor').offset().left - 
+                             parent.JQ.offset().left)/
+                             parent.JQ.parent().width())*100;
+        
+        if (cursorOffset > 50) {
+            this.mode = 'right';
+        }
+        
         mJQ.find('.namerow').html(this.marquee(this.searchterm, this.list[0].aggSymbol));
-        if (mode == 'left') {
+        if (this.mode == 'left') {
             this.list.forEach(function(item) {
                 var symbolposition = '';
                 if (item.aggSymbol.length > maxLength)
@@ -63,12 +82,12 @@ extend(Menu, Object, function(_) {
         }
         maxLength *= 8;
         if (symbolcount > 5) {
-            if (mode == 'right') {
+            if (this.mode == 'right') {
                 var leftOffset = (this.list.length-5)*(-50);
                 mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': leftOffset+'px'});
             }
             mJQ.find('.search_results')
-                .addClass('search-'+mode)
+                .addClass('search-'+this.mode)
                 .css({'width': 332+'px'})
                 .attr({'data-str': this.searchterm,'data-num': 5});
             mJQ.find('.resultsholder')
@@ -83,7 +102,7 @@ extend(Menu, Object, function(_) {
             if (maxLength > menuWidth)
                 menuWidth = maxLength;
             mJQ.find('.search_results')
-                .addClass('search-'+mode)
+                .addClass('search-'+this.mode)
                 .css({'width': menuWidth+'px'})
                 .attr({'data-str': this.searchterm,'data-num': 5});
             mJQ.find('.resultsholder')
@@ -106,7 +125,7 @@ extend(Menu, Object, function(_) {
             var nextIndex = (Math.floor(currIndex/5)+1)*5;
             var resetIndex = 0;
             var resetOffset = 0;
-            if (mode == 'left') {
+            if (this.mode == 'left') {
                 if (nextIndex < items.length) {
                     marquee = $(items[nextIndex]).attr('title');
                     $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
@@ -142,7 +161,7 @@ extend(Menu, Object, function(_) {
             var currIndex = items.index(curr);
             curr.css('color', '#FFFFFF').removeClass('list-row-hover');
             var nextIndex = (Math.floor(currIndex/5)-1)*5;
-            if (mode == 'left') {
+            if (this.mode == 'left') {
                 if (currIndex >= 5) {
                     marquee = $(items[nextIndex]).attr('title');
                     $(items[nextIndex]).css('color', '#55D7FF').addClass('list-row-hover');
@@ -175,17 +194,16 @@ extend(Menu, Object, function(_) {
                $(this).css('color', '#FFFFFF').removeClass('list-row-hover');
            });
            $(this).css('color', '#55D7FF').addClass('list-row-hover');
-            var before = "";
-            var after = "";
-            var symbol = $(this).attr('title');
-            var startIndex = symbol.indexOf(search);
-            before = symbol.substr(0, startIndex);
-            after = symbol.substr(before.length+search.length);
-            mJQ.find('.namerow').html('<span nowrap>'+before+
-                                      '<span class="resnamematch">'+
-                                      search+
-                                      '</span>'+after+'</span>');
+            mJQ.find('.namerow').html(menu.marquee(search, $(this).attr('title')));
         });
+        
+        // Set location of the SmartMenu
+        mJQ.css('top', parent.JQ.find('.mX-cursor').offset().top-parent.JQ.offset().top-40);
+        var leftOffset = parent.JQ.find('.mX-cursor').offset().left-parent.JQ.offset().left-(2*40);
+        if (this.mode == 'right') {
+            leftOffset -= (mJQ.find('.search_results').width()-(3*40));
+        }
+        mJQ.css('left', leftOffset);
     };
     
     _.marquee = function(search, symbol) {
@@ -287,6 +305,17 @@ extend(Menu, Object, function(_) {
             }
         }
         this.JQ.find('.namerow').html(this.marquee(this.searchterm, marquee));
+    };
+    
+    _.click = function(e) {
+        // Setup Clicking
+        var symbol = $(e).attr('title');
+        var clickedSymbol = aggSymbols[symbol];
+
+        this.attachTo.JQ.find('.aC-container').remove();
+
+        var node = new clickedSymbol.Tag(symbol, clickedSymbol);
+        return node;
     };
     
     _.sort = function() {
