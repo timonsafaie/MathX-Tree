@@ -368,8 +368,8 @@ var Mfrac = function(input, info) {
     Mrow.call(this, 'mfrac', input, info);
     this.cursorStay = false;
 
-    this.over = new Mrow();
-    this.under = new Mrow();
+    this.over = new Mrow('mover');
+    this.under = new Mrow('munder');
     this.over.addBefore(this.children);
     this.under.addBefore(this.children);
 
