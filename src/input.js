@@ -125,7 +125,7 @@ extend(MathInput, Object, function(_) {
     }
 
     _.dumpRoot = function() {
-        return dump(this.root, 0, '  ');
+        return serialize(this.root, 0, '  ');
     };
 
     _.dumpSavedSelection = function() {
