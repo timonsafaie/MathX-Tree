@@ -7,6 +7,7 @@ var MathInput = function() {
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
     this.cursor.hide();
+    this.log = [];
 };
 
 extend(MathInput, Object, function(_) {
