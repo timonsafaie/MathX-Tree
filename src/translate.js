@@ -52,6 +52,8 @@ function toLatex(node) {
                 enclose = '}';
                 break;
             case 'munder':
+                if (node.info.category == 'Function')
+                    result += node.info.latex;
                 result += '_{';
                 enclose = '}';
                 break;
@@ -82,14 +84,14 @@ function toLatex(node) {
         }
         if (!skip)
             result += listFold(start, end, delimiter, toLatex);
-        result += enclose;
+        result = result.trim() + enclose;
     } else if (node instanceof Mspace) {
         result += '\\ ';
     } else {
         var cmd = node.input;
         if (aggSymbols[node.input])
-            cmd = aggSymbols[node.input].latex;
-        result += cmd;
+            cmd = ' '+aggSymbols[node.input].latex+' ';
+        result = result.trim() + cmd;
     }
     return result;
 }
