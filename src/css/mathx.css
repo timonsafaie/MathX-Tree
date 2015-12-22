@@ -439,7 +439,7 @@
   padding:5pt 10pt;
   letter-spacing: 2pt;
   height: 20pt;
-  width:180pt !important;
+  /* width:180pt !important; */
 }
 .matrixbuilder tr.namerow td {
   font-size: 1em;

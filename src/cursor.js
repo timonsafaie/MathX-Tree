@@ -69,6 +69,10 @@ extend(Cursor, Elem, function(_) {
                     
                     var node = new insert.Tag(symbol, insert);
                     node.insert(this);
+                    
+                    if(insert.category == "Matrix") {
+                        this.menu.matrixbuilder(symbol);
+                    }
                 }
             }
             this.resetSelection();

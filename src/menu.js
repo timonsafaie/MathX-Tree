@@ -32,6 +32,7 @@ extend(Menu, Object, function(_) {
         var firstposition = 0;
         var search = this.searchterm;
         var maxLength = 0;
+        var mult = 1;
         this.sort();
         
         // Reset state by clearing out any old SmartMenues
@@ -82,6 +83,7 @@ extend(Menu, Object, function(_) {
         }
         maxLength *= 8;
         if (symbolcount > 5) {
+            mult = 2;
             if (this.mode == 'right') {
                 var leftOffset = (this.list.length-5)*(-50);
                 mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': leftOffset+'px'});
@@ -199,9 +201,9 @@ extend(Menu, Object, function(_) {
         
         // Set location of the SmartMenu
         mJQ.css('top', parent.JQ.find('.mX-cursor').offset().top-parent.JQ.offset().top-40);
-        var leftOffset = parent.JQ.find('.mX-cursor').offset().left-parent.JQ.offset().left-(2*40);
+        var leftOffset = parent.JQ.find('.mX-cursor').offset().left-parent.JQ.offset().left-(mult*40);
         if (this.mode == 'right') {
-            leftOffset -= (mJQ.find('.search_results').width()-(3*40));
+            leftOffset -= (mJQ.find('.search_results').width()-((mult+(mult-1))*40));
         }
         mJQ.css('left', leftOffset);
     };
@@ -316,6 +318,41 @@ extend(Menu, Object, function(_) {
 
         var node = new clickedSymbol.Tag(symbol, clickedSymbol);
         return node;
+    };
+    
+    _.matrixbuilder = function(matrix) {
+        var parent = this.attachTo.JQ.parent();
+        var rows = 'ROWS <input type="text" class="mat-inp" name="mat-rows" placeholder="MAX 10" func="'+matrix+'">\n';
+        var columns = 'COLUMNS <input type="text" class="mat-inp" name="mat-cols" placeholder="MAX 10" func="'+matrix+'">';
+        var width = 250;
+        if (matrix == 'piecewise') {
+            width = 110;
+            columns = '';
+        }
+        var menuJQ = $('<div class="aC-container">'+
+                       '<div class="aC-results">'+
+                       '<div class="search_results search-'+
+                       this.mode+
+                       ' matmenu matrixbuilder" data-str="'+
+                       matrix+'" data-num="5">'+
+                       rows+columns+
+                       '</div></div></div>');
+        
+        menuJQ.appendTo(parent);
+        
+        // Position and Size
+        var top = parent.find('.mX-cursor').offset().top-30;// - parent.offset().top-40;
+        var left = parent.find('.mX-cursor').offset().left;
+        if (this.mode == 'right') {
+            left -= width;
+        }
+        
+        parent.find('.matrixbuilder').css('width', width+'px');
+        parent.find('.aC-container').css({
+                                           display: 'block',
+                                              left: left+'px',
+                                               top: top+'px'    
+                                         });
     };
     
     _.sort = function() {
