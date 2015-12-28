@@ -129,12 +129,11 @@ function copyChildren(src, dst) {
     });
 }
 
-function jsonChildren(node) {
-    var result = [];
+function jsonChildren(doc, node) {
+    doc.children = [];
     listEach(node.children.next, node.children, function(elem) {
-        result.push(elem.toJSON());
+        doc.children.push(elem.toJSON());
     });
-    return result;
 }
 
 function loadChildren(node, doc) {
@@ -172,7 +171,7 @@ extend(Mrow, Elem, function(_, _super) {
 
     _.toJSON = function() {
         var doc = elemToJSON(this);
-        doc.children = jsonChildren(this);
+        jsonChildren(doc, this);
         return doc;
     };
 
@@ -347,8 +346,8 @@ extend(Msubsup, Mrow, function(_, _super) {
 
     _.toJSON = function() {
         var doc = elemToJSON(this);
-        doc.sub = jsonChildren(this.sub);
-        doc.sup = jsonChildren(this.sup);
+        doc.sub = this.sub.toJSON();
+        doc.sup = this.sup.toJSON();
         return doc;
     };
 
@@ -436,8 +435,8 @@ extend(Munderover, Mrow, function(_, _super) {
 
     _.toJSON = function() {
         var doc = elemToJSON(this);
-        doc.under = jsonChildren(this.under);
-        doc.over = jsonChildren(this.over);
+        doc.under = this.under.toJSON();
+        doc.over = this.over.toJSON();
         return doc;
     };
 
@@ -551,7 +550,7 @@ extend(Menclose, Mrow, function(_, _super) {
 
     _.toJSON = function() {
         var doc = elemToJSON(this);
-        doc.children = jsonChildren(this.menclosed);
+        doc.menclosed = this.menclosed.toJSON();
         doc.open = this.mopen.input;
         doc.close = this.mclose.input;
         return doc;
