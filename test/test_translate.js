@@ -60,3 +60,40 @@ var n = node.JQ.find('.func-sqrt');
 assert(n.length === 1, 'test_translate.sqrt: ' + n);
 var n = node.JQ.find('sup');
 assert(n.length === 1, 'test_translate.sup: ' + n);
+
+doc = JSON.stringify({
+    "tag": "root",
+    "children": [
+        {
+            "tag": "munderover",
+            "input": "sum",
+            "under": {
+                "tag": "munder",
+                "children": [
+                    {
+                        "tag": "mn",
+                        "input": "1"
+                    }
+                ]
+            },
+            "over": {
+                "tag": "mover",
+                "children": [
+                    {
+                        "tag": "mn",
+                        "input": "2"
+                    }
+                ]
+            }
+        }
+    ]
+}, null, '    ');
+
+node = fromJSON(doc);
+doc_ = toJSON(node);
+assert(doc === doc_, 'test_translate: ' + doc_);
+
+n = node.JQ.find('.func-over .mX');
+assert(n.length === 1, 'test_translate.over: ' + n);
+n = node.JQ.find('.func-under .mX');
+assert(n.length === 1, 'test_translate.under: ' + n);
