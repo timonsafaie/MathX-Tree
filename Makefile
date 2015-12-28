@@ -48,6 +48,7 @@ font:
 $(BUILD_JS): $(INTRO) $(SOURCES) $(OUTRO)
 	@mkdir -p $(BUILD_DIR)
 	cat $^ > $@
+	cp $(SRC_DIR)/mxapi.js $(BUILD_DIR)
 
 $(TEST_JS): $(INTRO) $(SOURCES) $(TEST_SOURCES) $(OUTRO)
 	@mkdir -p $(BUILD_DIR)
