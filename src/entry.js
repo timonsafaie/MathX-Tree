@@ -1,6 +1,6 @@
-var entry = function(JQ) {
+var entry = function(JQ, root) {
     var input = new MathInput();
-
+    if (root) input.root = root;
     JQ.append(input.root.JQ);
     JQ.prop('tabindex', 0);
     JQ.bind({
@@ -13,6 +13,20 @@ var entry = function(JQ) {
     });
     JQ.blur(function() {
         input.cursor.hide();
+        if (typeof mxapi == "object" && mxapi && mxapi.host) {
+          var eq = {
+            content: toJSON(input.root)
+          };
+          var meth = "POST",path = "/User/equation";
+          if (input.uuid) {
+            meth = "PUT";
+            path = "/User/equation/" + input.uuid;
+          }
+          mxapi.call(mxapi.host+path, meth, JSON.stringify(eq), true, function(req) {
+            var shwing = JSON.parse(req.responseText);
+            if (shwing && shwing.uuid) input.uuid = shwing.uuid;
+          });
+        }
     });
     input.root.JQ.click(function(e) {
         input.click($(e.target), e.pageX, e.pageY);

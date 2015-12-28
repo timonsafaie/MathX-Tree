@@ -7,6 +7,7 @@ var MathInput = function() {
     this.cursor.JQ.appendTo(this.root.JQ);
     this.cursor.hide();
     this.log = [];
+    this.uuid = null;
 };
 
 extend(MathInput, Object, function(_) {
