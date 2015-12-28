@@ -29,6 +29,14 @@ function serialize(node, level, indent) {
     return result;
 }
 
+function toJSON(node) {
+    return JSON.stringify(node.toJSON(), null, '    ');
+}
+
+function fromJSON(str) {
+    return elemFromJSON(JSON.parse(str));
+}
+
 function toLatex(node) {
     var result = "";
     var delimiter = '';
@@ -134,6 +142,7 @@ function deserialize(str) {
                 throw new Error('invalid input ' + input);
             var node = new info.Tag(input, info);
             node.addBefore(parentNode.children);
+            node.JQ.appendTo(parentNode.children.JQ);
             if ($this.children().length > 0)
                 _deserialize($this, node);
         });

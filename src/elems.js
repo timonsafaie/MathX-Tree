@@ -1,3 +1,26 @@
+function elemToJSON(elem) {
+    return {tag: elem.tag, input: elem.input};
+}
+
+function elemFromJSON(doc) {
+    var node;
+    if (doc.tag === 'cursor')
+        return null;
+    if (doc.input) {
+        var info = findAtom(doc.input) || findAgg(doc.input);
+        if (!info)
+            throw new Error('invalid input ' + doc.input);
+        node = new info.Tag(doc.input, info);
+    } else if (doc.children) {
+        node = new Mrow(doc.tag);
+    } else {
+        throw new Error('invalid JSON ' + doc);
+    }
+    if (node.loadJSON)
+        node.loadJSON(doc);
+    return node;
+}
+
 elemId = 0;
 allElems = {};
 
@@ -31,6 +54,10 @@ extend(Elem, Node, function(_, _super) {
 
     _.copy = function() {
         return new this.constructor(this.input, this.info);
+    };
+
+    _.toJSON = function() {
+        return elemToJSON(this);
     };
 
     _.putCursorBefore = function(cursor) {
@@ -102,8 +129,30 @@ function copyChildren(src, dst) {
     });
 }
 
+function jsonChildren(node) {
+    var result = [];
+    listEach(node.children.next, node.children, function(elem) {
+        result.push(elem.toJSON());
+    });
+    return result;
+}
+
+function loadChildren(node, doc) {
+    if (!doc.children)
+        return;
+    doc.children.forEach(function(d) {
+        var n = elemFromJSON(d);
+        if (!n)
+            return;
+        n.addBefore(node.children);
+        n.JQ.appendTo(node.children.JQ);
+    });
+}
+
 var Mrow = function() {
     Elem.apply(this, arguments);
+    this.JQ = $('<span class="mX-container"></span>');
+    this.children.JQ = this.JQ;
     this.cursorStay = true;
 };
 
@@ -119,6 +168,16 @@ extend(Mrow, Elem, function(_, _super) {
         var copy = new this.constructor(this.input, this.info);
         copyChildren(this, copy);
         return copy;
+    };
+
+    _.toJSON = function() {
+        var doc = elemToJSON(this);
+        doc.children = jsonChildren(this);
+        return doc;
+    };
+
+    _.loadJSON = function(doc) {
+        loadChildren(this, doc);
     };
 
     _.prependCursor = function(cursor) {
@@ -279,11 +338,23 @@ extend(Msubsup, Mrow, function(_, _super) {
         cursor.JQ.prependTo(this.sub.children.JQ);
     };
 
-    _.copy = function(cursor) {
-        var copy = new Msubsup(this.input, this.info);
+    _.copy = function() {
+        var copy = new this.constructor(this.input, this.info);
         copyChildren(this.sub, copy.sub);
         copyChildren(this.sup, copy.sup);
         return copy;
+    };
+
+    _.toJSON = function() {
+        var doc = elemToJSON(this);
+        doc.sub = jsonChildren(this.sub);
+        doc.sup = jsonChildren(this.sup);
+        return doc;
+    };
+
+    _.loadJSON = function(doc) {
+        loadChildren(this.sub, doc.sub);
+        loadChildren(this.sup, doc.sup);
     };
 });
 
@@ -357,10 +428,22 @@ extend(Munderover, Mrow, function(_, _super) {
     };
 
     _.copy = function() {
-        var copy = new Munderover(this.input, this.info);
+        var copy = new this.constructor(this.input, this.info);
         copyChildren(this.under, copy.under);
         copyChildren(this.over, copy.over);
         return copy;
+    };
+
+    _.toJSON = function() {
+        var doc = elemToJSON(this);
+        doc.under = jsonChildren(this.under);
+        doc.over = jsonChildren(this.over);
+        return doc;
+    };
+
+    _.loadJSON = function(doc) {
+        loadChildren(this.under, doc.under);
+        loadChildren(this.over, doc.over);
     };
 });
 
@@ -385,7 +468,7 @@ var Mfrac = function(input, info) {
     this.JQ.attr('mxId', this.id);
 };
 
-extend(Mfrac, Mrow, function(_, _super) {
+extend(Mfrac, Munderover, function(_, _super) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         cursor.moveAfter(this.over.children);
@@ -405,13 +488,6 @@ extend(Mfrac, Mrow, function(_, _super) {
             cursor.moveAfter(this.under.children);
             cursor.JQ.prependTo(this.under.children.JQ);
         }
-    };
-
-    _.copy = function() {
-        var copy = new Mfrac(this.input, this.info);
-        copyChildren(this.under, copy.under);
-        copyChildren(this.over, copy.over);
-        return copy;
     };
 });
 
@@ -467,10 +543,23 @@ extend(Menclose, Mrow, function(_, _super) {
     };
 
     _.copy = function() {
-        var copy = new Menclose(this.input, this.info);
+        var copy = new this.constructor(this.input, this.info);
         copy.resetMclose(this.mclose);
         copyChildren(this.menclosed, copy.menclosed);
         return copy;
+    };
+
+    _.toJSON = function() {
+        var doc = elemToJSON(this);
+        doc.children = jsonChildren(this.menclosed);
+        doc.open = this.mopen.input;
+        doc.close = this.mclose.input;
+        return doc;
+    };
+
+    _.loadJSON = function(doc) {
+        this.resetMclose(doc.close);
+        loadChildren(this.menclosed, doc);
     };
 
     _.resize = function() {

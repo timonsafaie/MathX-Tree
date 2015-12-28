@@ -1,7 +1,6 @@
 var MathInput = function() {
     this.root = new Mrow('root');
     this.root.isRoot = true;
-    this.root.JQ = $('<span class="mX-container"></span>');
 
     this.cursor = new Cursor(this.root);
     this.cursor.addAfter(this.root.children);
