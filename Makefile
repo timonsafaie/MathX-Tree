@@ -18,12 +18,21 @@ SOURCES = \
 CSS_DIR = $(SRC_DIR)/css
 FONT_DIR = $(SRC_DIR)/font/Symbola-Lite
 
+TEST_DIR = ./test
+TEST_SOURCES = \
+	$(TEST_DIR)/test_input.js \
+	$(TEST_DIR)/test_translate.js
+
 BUILD_DIR = ./build
 BUILD_JS = $(BUILD_DIR)/mathx-tree.js
+TEST_JS = $(BUILD_DIR)/mathx-tree-test.js
 
-.PHONY: all css font clean
+.PHONY: all css font clean test
 
 all: css font $(BUILD_JS)
+
+test: $(TEST_JS)
+	@(cd test && iojs test.js)
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -37,5 +46,9 @@ font:
 	cp $(FONT_DIR)/* $(BUILD_DIR)
 
 $(BUILD_JS): $(INTRO) $(SOURCES) $(OUTRO)
+	@mkdir -p $(BUILD_DIR)
+	cat $^ > $@
+
+$(TEST_JS): $(INTRO) $(SOURCES) $(TEST_SOURCES) $(OUTRO)
 	@mkdir -p $(BUILD_DIR)
 	cat $^ > $@
