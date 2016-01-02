@@ -65,7 +65,7 @@ extend(Menu, Object, function(_) {
                             '" title="'+item.aggSymbol+'">'
                             +item.props.output+'</span>');
             });
-            mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': 0+'px'});
+            mJQ.find('.resultsrow').css({'width': (symbolcount*50)+'px', 'left': 0+'px'});
         } else {
             for (var j=(this.list.length-1); j >= 0; j--) {
                 var item = this.list[j];
@@ -86,7 +86,7 @@ extend(Menu, Object, function(_) {
             mult = 2;
             if (this.mode == 'right') {
                 var leftOffset = (this.list.length-5)*(-50);
-                mJQ.find('.resultsrow').css({'width': 1000+'px', 'left': leftOffset+'px'});
+                mJQ.find('.resultsrow').css({'width': (symbolcount*50)+'px', 'left': leftOffset+'px'});
             }
             mJQ.find('.search_results')
                 .addClass('search-'+this.mode)
