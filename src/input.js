@@ -85,6 +85,7 @@ extend(MathInput, Object, function(_) {
             console.log(this.dumpSavedSelection());
             return false;
         case 'Ctrl-Backslash':
+            console.log("input:",this);
             if (this.mathMode && !this.didExitTextMode) {
               var that = this;
               var textDiv = document.createElement('div');
@@ -94,13 +95,19 @@ extend(MathInput, Object, function(_) {
                 if (e.keyCode == 220) {
                   that.mathMode = true;
                   that.didExitTextMode = true;
-                  that._runControl(that.cursor.moveLast, key);
-                  that.cursor.JQ[0].focus();
-                  input.inputKey("");
+                  var newMX = document.createElement('div');
+                  $(newMX).addClass("mathx-web-basic-container");
+                  var newMXTree = document.createElement('div');
+                  $(newMXTree).addClass("mathx-tree");
+                  $(newMXTree).addClass("mathx-web-basic-tb");
+                  $(newMXTree).addClass("mm-containe");
+                  newMXTree.tabIndex = "0";
+                  newMX.appendChild(newMXTree);
+                  entry($(newMX));
                   return false;
                 }
               };
-              this.cursor.JQ[0].appendChild(textDiv);
+              this.root.JQ[0].appendChild(textDiv);
               textDiv.focus();
               console.log(this.cursor.JQ[0]);
               this.mathMode = false;
