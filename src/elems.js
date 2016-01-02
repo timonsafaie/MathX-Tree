@@ -256,12 +256,16 @@ extend(Msub, Mrow, function(_, _super) {
     _.resize = function() {
         var next = this.next;
         if (next instanceof Msup)
-            next.JQ.css('margin-left', -this.JQ.width());
+            next.JQ.css('margin-left', next.offset-this.JQ.width());
     };
 });
 
 var Msup = function(input, info) {
     Mrow.call(this, 'msup', input, info);
+
+    this.offset = 0;
+    if (info.offset)
+        this.offset = em2px(info.offset);
 
     this.JQ = $('<sup class="exp-holder"><span>&#8203;</span></sup>');
     this.JQ.css('font-size', '0.72em');
@@ -288,7 +292,7 @@ extend(Msup, Mrow, function(_, _super) {
     _.repose = function() {
         var prev = this.prev;
         if (prev instanceof Msub) {
-            this.JQ.css('margin-left', -prev.JQ.width());
+            this.JQ.css('margin-left', this.offset-prev.JQ.width());
             prev = prev.prev;
         }
         if (prev.JQ) {
@@ -308,8 +312,8 @@ var Msubsup = function(input, info) {
     Mrow.call(this, 'msubsup', input, info);
     this.cursorStay = false;
 
-    this.sub = new Msub();
-    this.sup = new Msup();
+    this.sub = new Msub(null);
+    this.sup = new Msup(null, {offset: info.supOffset});
     this.sub.addBefore(this.children);
     this.sup.addBefore(this.children);
 
@@ -318,8 +322,10 @@ var Msubsup = function(input, info) {
                 '<sub class="func-sub"><span>&#8203;</span></sub>' +
                 '<sup class="func-sup"><span>&#8203;</span></sup>' +
                 '</span>');
-    this.sub.children.JQ = this.JQ.find('.func-sub');
-    this.sup.children.JQ = this.JQ.find('.func-sup');
+    this.sub.JQ = this.sub.children.JQ = this.JQ.find('.func-sub');
+    this.sup.JQ = this.sup.children.JQ = this.JQ.find('.func-sup');
+    if (info.subOffset)
+        this.sub.JQ.css('margin-left', em2px(info.subOffset));
 
     var $sym = this.JQ.find('.func-symbol-subsup');
     $sym.css('font-size', '2em');
@@ -477,7 +483,7 @@ extend(Mfrac, Munderover, function(_, _super) {
         var hasDivisor = false;
         while (true) {
             var prev = this.prev;
-            if (!(prev instanceof Mi || prev instanceof Mn || prev instanceof Mfrac))
+            if (!(prev instanceof Mi || prev instanceof Mn || prev instanceof Mrow))
                 break;
             hasDivisor = true;
             prev.moveAfter(this.over.children);

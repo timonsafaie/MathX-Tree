@@ -721,14 +721,10 @@
   font-size: .9em;
 }
 .func-sup {
-  /*margin-bottom: .5em;*/
-  /*vertical-align: top;*/
   vertical-align: 2.2em;
-  /*margin-left: -.5em;*/
+  margin-right: 0.1em;
 }
 .func-sub {
-  margin-left: -1em;
-  /*vertical-align: bottom;*/
   vertical-align: -.7em;
 }
 .func-sqrt {
