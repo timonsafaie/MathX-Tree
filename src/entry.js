@@ -61,22 +61,30 @@ var entry = function(JQ, root) {
 
         46: 'Del',
 
-        144: 'NumLock'
+        144: 'NumLock',
+
+        220: 'Backslash'
     };
 
     function onKeydown(e) {
-        var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
+      var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
+      if (input.mathMode) {
         if (e.ctrlKey)
-            key = 'Ctrl-' + key;
+          key = 'Ctrl-' + key;
         if (e.shiftKey)
-            key = 'Shift-' + key;
+          key = 'Shift-' + key;
         return input.inputControl(key);
+      }
     }
 
     function onKeypress(e) {
+      if (input.mathMode) {
         var key = String.fromCharCode(e.charCode);
         input.inputKey(key);
         return false;
+      } else {
+
+      }
     }
 
     function onMousedown(e) {

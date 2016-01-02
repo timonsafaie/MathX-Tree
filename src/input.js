@@ -8,6 +8,8 @@ var MathInput = function() {
     this.cursor.hide();
     this.log = [];
     this.uuid = null;
+    this.mathMode = true;
+    this.didExitTextMode = false;
 };
 
 extend(MathInput, Object, function(_) {
@@ -18,6 +20,8 @@ extend(MathInput, Object, function(_) {
         cursor.inputKey(key);
         cursor.reduceAgg();
         cursor.afterInput(key);
+
+
     };
 
     _._runControl = function(fn, key) {
@@ -80,6 +84,29 @@ extend(MathInput, Object, function(_) {
         case 'Shift-Ctrl-Esc':
             console.log(this.dumpSavedSelection());
             return false;
+        case 'Backslash':
+            if (this.mathMode && !this.didExitTextMode) {
+              var that = this;
+              var textDiv = document.createElement('div');
+              textDiv.contentEditable = "true";
+              console.log(this.cursor.JQ);
+              textDiv.onkeydown = function(e) {
+                if (e.keyCode == 220) {
+                  that.mathMode = true;
+                  that.didExitTextMode = true;
+                  that._runControl(that.cursor.moveLast, key);
+                  that.cursor.JQ[0].focus();
+                  input.inputKey("");
+                  return false;
+                }
+              };
+              this.cursor.JQ[0].appendChild(textDiv);
+              textDiv.focus();
+              console.log(this.cursor.JQ[0]);
+              this.mathMode = false;
+            }
+            this.didExitTextMode = false;
+          return false;
         }
     };
 
