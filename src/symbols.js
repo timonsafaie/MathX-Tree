@@ -65,7 +65,7 @@ var atomSymbols = [
     {input: ']', Tag: Mclose},
     {input: '}', Tag: Mclose},
 
-    {input: '/',             Tag: Mfrac},
+    {input: '/',             Tag: Mo},
     {input: ' ',             Tag: Mspace},
     {input: '^',             Tag: Msup},
     {input: '_',             Tag: Msub},
@@ -75,6 +75,8 @@ var atomSymbols = [
 ];
 
 var aggSymbols1 = {
+    '//':                 {Tag: Mfrac},
+
     '+-':                 {Tag: Mo, output: '&pm;', latex: "\\pm", version: "basic"},
     '-+':                 {Tag: Mo, output: '&mp;', latex: "\\mp", version: "basic"},
     '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'},  latex: "\\leq", version: "basic"},
@@ -220,3 +222,28 @@ function addAggSymbols(dict) {
 }
 addAggSymbols(aggSymbols1);
 addAggSymbols(aggSymbols2);
+
+// FIXME: may merge atomSymbols with aggSymbols
+
+function findAtom(input) {
+    var atom;
+    for (var i = 0; i < atomSymbols.length; i++) {
+        var s = atomSymbols[i];
+        if (s.input.test !== undefined) {
+            if (s.input.test(input)) {
+                atom = s;
+                break;
+            }
+        } else {
+            if (s.input === input) {
+                atom = s;
+                break;
+            }
+        }
+    }
+    return atom;
+}
+
+function findAgg(input) {
+    return aggSymbols[input];
+}
