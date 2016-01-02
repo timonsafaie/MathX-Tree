@@ -353,6 +353,7 @@ extend(Menu, Object, function(_) {
                                               left: left+'px',
                                                top: top+'px'    
                                          });
+        menuJQ.find('input.mat-inp:first').focus();
     };
     
     _.sort = function() {

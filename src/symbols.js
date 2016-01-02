@@ -156,6 +156,13 @@ var aggSymbols1 = {
     'limit': {Tag: Munder, output: 'lim', category: 'Function', rank: "21", latex: "\\lim"},
     'sqrt':  {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}, category: 'Function', rank: "22", latex: "\\sqrt", version: "basic"},
     // 'root': {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}},
+    
+    'matrix': {Tag: Mo, output: '[]', category: 'Matrix', rank: "1", latex: "[]"},
+    'pmatrix': {Tag: Mo, output: '()', category: 'Matrix', rank: "2", latex: "()"},
+    'determinant': {Tag: Mo, output: '||', category: 'Matrix', rank: "3", latex: "||"},
+    'binomial': {Tag: Mo, output: '()', category: 'Matrix', rank: "4", latex: "()"},
+    'piecewise': {Tag: Mo, output: '{', category: 'Matrix', rank: "5", latex: "\\{"},
+    
     "oo":    {Tag: Mi, output: "&infin;", family: "symbol", category: "Special Character", rank: "1", latex: "\\infty", version: "basic"},
     
     "nary intersection":    {Tag: Munderover, output: "&bigcap;", category: "Set", rank: "2", latex: "\\bigcap"},

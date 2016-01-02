@@ -362,9 +362,17 @@ extend(Cursor, Elem, function(_) {
 
         if (!atom)
             throw 'Unknown input "' + key + '"';
-
+        
         var node = new atom.Tag(key, atom);
         node.insert(this);
+        
+        /*
+        if(!this.parent.JQ.next().find('.matrixbuilder').attr('data-str')) 
+            node.insert(this);
+        else {
+            this.parent.JQ.next().find('input.mat-inp:focus').val(node.input);
+        }
+        */
     };
 
     _.click = function($elem, pageX, pageY) {
