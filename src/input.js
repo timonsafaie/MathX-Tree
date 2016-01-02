@@ -84,7 +84,7 @@ extend(MathInput, Object, function(_) {
         case 'Shift-Ctrl-Esc':
             console.log(this.dumpSavedSelection());
             return false;
-        case 'Backslash':
+        case 'Ctrl-Backslash':
             if (this.mathMode && !this.didExitTextMode) {
               var that = this;
               var textDiv = document.createElement('div');
