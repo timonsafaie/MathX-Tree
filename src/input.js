@@ -1,13 +1,13 @@
 var MathInput = function() {
     this.root = new Mrow('root');
     this.root.isRoot = true;
-    this.root.JQ = $('<span class="mX-container"></span>');
 
     this.cursor = new Cursor(this.root);
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
     this.cursor.hide();
     this.log = [];
+    this.uuid = null;
 };
 
 extend(MathInput, Object, function(_) {
@@ -109,6 +109,16 @@ extend(MathInput, Object, function(_) {
         cursor.afterInput('Select');
     };
 
+    _.dumpRoot = function() {
+        return dumpTree(this.root);
+    };
+
+    _.dumpSavedSelection = function() {
+        return dumpTree(clipBoard);
+    };
+});
+
+function dumpTree(node) {
     function dump(node, level, indent) {
         var result = indent.repeat(level);
 
@@ -124,12 +134,5 @@ extend(MathInput, Object, function(_) {
         result += '</' + node.tag + '>\n';
         return result;
     }
-
-    _.dumpRoot = function() {
-        return serialize(this.root, 0, '  ');
-    };
-
-    _.dumpSavedSelection = function() {
-        return dump(clipBoard, 0, '  ');
-    };
-});
+    return dump(node, 0, '  ');
+};
