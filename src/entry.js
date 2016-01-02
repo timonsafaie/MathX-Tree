@@ -11,13 +11,70 @@ var entry = function(JQ) {
     JQ.focus(function() {
         input.cursor.show();
     });
-    JQ.blur(function() {
+    JQ.blur(function(e) {
         input.cursor.hide();
     });
     input.root.JQ.click(function(e) {
         input.click($(e.target), e.pageX, e.pageY);
+        /*
+        console.log(serialize(input.root, 0, '  '));
+        console.log(toLatex(input.root));
+        */
     });
-
+    /*
+    input.root.JQ.mousedown(function(e) {
+        var logEvent = '{event: "mousedown", '+ 
+                         'mxid: '+$(e.target).attr('mxid')+', '+ 
+                         'time: "'+Date().toString()+'"}'; 
+        input.log.push(logEvent);
+        console.log(logEvent);
+        
+        var startTime = Date().toString();
+        if (e.which == 1) {
+            var $this = $(this);
+            $this.bind('mouseleave', function(){
+                $('body').one('mouseup', function() {
+                    logEvent = '{event: "mouseup", '+
+                                    'mxid: '+input.cursor.selection.end.JQ.attr('mxid')+', '+
+                                    'time: "'+Date().toString()+'"'; 
+                    if (input.cursor.isLastChild()) {
+                        logEvent += ', cursor: {placement: "after", mxid: '+
+                                    input.cursor.prev.JQ.attr('mxid')+'}}';
+                        input.log.push(logEvent);
+                        console.log(logEvent);
+                    } else {
+                        logEvent += ', cursor: {placement: "before", mxid: '+
+                                    input.cursor.next.JQ.attr('mxid')+'}}';
+                        input.log.push(logEvent);
+                        console.log(logEvent);
+                    }
+                });
+            });
+            $this.mouseup(function() {
+                $(this).unbind('mouseleave');
+            });
+        }
+        //console.log('start: '+$(e.target).attr('mxid'));
+    });
+    input.root.JQ.mouseup(function(e) {
+        var logEvent = '{event: "mouseup", '+
+                        'mxid: '+$(e.target).attr('mxid')+', '+
+                        'time: "'+Date().toString()+'"';
+        if (input.cursor.selection.start || input.cursor.selection.end) {
+            if (input.cursor.isLastChild()) {
+                logEvent += ', cursor: {placement: "after", mxid: '+
+                            input.cursor.prev.JQ.attr('mxid')+'}}';
+            } else {
+                logEvent += ', cursor: {placement: "before", mxid: '+
+                            input.cursor.next.JQ.attr('mxid')+'}}';
+            }
+        }
+        input.log.push(logEvent);
+        console.log(logEvent);
+        //console.log('end: '+$(e.target).attr('mxid'));
+    });
+    */
+    
     var KEY_VALUES = {
         8: 'Backspace',
         9: 'Tab',
@@ -87,6 +144,6 @@ var entry = function(JQ) {
         $('body').on('mousemove.mathx', updateSelection);
         $('body').on('mouseup.mathx', endSelection);
     }
-
+    
     return input;
 };
