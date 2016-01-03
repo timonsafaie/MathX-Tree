@@ -85,29 +85,27 @@ extend(MathInput, Object, function(_) {
             console.log(this.dumpSavedSelection());
             return false;
         case 'Ctrl-Backslash':
-            console.log("input:",this);
             if (this.mathMode && !this.didExitTextMode) {
               var that = this;
+              var textSpan = document.createElement('span');
               var textDiv = document.createElement('div');
               textDiv.contentEditable = "true";
-              console.log(this.cursor.JQ);
+              $(textDiv).css('padding','0px 8px 0px 8px');
+              $(textDiv).css('display','inline');
               textDiv.onkeydown = function(e) {
                 if (e.keyCode == 220) {
-                  that.mathMode = true;
                   that.didExitTextMode = true;
-                  var newMX = document.createElement('div');
-                  $(newMX).addClass("mathx-web-basic-container");
-                  var newMXTree = document.createElement('div');
-                  $(newMXTree).addClass("mathx-tree");
-                  $(newMXTree).addClass("mathx-web-basic-tb");
-                  $(newMXTree).addClass("mm-containe");
-                  newMXTree.tabIndex = "0";
-                  newMX.appendChild(newMXTree);
-                  entry($(newMX));
+                  var newMX = document.createElement('span');
+                  var newInput = entry($(newMX));
+                  this.parentElement.appendChild(newMX);
+                  $(newMX).focus();
+                  console.log("newMX", newMX);
+                  that.mathMode = true;
                   return false;
                 }
               };
-              this.root.JQ[0].appendChild(textDiv);
+              textSpan.appendChild(textDiv);
+              this.root.JQ[0].parentElement.appendChild(textSpan);
               textDiv.focus();
               console.log(this.cursor.JQ[0]);
               this.mathMode = false;
