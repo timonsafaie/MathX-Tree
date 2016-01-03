@@ -99,7 +99,6 @@ extend(MathInput, Object, function(_) {
                   var newInput = entry($(newMX));
                   this.parentElement.appendChild(newMX);
                   $(newMX).focus();
-                  console.log("newMX", newMX);
                   that.mathMode = true;
                   return false;
                 }
@@ -107,7 +106,6 @@ extend(MathInput, Object, function(_) {
               textSpan.appendChild(textDiv);
               this.root.JQ[0].parentElement.appendChild(textSpan);
               textDiv.focus();
-              console.log(this.cursor.JQ[0]);
               this.mathMode = false;
             }
             this.didExitTextMode = false;

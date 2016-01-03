@@ -1,6 +1,5 @@
 $('.mathx-tree').each(function() {
-    var entree = entry($(this));
-    entrees[entree.root.id] = entree;
+    entry($(this));
 });
 $('.mathx-tree').first().focus();
 //expose serialization
