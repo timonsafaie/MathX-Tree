@@ -541,6 +541,8 @@ extend(Cursor, Elem, function(_) {
         var target ='';
         var aggList = [];
         listEachReversed(start, this, function(e) {
+            if (e instanceof Mrow)
+                return false;
             search = e.input + search;
             if (aggSymbols.hasOwnProperty(search.trim())) {
                 agg = aggSymbols[search.trim()];
