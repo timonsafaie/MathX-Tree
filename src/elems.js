@@ -36,6 +36,8 @@ var Elem = function(tag, input, info) {
     allElems[this.id] = this;
 
     this.JQ = $('<span class="mX">' + this.output + '</span>');
+    this.JQ.addClass(tag);
+    this.JQ.attr('data-value', input);
     if (this.info && this.info.css)
         this.JQ.css(this.info.css);
     this.JQ.attr('mxId', this.id);
@@ -95,28 +97,24 @@ extend(Elem, Node, function(_, _super) {
 
 var Mi = function(input, info) {
     Elem.call(this, 'mi', input, info);
-    this.JQ.attr('data-value', input);
 };
 
 extend(Mi, Elem);
 
 var Mo = function(input, info) {
     Elem.call(this, 'mo', input, info);
-    this.JQ.attr('data-value', input);
 };
 
 extend(Mo, Elem);
 
 var Mn = function(input, info) {
     Elem.call(this, 'mn', input, info);
-    this.JQ.attr('data-value', input);
 };
 
 extend(Mn, Elem);
 
 var Mspace = function(input, info) {
     Elem.call(this, 'mspace', input, info);
-    this.JQ = $('<span class="mX space"></span>');
 };
 
 extend(Mspace, Elem);
