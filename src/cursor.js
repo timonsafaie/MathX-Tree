@@ -93,8 +93,8 @@ extend(Cursor, Elem, function(_) {
     _.afterInput = function(key) {
         if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
             this.lastMenclose.settle();
-        this.bubble('resize');
         this.show();
+        this.bubble('resize');
     };
 
     _.moveLeft = function() {

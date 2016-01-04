@@ -38,10 +38,14 @@
 }
 
 .mopen {
-    vertical-align: 0.2em;
+    vertical-align: bottom;
+    transform-origin: bottom center;
+    padding-left: 0.1em;
 }
 .mclose {
-    vertical-align: 0.2em;
+    vertical-align: bottom;
+    transform-origin: bottom center;
+    padding-right: 0.1em;
 }
 
 .munder {

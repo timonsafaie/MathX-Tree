@@ -150,7 +150,7 @@ function loadChildren(node, doc) {
 
 var Mrow = function() {
     Elem.apply(this, arguments);
-    this.JQ = $('<span class="mX-container"></span>');
+    this.JQ = $('<span class="mX-container"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
     this.cursorStay = true;
 };
@@ -535,7 +535,7 @@ var Menclose = function(input, info) {
 
     this.JQ = $('<span class="brack-holder">' +
                 '<span class="mX mopen">' + this.mopen.output + '</span>' +
-                '<span class="brack-holder menclosed"></span>' +
+                '<span class="brack-holder menclosed"><span>&#8203;</span></span>' +
                 '<span class="mX mclose unsettled">' + this.mclose.output + '</span>' +
                 '</span>');
     this.mopen.JQ = this.JQ.find('.mopen');
@@ -575,8 +575,8 @@ extend(Menclose, Mrow, function(_, _super) {
     };
 
     _.resize = function() {
-        var $enclosed = this.menclosed.children.JQ;
-        var h = $enclosed.outerHeight()/+$enclosed.css('fontSize').slice(0,-2);
+        var $t = this.menclosed.children.JQ;
+        var h = $t.outerHeight()/+$t.css('fontSize').slice(0,-2);
         var hscale = min(1+0.2*(h-1), 1.2);
         var vscale = 1.05 * h;
         var transform = 'scale(' + hscale + ',' + vscale + ')';
