@@ -696,13 +696,13 @@
 }
 .func-symbol-sqrt {
   font-size: 1em;
+  vertical-align: top;
   display: inline-block;
   -webkit-transform-origin:top;
   -moz-transform-origin:top;
   -ms-transform-origin:top;
   -o-transform-origin:top;
   transform-origin:top;
-  /*padding-top:.1em;*/
 }
 .func-subsup {
   display: inline-block;
@@ -729,8 +729,8 @@
 }
 .func-sqrt {
   display: inline-block;
+  padding-top: 0.1em;
   border-top:1px rgb(51,51,51) solid;
-  margin-left: -.25em;
   min-width: 5px;
 }
 .func-root-base {

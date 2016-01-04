@@ -16,7 +16,7 @@ SOURCES = \
 	$(SRC_DIR)/entry.js
 
 CSS_DIR = $(SRC_DIR)/css
-FONT_DIR = $(SRC_DIR)/font/Symbola-Lite
+FONT_DIR = $(SRC_DIR)/font/Symbola
 
 TEST_DIR = ./test
 TEST_SOURCES = \

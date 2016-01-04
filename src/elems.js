@@ -201,20 +201,27 @@ extend(Mrow, Elem, function(_, _super) {
 var Msqrt = function(input, info) {
     Mrow.call(this, 'msqrt', input, info);
 
-    this.JQ = $('<span>' +
+    this.JQ = $('<span class="mX">' +
                 '<span class="func-symbol-sqrt">' + this.output + '</span>' +
                 '<span class="func-sqrt"><span>&#8203;</span></span>' +
                 '</span>');
     this.JQ.attr('mxId', this.id);
 
-    var $sym = this.JQ.find('.func-symbol-sqrt');
+    this.$sym = this.JQ.find('.func-symbol-sqrt');
     if (this.info.css)
-        $sym.css(this.info.css);
+        this.$sym.css(this.info.css);
 
     this.children.JQ = this.JQ.find('.func-sqrt');
 };
 
-extend(Msqrt, Mrow);
+extend(Msqrt, Mrow, function(_, _super) {
+    _.resize = function() {
+        var $t = this.children.JQ;
+        var scale = $t.outerHeight()/+$t.css('fontSize').slice(0,-2);
+        var transform = 'scale(1,' + scale + ')';
+        this.$sym.css({transform: transform});
+    };
+});
 
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
