@@ -248,7 +248,7 @@ extend(Msub, Mrow, function(_, _super) {
             prev = prev.prev;
         }
         if (prev.JQ) {
-            var height = prev.JQ.outerHeight() * -0.325;
+            var height = prev.JQ.outerHeight() * -0.25;
             this.JQ.css('vertical-align', height);
         }
     };
@@ -296,7 +296,7 @@ extend(Msup, Mrow, function(_, _super) {
             prev = prev.prev;
         }
         if (prev.JQ) {
-            var height = prev.JQ.outerHeight() * 0.5;
+            var height = prev.JQ.outerHeight() * 0.375;
             this.JQ.css('vertical-align', height);
         }
     };
