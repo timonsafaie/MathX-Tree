@@ -95,10 +95,7 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveLeft = function() {
-        var mx = this.parent;
-        while (mx.JQ.attr('class') != 'mX-container') {
-            mx = mx.parent;
-        }
+        var mx = this.root;
         if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
         } else {
@@ -121,10 +118,7 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.moveRight = function() {
-        var mx = this.parent;
-        while (mx.JQ.attr('class') != 'mX-container') {
-            mx = mx.parent;
-        }
+        var mx = this.root;
         if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
         } else {
@@ -163,10 +157,7 @@ extend(Cursor, Elem, function(_) {
 
     _.movePrevRow = function() {
         var parent = this.parent;
-        var mx = parent;
-        while (mx.JQ.attr('class') != 'mX-container') {
-            mx = mx.parent;
-        }
+        var mx = this.root;
         if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
             return;
@@ -186,10 +177,7 @@ extend(Cursor, Elem, function(_) {
 
     _.moveNextRow = function() {
         var parent = this.parent;
-        var mx = parent;
-        while (mx.JQ.attr('class') != 'mX-container') {
-            mx = mx.parent;
-        }
+        var mx = this.root;
         if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
             return;
@@ -262,10 +250,7 @@ extend(Cursor, Elem, function(_) {
         prev.putCursorBefore(this);
         prev.remove();
         // Update SmartMenu
-        var parent = this.parent;
-        while (parent.JQ.attr('class') != 'mX-container') {
-            parent = parent.parent;
-        }
+        var parent = this.root;
         var start = this.parent.firstChild();
         var search ='';
         var target = '';
@@ -528,12 +513,6 @@ extend(Cursor, Elem, function(_) {
         var agg, input;
         
         var parent = this.root;
-        /*
-        while (parent.JQ.attr('class') != 'mX-container') {
-            parent = parent.parent;
-        }
-        */
-        
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
