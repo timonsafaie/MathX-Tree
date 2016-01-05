@@ -1,4 +1,4 @@
-var Menu = function(list, searchTerm, start, attachTo) {
+var Menu = function(list, searchTerm, start, cursor, attachTo) {
     this.JQ = $('<div class="aC-container">'+
                 '<div class="aC-results">'+
                 '<span class="search_results">'+
@@ -13,6 +13,7 @@ var Menu = function(list, searchTerm, start, attachTo) {
     this.start = start;
     this.attachTo = attachTo;
     this.mode = 'left';
+    this.cursor = cursor;
 };
 
 extend(Menu, Object, function(_) {
@@ -44,7 +45,7 @@ extend(Menu, Object, function(_) {
         mJQ.appendTo(parent.JQ);
         
         // Calculates how far (in %) the cursor is into the textbox
-        var cursorOffset = ((parent.JQ.find('.mX-cursor').offset().left - 
+        var cursorOffset = ((this.cursor.JQ.offset().left - 
                              parent.JQ.offset().left)/
                              parent.JQ.parent().width())*100;
         
@@ -200,8 +201,8 @@ extend(Menu, Object, function(_) {
         });
         
         // Set location of the SmartMenu
-        mJQ.css('top', parent.JQ.find('.mX-cursor').offset().top-parent.JQ.offset().top-40);
-        var leftOffset = parent.JQ.find('.mX-cursor').offset().left-parent.JQ.offset().left-(mult*40);
+        mJQ.css('top', this.cursor.JQ.offset().top-parent.JQ.offset().top-40);
+        var leftOffset = this.cursor.JQ.offset().left-parent.JQ.offset().left-(mult*40);
         if (this.mode == 'right') {
             leftOffset -= (mJQ.find('.search_results').width()-((mult+(mult-1))*40));
         }

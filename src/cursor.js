@@ -302,7 +302,7 @@ extend(Cursor, Elem, function(_) {
             }
         }
         if (aggList.length > 0) {
-            this.menu = new Menu(aggList, target, start, parent);
+            this.menu = new Menu(aggList, target, start, this, parent);
             this.menu.display();
             
             
@@ -572,7 +572,7 @@ extend(Cursor, Elem, function(_) {
                 }
             }
             // Add list and display SmartMenu
-            this.menu = new Menu(aggList, trimTarget, start, parent);
+            this.menu = new Menu(aggList, trimTarget, start, this, parent);
             this.menu.display();
             
             // Setup Clicking
