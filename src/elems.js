@@ -474,7 +474,6 @@ var Mfrac = function(input, info) {
     this.over.children.JQ = this.JQ.find('.divisor');
     this.under.children.JQ = this.JQ.find('.dividend');
 
-    this.JQ.css('font-size', '.9em');
     this.JQ.attr('mxId', this.id);
 };
 
