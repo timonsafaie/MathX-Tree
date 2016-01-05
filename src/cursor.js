@@ -51,10 +51,7 @@ extend(Cursor, Elem, function(_) {
         var next = this.next;
         if (cancelSelectKeys.indexOf(key) !== -1) {
             if (key == 'Enter') {
-                var mx = this.parent;
-                while (mx.JQ.attr('class') != 'mX-container') {
-                    mx = mx.parent;
-                }
+                var mx = this.root;
                 if (mx.JQ.find('.aC-container').children().length > 0) {
                     // Insert highlighted Symbol
                     var symbol = this.menu.JQ.find('.list-row-hover').attr('title');
@@ -530,11 +527,13 @@ extend(Cursor, Elem, function(_) {
     _.reduceAgg = function() {
         var agg, input;
         
-        var parent = this.parent;
+        var parent = this.root;
+        /*
         while (parent.JQ.attr('class') != 'mX-container') {
             parent = parent.parent;
         }
-
+        */
+        
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
         var search ='';
