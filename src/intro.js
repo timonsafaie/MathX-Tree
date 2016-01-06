@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 var _mxCF = (function() {
-=======
 (function() {
-
->>>>>>> master
 var version = 'full';
+if (typeof MathXVersionLevel != "undefined") version = MathXVersionLevel;
 var version_number  = '1.0';        // Software Version
