@@ -100,7 +100,7 @@
   font-family: "Symbola", Times New Roman, serif;
   font-size:15pt;
   z-index: 6;
-  border: 1px #999999 solid;
+  /* border: 1px #999999 solid; */
   line-height: normal;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
