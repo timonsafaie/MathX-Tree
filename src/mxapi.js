@@ -7,17 +7,17 @@ var mxapi = {
       if (data && data.uuid && data.content) {
         eq_data = _mxCF._mxD(data.content);
         uuid = data.uuid;
-        $("div[mx-id='" + uuid + "']").each(function(lidx, mxel) {
-          $(mxel).addClass("mathx-web-basic-container");
-          $(mxel).html("");
+        jQuery("div[mx-id='" + uuid + "']").each(function(lidx, mxel) {
+          jQuery(mxel).addClass("mathx-web-basic-container");
+          jQuery(mxel).html("");
           var new_mxel = document.createElement("DIV");
           new_mxel.id = uuid + "-" + lidx;
           eq_data.id = new_mxel.id;
           mxel.appendChild(new_mxel);
-          $("#" + new_mxel.id).addClass("mathx-tree");
-          $("#" + new_mxel.id).addClass("mathx-web-basic-tb");
-          $("#" + new_mxel.id).addClass("mm-container");
-          var input = _mxCF._mxE($("#" + new_mxel.id), eq_data);
+          jQuery("#" + new_mxel.id).addClass("mathx-tree");
+          jQuery("#" + new_mxel.id).addClass("mathx-web-basic-tb");
+          jQuery("#" + new_mxel.id).addClass("mm-container");
+          var input = _mxCF._mxE(jQuery("#" + new_mxel.id), eq_data);
           var id = input.root.id;
           input.uuid = uuid;
         });
