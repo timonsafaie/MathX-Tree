@@ -1,8 +1,3 @@
-var _mxfirsts = document.getElementsByTagName('script');
-var _mxc = document.createElement('link');
-_mxc.rel="stylesheet";
-_mxc.href="/mathx.css?d=1451034624103";
-_mxfirsts[0].parentElement.appendChild(_mxc);
 var mxapi = {
   inProcess: 0,
   host: null,

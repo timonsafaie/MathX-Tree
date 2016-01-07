@@ -24,7 +24,10 @@ var entry = function(JQ, root) {
           }
           mxapi.call(mxapi.host+path, meth, JSON.stringify(eq), true, function(req) {
             var shwing = JSON.parse(req.responseText);
-            if (shwing && shwing.uuid) input.uuid = shwing.uuid;
+            if (shwing && shwing.uuid) {
+              input.uuid = shwing.uuid;
+              JQ.attr('mx-id',shwing.uuid);
+            }
           });
         }
     });
