@@ -719,6 +719,10 @@
 .func-sup,.func-sub {
   display: inline-block;
   text-align: left;
+  font-size: .72em;
+}
+.func-sup .division .mX, .func-sub .division .mX {
+  font-size: .9em;
 }
 .func-sup {
   vertical-align: 2.2em;
