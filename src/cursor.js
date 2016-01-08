@@ -609,4 +609,12 @@ extend(Cursor, Elem, function(_) {
         if (before)
             first.putCursorBefore(this);
     };
+
+    _.reduceFont = function(JQ) {
+        var rootSize = this.root.JQ.css('font-size').slice(0, -2);
+        var origSize = JQ.css('font-size').slice(0, -2);
+        if (origSize === rootSize)
+            return rootSize * 0.72;
+        return rootSize * 0.5;
+    };
 });

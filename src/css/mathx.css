@@ -679,9 +679,6 @@
   display: block;
   text-align: center;
 }
-.func-over,.func-under {
-  font-size: .6em;
-}
 .func-over, {
   padding-bottom: .1em;
 }
@@ -703,7 +700,6 @@
   width: 100%;
 }
 .func-symbol-sqrt {
-  font-size: 1em;
   vertical-align: top;
   display: inline-block;
   -webkit-transform-origin:top;
@@ -723,10 +719,6 @@
 .func-sup,.func-sub {
   display: inline-block;
   text-align: left;
-  font-size: .6em;
-}
-.func-sup .division .mX, .func-sub .division .mX {
-  font-size: .9em;
 }
 .func-sup {
   vertical-align: 2.2em;
@@ -791,8 +783,6 @@
   /*margin-left: -.5em;*/
   display: inline-block;
   text-align: left;
-  font-size: .6em;
-
 }
 
 .inline .func-under {
@@ -802,14 +792,7 @@
   vertical-align: -1.2em;
   display: inline-block;
   text-align: left;
-  font-size: .6em;
-
 }
-
-.fullsize {
-  font-size: 1em;
-}
-
 
 /* over/under tables */
 .above, .below {
@@ -894,9 +877,6 @@
   content: "x";
 }
 
-.exp .arginput, .und .arginput {
-  font-size:1em;
-}
 .und-holder {
    display: inline-block; 
   /*display: inline;*/
@@ -915,9 +895,7 @@
 .sub-sup {
   display: inline-block;
   vertical-align: middle;
-  font-size: .7em;
 }
-
 
 /* lasso selection */
 #mxselectionbox {

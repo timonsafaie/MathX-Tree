@@ -21,8 +21,8 @@ function elemFromJSON(doc) {
     return node;
 }
 
-elemId = 0;
-allElems = {};
+var elemId = 0;
+var allElems = {};
 
 var Elem = function(tag, input, info) {
     Node.call(this);
@@ -215,7 +215,7 @@ var Msqrt = function(input, info) {
 extend(Msqrt, Mrow, function(_, _super) {
     _.resize = function() {
         var $t = this.children.JQ;
-        var scale = $t.outerHeight()/+$t.css('fontSize').slice(0,-2);
+        var scale = $t.outerHeight()/+$t.css('font-size').slice(0, -2);
         var transform = 'scale(1,' + scale + ')';
         this.$sym.css({transform: transform});
     };
@@ -223,16 +223,14 @@ extend(Msqrt, Mrow, function(_, _super) {
 
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
-
-    this.JQ = $('<sub class="und-holder"><span>&#8203;</span></sub>');
-    this.JQ.css('font-size', '0.72em');
-
+    this.JQ = $('<span class="und-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
 };
 
 extend(Msub, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
+        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
         this.repose();
     };
 
@@ -267,20 +265,17 @@ extend(Msub, Mrow, function(_, _super) {
 
 var Msup = function(input, info) {
     Mrow.call(this, 'msup', input, info);
-
     this.offset = 0;
     if (info.offset)
         this.offset = em2px(info.offset);
-
-    this.JQ = $('<sup class="exp-holder"><span>&#8203;</span></sup>');
-    this.JQ.css('font-size', '0.72em');
-
+    this.JQ = $('<span class="exp-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
 };
 
 extend(Msup, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
+        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
         this.repose();
     };
 
@@ -324,8 +319,8 @@ var Msubsup = function(input, info) {
 
     this.JQ = $('<span class="function">' +
                 '<span class="func-symbol-subsup">' + this.output + '</span>' +
-                '<sub class="func-sub"><span>&#8203;</span></sub>' +
-                '<sup class="func-sup"><span>&#8203;</span></sup>' +
+                '<span class="func-sub"><span>&#8203;</span></span>' +
+                '<span class="func-sup"><span>&#8203;</span></span>' +
                 '</span>');
     this.sub.JQ = this.sub.children.JQ = this.JQ.find('.func-sub');
     this.sup.JQ = this.sup.children.JQ = this.JQ.find('.func-sup');
@@ -346,6 +341,11 @@ extend(Msubsup, Mrow, function(_, _super) {
         cursor.moveAfter(this.sub.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.sub.children.JQ);
+        var JQ;
+        JQ = this.sub.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
+        JQ = this.sup.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 
     _.copy = function() {
@@ -384,7 +384,12 @@ var Munder = function(input, info) {
     this.children.JQ = this.JQ.find('.munder-row');
 };
 
-extend(Munder, Mrow);
+extend(Munder, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
+    };
+});
 
 var Mover = function(input, info) {
     Mrow.call(this, 'mover', input, info);
@@ -402,7 +407,12 @@ var Mover = function(input, info) {
     this.children.JQ = this.JQ.find('.mover-row');
 };
 
-extend(Mover, Mrow);
+extend(Mover, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
+    };
+});
 
 var Munderover = function(input, info) {
     Mrow.call(this, 'munderover', input, info);
@@ -435,6 +445,11 @@ extend(Munderover, Mrow, function(_, _super) {
         cursor.moveAfter(this.under.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.under.children.JQ);
+        var JQ;
+        JQ = this.under.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
+        JQ = this.over.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 
     _.copy = function() {
@@ -573,7 +588,7 @@ extend(Menclose, Mrow, function(_, _super) {
 
     _.resize = function() {
         var $t = this.menclosed.children.JQ;
-        var h = $t.outerHeight()/+$t.css('fontSize').slice(0,-2);
+        var h = $t.outerHeight()/+$t.css('font-size').slice(0,-2);
         var hscale = min(1+0.2*(h-1), 1.2);
         var vscale = 1.05 * h;
         var transform = 'scale(' + hscale + ',' + vscale + ')';
