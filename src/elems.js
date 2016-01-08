@@ -41,6 +41,8 @@ var Elem = function(tag, input, info) {
     if (this.info && this.info.css)
         this.JQ.css(this.info.css);
     this.JQ.attr('mxId', this.id);
+
+    this.grouping = true;
 };
 
 extend(Elem, Node, function(_, _super) {
@@ -103,6 +105,7 @@ extend(Mi, Elem);
 
 var Mo = function(input, info) {
     Elem.call(this, 'mo', input, info);
+    this.grouping = false;
 };
 
 extend(Mo, Elem);
@@ -115,6 +118,7 @@ extend(Mn, Elem);
 
 var Mspace = function(input, info) {
     Elem.call(this, 'mspace', input, info);
+    this.grouping = false;
 };
 
 extend(Mspace, Elem);
@@ -333,6 +337,8 @@ var Msubsup = function(input, info) {
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
+
+    this.grouping = false;
 };
 
 extend(Msubsup, Mrow, function(_, _super) {
@@ -437,6 +443,8 @@ var Munderover = function(input, info) {
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
+
+    this.grouping = false;
 };
 
 extend(Munderover, Mrow, function(_, _super) {
@@ -499,16 +507,16 @@ extend(Mfrac, Munderover, function(_, _super) {
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.over.children.JQ);
 
-        var hasDivisor = false;
+        var hasNumerator = false;
         while (true) {
             var prev = this.prev;
-            if (!(prev instanceof Mi || prev instanceof Mn || prev instanceof Mrow))
+            if (!prev.grouping)
                 break;
-            hasDivisor = true;
+            hasNumerator = true;
             prev.moveAfter(this.over.children);
             prev.JQ.prependTo(this.over.children.JQ);
         }
-        if (hasDivisor) {
+        if (hasNumerator) {
             cursor.moveAfter(this.under.children);
             cursor.JQ.prependTo(this.under.children.JQ);
         }
