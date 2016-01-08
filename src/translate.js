@@ -1,5 +1,5 @@
 function toJSON(node) {
-    return JSON.stringify(node.toJSON(), null, '  ');
+    return JSON.stringify(node.toJSON(), null, '    ');
 }
 
 function fromJSON(str) {

@@ -576,14 +576,15 @@ extend(Menclose, Mrow, function(_, _super) {
     _.toJSON = function() {
         var doc = elemToJSON(this);
         doc.menclosed = this.menclosed.toJSON();
-        doc.open = this.mopen.input;
-        doc.close = this.mclose.input;
+        doc.mopen = this.mopen.toJSON();
+        doc.mclose = this.mclose.toJSON();
         return doc;
     };
 
     _.loadJSON = function(doc) {
-        this.resetMclose(doc.close);
-        loadChildren(this.menclosed, doc);
+        var mclose = elemFromJSON(doc.mclose);
+        this.resetMclose(mclose);
+        loadChildren(this.menclosed, doc.menclosed);
     };
 
     _.resize = function() {

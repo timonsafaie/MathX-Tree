@@ -58,7 +58,7 @@ assert(doc === doc_, 'test_translate: ' + doc_);
 
 var n = node.JQ.find('.func-sqrt');
 assert(n.length === 1, 'test_translate.sqrt: ' + n);
-var n = node.JQ.find('sup');
+var n = node.JQ.find('.exp-holder');
 assert(n.length === 1, 'test_translate.sup: ' + n);
 
 doc = JSON.stringify({
@@ -97,3 +97,38 @@ n = node.JQ.find('.func-over .mX');
 assert(n.length === 1, 'test_translate.over: ' + n);
 n = node.JQ.find('.func-under .mX');
 assert(n.length === 1, 'test_translate.under: ' + n);
+
+doc = JSON.stringify({
+    "tag": "root",
+    "children": [
+        {
+            "tag": "mi",
+            "input": "sin"
+        },
+        {
+            "tag": "mfenced",
+            "input": "(",
+            "menclosed": {
+                "tag": "mrow",
+                "children": [
+                    {
+                        "tag": "mi",
+                        "input": "x"
+                    }
+                ]
+            },
+            "mopen": {
+                "tag": "mopen",
+                "input": "("
+            },
+            "mclose": {
+                "tag": "mclose",
+                "input": ")"
+            }
+        }
+    ]
+}, null, '    ');
+
+node = fromJSON(doc);
+doc_ = toJSON(node);
+assert(doc === doc_, 'test_translate: ' + doc_);

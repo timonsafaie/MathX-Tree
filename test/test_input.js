@@ -62,3 +62,26 @@ dump = [
 input = inputKeys(keys);
 var dump_ = input.dumpRoot();
 assert(dump === dump_, 'test_input error: ' + dump_);
+
+keys = [
+    's', 'i', 'n',
+    '(', 'x', 'Right',
+];
+dump = [
+    "<root>",
+    "  <mi>sin</mi>",
+    "  <mfenced>",
+    "    <mopen>(</mopen>",
+    "    <mrow>",
+    "      <mi>x</mi>",
+    "    </mrow>",
+    "    <mclose>)</mclose>",
+    "  </mfenced>",
+    "  <cursor></cursor>",
+    "</root>",
+    ""
+].join('\n');
+
+input = inputKeys(keys);
+var dump_ = input.dumpRoot();
+assert(dump === dump_, 'test_input error: ' + dump_);
