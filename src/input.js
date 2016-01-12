@@ -14,7 +14,6 @@ var MathInput = function() {
 
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
-      console.log("inputKey",this.mathMode);
         var cursor = this.cursor;
 
         cursor.beforeInput(key);
@@ -26,7 +25,6 @@ extend(MathInput, Object, function(_) {
     };
 
     _._runControl = function(fn, key) {
-      console.log("runControl",this.mathMode);
         var cursor = this.cursor;
 
         cursor.beforeInput(key);
