@@ -14,6 +14,7 @@ var MathInput = function() {
 
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
+      console.log("inputKey",this.mathMode);
         var cursor = this.cursor;
 
         cursor.beforeInput(key);
@@ -25,6 +26,7 @@ extend(MathInput, Object, function(_) {
     };
 
     _._runControl = function(fn, key) {
+      console.log("runControl",this.mathMode);
         var cursor = this.cursor;
 
         cursor.beforeInput(key);
@@ -107,7 +109,7 @@ extend(MathInput, Object, function(_) {
               this.root.JQ[0].parentElement.appendChild(textSpan);
               textDiv.focus();
               this.mathMode = false;
-            }
+            } else if (this.mathMode) this.mathMode = false;
             this.didExitTextMode = false;
           return false;
         }
