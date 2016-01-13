@@ -33,7 +33,7 @@ var atomSymbols = [
     {input: 'e', Tag: Mi, output: "&#x1d452;", css: {padding: '0 .1em 0 0'}},
     {input: 'f', Tag: Mi, output: "&#x1d453;", css: {padding: '0 .15em 0 .13em'}},
     {input: 'g', Tag: Mi, output: "&#x1d454;", css: {padding: '0 .1em 0 .03em'}},
-    {input: 'h', Tag: Mi, output: "&#xu210E;", css: {padding: '0 .05em 0 0'}},
+    {input: 'h', Tag: Mi, output: "&#8462;",   css: {padding: '0 .05em 0 0'}},
     {input: 'i', Tag: Mi, output: "&#x1d456;", css: {padding: '0 .1em 0 0'}},
     {input: 'j', Tag: Mi, output: "&#x1d457;", css: {padding: '0 .09em 0 .07em'}},
     {input: 'k', Tag: Mi, output: "&#x1d458;", css: {padding: '0 .1em 0 0'}},
