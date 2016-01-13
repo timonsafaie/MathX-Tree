@@ -81,7 +81,7 @@ var aggSymbols1 = {
     '**':                 {Tag: Mo, output: '&#183;', css: {padding: '0 .2em'}, latex: "\\cdot", version: "basic"},
     '-:':                 {Tag: Mo, output: '&#247;', css: {padding: '0 .2em'}, latex: "\\div", version: "basic"},
     '/':                  {Tag: Mo, output: '&#47;', latex: "/", version: "basic"},
-    '\\'                  {Tag: Mo, output: '&#8726;', css: {padding: '0 .15em'}, latex: "\\setminus"},
+    '\\':                 {Tag: Mo, output: '&#8726;', css: {padding: '0 .15em'}, latex: "\\setminus"},
     
     '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'},  latex: "\\leq", version: "basic"},
     '>=':                 {Tag: Mo, output: '&geq;', css: {padding: '0 .2em'},  latex: "\\geq", version: "basic"},
