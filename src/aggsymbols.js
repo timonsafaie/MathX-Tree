@@ -35,6 +35,7 @@ var aggSymbols2 = {
     "southwest double arrow": {Tag: Mo, output: "&#8665;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "33", latex: "\\Swarrow"},
     "dot operator": {Tag: Mo, output: "&#183;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "1", latex: "\\cdot"},
     "times": {Tag: Mo, output: "&times;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "2", latex: "\\times"},
+    "asterisk": {Tag: Mo, output: "&asterisk;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "2", latex: "*"},
     "composition": {Tag: Mo, output: "&#8728;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "5", latex: "\\circ"},
     "circled times": {Tag: Mo, output: "&otimes;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "6", latex: "\\otimes"},
     "circled asterisk": {Tag: Mo, output: "&#8859;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Binary Operator", rank: "7", latex: "\\circledast"},
