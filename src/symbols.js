@@ -77,6 +77,8 @@ var atomSymbols = [
 var aggSymbols1 = {
     '+-':                 {Tag: Mo, output: '&pm;', latex: "\\pm", version: "basic"},
     '-+':                 {Tag: Mo, output: '&mp;', latex: "\\mp", version: "basic"},
+    '*':                  {Tag: Mo, output: '&times;', latex: "\\times", version: "basic"},
+    '**':                 {Tag: Mo, output: '&asterisk;', latex: "*", version: "basic"},
     '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'},  latex: "\\leq", version: "basic"},
     '>=':                 {Tag: Mo, output: '&geq;', css: {padding: '0 .2em'},  latex: "\\geq", version: "basic"},
     '=>':                 {Tag: Mo, output: '&rArr;', latex: "\\Rightarrow"},
