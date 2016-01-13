@@ -126,7 +126,7 @@ var aggSymbols1 = {
     'HH':                 {Tag: Mo, output: '&#8461;', latex: "\\mathbb{H}"},
     'PP':                 {Tag: Mo, output: '&#8472;', latex: "\\wp"},
     'LL':                 {Tag: Mo, output: '&#8466;', latex: "\\mathcal{L}"},
-    'cc':                 {Tag: Mo, output: '&#8728;', css: {padding: '0 .2em'}, latex: "\\circ"},
+    'cc':                 {Tag: Mo, output: '&#8728;', css: {padding: '0 .3em'}, latex: "\\circ"},
     
     
     'del':                {Tag: Mo, output: '&part;', category: 'Operator', rank: "2", latex: "\\nabla"},
