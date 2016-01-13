@@ -33,7 +33,7 @@ var atomSymbols = [
     {input: 'e', Tag: Mi, output: "&#x1d452;", css: {padding: '0 .1em 0 0'}},
     {input: 'f', Tag: Mi, output: "&#x1d453;", css: {padding: '0 .15em 0 .13em'}},
     {input: 'g', Tag: Mi, output: "&#x1d454;", css: {padding: '0 .1em 0 .03em'}},
-    {input: 'h', Tag: Mi, output: "&#xu210E;",   css: {padding: '0 .05em 0 0'}},
+    {input: 'h', Tag: Mi, output: "&#xu210E;", css: {padding: '0 .05em 0 0'}},
     {input: 'i', Tag: Mi, output: "&#x1d456;", css: {padding: '0 .1em 0 0'}},
     {input: 'j', Tag: Mi, output: "&#x1d457;", css: {padding: '0 .09em 0 .07em'}},
     {input: 'k', Tag: Mi, output: "&#x1d458;", css: {padding: '0 .1em 0 0'}},
@@ -56,7 +56,7 @@ var atomSymbols = [
     {input: '<', Tag: Mo, css: {padding: '0 .2em'}},
     {input: '>', Tag: Mo, css: {padding: '0 .2em'}},
     {input: '=', Tag: Mo, css: {padding: '0 .2em'}},
-    {input: '*', Tag: Mo, css: {padding: '0 .2em'}},
+    {input: '*', Tag: Mo, output: "&#8727;", css: {padding: '0 .2em'}},
 
     {input: '(', Tag: Menclose, closeInfo: {input: ')'}},
     {input: '[', Tag: Menclose, closeInfo: {input: ']'}},
@@ -75,26 +75,59 @@ var atomSymbols = [
 ];
 
 var aggSymbols1 = {
-    '+-':                 {Tag: Mo, output: '&pm;', latex: "\\pm", version: "basic"},
-    '-+':                 {Tag: Mo, output: '&mp;', latex: "\\mp", version: "basic"},
-    '*':                  {Tag: Mo, output: '&times;', latex: "\\times", version: "basic"},
-    '**':                 {Tag: Mo, output: '&asterisk;', latex: "*", version: "basic"},
+    '+-':                 {Tag: Mo, output: '&pm;', css: {padding: '0 .2em'}, latex: "\\pm", version: "basic"},
+    '-+':                 {Tag: Mo, output: '&mp;', css: {padding: '0 .2em'}, latex: "\\mp", version: "basic"},
+    '*':                  {Tag: Mo, output: '&times;', css: {padding: '0 .2em'}, latex: "\\times", version: "basic"},
+    '**':                 {Tag: Mo, output: '&#183;', css: {padding: '0 .2em'}, latex: "\\cdot", version: "basic"},
+    '-:':                 {Tag: Mo, output: '&#247;', css: {padding: '0 .2em'}, latex: "\\div", version: "basic"},
+    '/':                  {Tag: Mo, output: '&#47;', latex: "/", version: "basic"},
+    '\\'                  {Tag: Mo, output: '&#8726;', css: {padding: '0 .15em'}, latex: "\\setminus"},
+    
     '<=':                 {Tag: Mo, output: '&leq;', css: {padding: '0 .2em'},  latex: "\\leq", version: "basic"},
     '>=':                 {Tag: Mo, output: '&geq;', css: {padding: '0 .2em'},  latex: "\\geq", version: "basic"},
+    '<<':                 {Tag: Mo, output: '&#8810;', css: {padding: '0 .2em'},  latex: "\\ll"},
+    '>>':                 {Tag: Mo, output: '&#8811;', css: {padding: '0 .2em'},  latex: "\\gg"},
+    '>~':                 {Tag: Mo, output: '&#8819;', css: {padding: '0 .2em'},  latex: "\\gtrsim"},
+    '<~':                 {Tag: Mo, output: '&#8818;', css: {padding: '0 .2em'},  latex: "\\lesssim"},
+    '~~':                 {Tag: Mo, output: '&#8776;', css: {padding: '0 .2em'},  latex: "\\approx"},
+    '~=':                 {Tag: Mo, output: '&#8773;', css: {padding: '0 .2em'},  latex: "\\cong"},
+    '-=':                 {Tag: Mo, output: '&#8801;', css: {padding: '0 .2em'},  latex: "\\equiv"},
+    '!=':                 {Tag: Mo, output: '&#8800;', css: {padding: '0 .2em'},  latex: "\\ne"},
+
     '=>':                 {Tag: Mo, output: '&rArr;', latex: "\\Rightarrow"},
     '->':                 {Tag: Mo, output: '&rarr;',  latex: "\\rightarrow", version: "basic"},
     '<-':                 {Tag: Mo, output: '&larr;', latex: "\\leftarrow"},
     '<->':                {Tag: Mo, output: '&harr;', latex: "\\leftrightarrow"},
     '|->':                {Tag: Mo, output: '&map;', latex: "\\mapsto"},
     '\\->':               {Tag: Mo, output: '&hookrightarrow;', latex: "\\xhookrightarrow{}"},
-
     '<--':                {Tag: Mo, output: '&longleftarrow;', latex: "\\longleftarrow"},
     '-->':                {Tag: Mo, output: '&longrightarrow;', latex: "\\longrightarrow"},
     '<-->':               {Tag: Mo, output: '&longleftrightarrow;', latex: "\\longleftrightarrow"},
     '|-->':               {Tag: Mo, output: '&longmapsto;', latex: "\\longmapsto"},
+    
     '|':                  {Tag: Mo, output: '|', latex: '|'},
     '|':                  {Tag: Menclose, closeInfo: {input: '|'}},
-
+    
+    '...':                {Tag: Mo, output: '&#8943;', css: {padding: '0 .1em'},  latex: "\\cdots", version: "basic"},
+    ':.':                 {Tag: Mo, output: '&#8756;', css: {padding: '0 .1em'},  latex: "\\cdots", version: "basic"},
+    '.:':                 {Tag: Mo, output: '&#8757;', css: {padding: '0 .1em'},  latex: "\\cdots", version: "basic"},
+    
+    'DD':                 {Tag: Mo, output: '&#8711;', latex: "\\nabla"},
+    'dd':                 {Tag: Mo, output: '&#8706;', latex: "\\partial"},
+    'AA':                 {Tag: Mo, output: '&#8704;', latex: "\\forall"},
+    'EE':                 {Tag: Mo, output: '&#8707;', latex: "\\exists"},
+    'NN':                 {Tag: Mo, output: '&#8469;', latex: "\\mathbb{N}", version: "basic"},
+    'ZZ':                 {Tag: Mo, output: '&#8484;', latex: "\\mathbb{Z}", version: "basic"},
+    'QQ':                 {Tag: Mo, output: '&#8474;', latex: "\\mathbb{Q}", version: "basic"},
+    'RR':                 {Tag: Mo, output: '&#8477;', latex: "\\mathbb{R}", version: "basic"},
+    'CC':                 {Tag: Mo, output: '&#8450;', latex: "\\mathbb{C}", version: "basic"},
+    'WW':                 {Tag: Mo, output: '&#120142;', latex: "\\mathbb{W}", version: "basic"},
+    'HH':                 {Tag: Mo, output: '&#8461;', latex: "\\mathbb{H}"},
+    'PP':                 {Tag: Mo, output: '&#8472;', latex: "\\wp"},
+    'LL':                 {Tag: Mo, output: '&#8466;', latex: "\\mathcal{L}"},
+    'cc':                 {Tag: Mo, output: '&#8728;', css: {padding: '0 .2em'}, latex: "\\circ"},
+    
+    
     'del':                {Tag: Mo, output: '&part;', category: 'Operator', rank: "2", latex: "\\nabla"},
     'gradient':           {Tag: Mo, output: '&nabla;', category: 'Operator', rank: "4", latex: "\\nabla"},
     'nabla':              {Tag: Mo, output: '&nabla;', category: 'Operator', rank: "5", latex: "\\nabla"},
