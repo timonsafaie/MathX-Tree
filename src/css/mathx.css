@@ -702,6 +702,7 @@
 .func-symbol-sqrt {
   vertical-align: top;
   display: inline-block;
+  padding-bottom: 0.4em;
   -webkit-transform-origin:top;
   -moz-transform-origin:top;
   -ms-transform-origin:top;
@@ -821,7 +822,7 @@
 }
 .dividend {
   border-top:1px #333333 solid;
-  padding: 0.12em 0.1em 0 0.1em;
+  padding: 0.13em 0.1em 0 0.1em;
   margin-left: -0.1em;
   margin-right: -0.1em;
   min-width:5px;
