@@ -92,6 +92,7 @@ var aggSymbols1 = {
     '>~':                 {Tag: Mo, output: '&#8819;', latex: "\\gtrsim"},
     '<~':                 {Tag: Mo, output: '&#8818;', latex: "\\lesssim"},
     '~~':                 {Tag: Mo, output: '&#8776;', latex: "\\approx"},
+    '~-':                 {Tag: Mo, output: '&#8771;', latex: "\\simeq"},
     '~=':                 {Tag: Mo, output: '&#8773;', latex: "\\cong"},
     '-=':                 {Tag: Mo, output: '&#8801;', latex: "\\equiv"},
     '!=':                 {Tag: Mo, output: '&#8800;', latex: "\\ne"},
