@@ -90,8 +90,7 @@ extend(MathInput, Object, function(_) {
               var textSpan = document.createElement('span');
               var textDiv = document.createElement('div');
               textDiv.contentEditable = "true";
-              $(textDiv).css('padding','0px 8px 0px 8px');
-              $(textDiv).css('display','inline');
+              $(textDiv).addClass('mx-txt');
               textDiv.onkeydown = function(e) {
                 if (e.keyCode == 220) {
                   that.didExitTextMode = true;
