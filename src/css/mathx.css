@@ -1005,4 +1005,8 @@
 .mx-txt {
   padding: 0px 3px 0px 3px;
   display: inline;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 17px;
+  color: rgb(13,13,13);
+  font-weight: 300;
 }
