@@ -31,6 +31,11 @@
     outline: none;
 }
 
+.empty::after {
+  visibility: hidden;
+  content: "x";
+}
+
 .focus {
   background-color: rgb(226, 250, 241);
   border: none;
@@ -715,13 +720,23 @@
 .func-symbol-sqrt {
   vertical-align: top;
   display: inline-block;
-  padding-bottom: 0.4em;
   -webkit-transform-origin:top;
   -moz-transform-origin:top;
   -ms-transform-origin:top;
   -o-transform-origin:top;
   transform-origin:top;
 }
+
+.root-index {
+  margin-right: -0.8em;
+  margin-left: .2em;
+  min-width: .5em;
+}
+
+.root-index, .root-index * {
+    vertical-align: top;
+}
+
 .func-subsup {
   display: inline-block;
   /*vertical-align: middle;*/

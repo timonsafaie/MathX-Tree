@@ -1,11 +1,13 @@
 var MathInput = function() {
     this.root = new Mrow('root');
     this.root.isRoot = true;
+    this.root.resize();
 
     this.cursor = new Cursor(this.root);
     this.cursor.addAfter(this.root.children);
     this.cursor.JQ.appendTo(this.root.JQ);
     this.cursor.hide();
+
     this.log = [];
     this.uuid = null;
     this.mathMode = true;

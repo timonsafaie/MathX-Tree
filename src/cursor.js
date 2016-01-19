@@ -615,9 +615,11 @@ extend(Cursor, Elem, function(_) {
             first.putCursorBefore(this);
     };
 
-    _.reduceFont = function(JQ) {
+    _.reduceFont = function(JQ, scale) {
         var rootSize = this.root.JQ.css('font-size').slice(0, -2);
         var origSize = JQ.css('font-size').slice(0, -2);
+        if (scale)
+            return rootSize * scale;
         if (origSize === rootSize)
             return rootSize * 0.72;
         return rootSize * 0.5;

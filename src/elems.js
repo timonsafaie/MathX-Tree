@@ -198,6 +198,15 @@ extend(Mrow, Elem, function(_, _super) {
             cursor.JQ.insertAfter(cursor.prev.JQ);
         return this.cursorStay;
     };
+
+    _.resize = function() {
+        var first = this.firstChild();
+        var last = this.lastChild();
+        if (!this.hasChild() || (first === last && first instanceof Cursor))
+            this.children.JQ.addClass('empty');
+        else
+            this.children.JQ.removeClass('empty');
+    };
 });
 
 var Msqrt = function(input, info) {
@@ -218,6 +227,7 @@ var Msqrt = function(input, info) {
 
 extend(Msqrt, Mrow, function(_, _super) {
     _.resize = function() {
+        _super.resize.call(this);
         var $t = this.children.JQ;
         var scale = $t.outerHeight()/+$t.css('font-size').slice(0, -2);
         var transform = 'scale(1,' + scale + ')';
@@ -236,10 +246,8 @@ var Mroot = function(input, info) {
     this.radicand.addBefore(this.children);
 
     this.JQ = $('<span class="mX">' +
-                '<span>' +
-                '<span class="root-index"><span>&#8203;</span></span>' +
+                '<sup class="root-index"><span>&#8203;</span></sup>' +
                 '<span class="root-radix func-symbol-sqrt">&radic;</span>' +
-                '</spam>' +
                 '<span class="root-radicand func-sqrt"><span>&#8203;</span></span>' +
                 '</span>');
     this.index.children.JQ = this.JQ.find('.root-index');
@@ -260,7 +268,7 @@ extend(Mroot, Mrow, function(_, _super) {
         cursor.JQ.prependTo(this.index.children.JQ);
         var JQ;
         JQ = this.index.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(JQ));
+        JQ.css('font-size', cursor.reduceFont(JQ, 0.5));
     };
 
     _.copy = function() {
@@ -326,6 +334,7 @@ extend(Msub, Mrow, function(_, _super) {
     };
 
     _.resize = function() {
+        _super.resize.call(this);
         var next = this.next;
         if (next instanceof Msup)
             next.JQ.css('margin-left', next.offset-this.JQ.width());
@@ -371,6 +380,7 @@ extend(Msup, Mrow, function(_, _super) {
     };
 
     _.resize = function() {
+        _super.resize.call(this);
         var next = this.next;
         if (next instanceof Msub)
             next.JQ.css('margin-left', -this.JQ.width());
