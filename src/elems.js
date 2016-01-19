@@ -225,6 +225,71 @@ extend(Msqrt, Mrow, function(_, _super) {
     };
 });
 
+var Mroot = function(input, info) {
+    Mrow.call(this, 'mroot', input, info);
+    this.cursorStay = false;
+
+    this.index = new Mrow();
+    this.index.maxLength = 1;
+    this.radicand = new Mrow();
+    this.index.addBefore(this.children);
+    this.radicand.addBefore(this.children);
+
+    this.JQ = $('<span class="mX">' +
+                '<span>' +
+                '<span class="root-index"><span>&#8203;</span></span>' +
+                '<span class="root-radix func-symbol-sqrt">&radic;</span>' +
+                '</spam>' +
+                '<span class="root-radicand func-sqrt"><span>&#8203;</span></span>' +
+                '</span>');
+    this.index.children.JQ = this.JQ.find('.root-index');
+    this.radicand.children.JQ = this.JQ.find('.root-radicand');
+
+    this.$sym = this.JQ.find('.func-symbol-sqrt');
+    if (this.info.css)
+        this.$sym.css(this.info.css);
+
+    this.JQ.attr('mxId', this.id);
+};
+
+extend(Mroot, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        this.addBefore(cursor);
+        cursor.moveAfter(this.index.children);
+        this.JQ.insertBefore(cursor.JQ);
+        cursor.JQ.prependTo(this.index.children.JQ);
+        var JQ;
+        JQ = this.index.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
+    };
+
+    _.copy = function() {
+        var copy = new this.constructor(this.input, this.info);
+        copyChildren(this.index, copy.index);
+        copyChildren(this.radicand, copy.radicand);
+        return copy;
+    };
+
+    _.toJSON = function() {
+        var doc = elemToJSON(this);
+        doc.index = this.index.toJSON();
+        doc.radicand = this.radicand.toJSON();
+        return doc;
+    };
+
+    _.loadJSON = function(doc) {
+        loadChildren(this.index, doc.index);
+        loadChildren(this.radicand, doc.radicand);
+    };
+
+    _.resize = function() {
+        var $t = this.radicand.children.JQ;
+        var scale = $t.outerHeight()/+$t.css('font-size').slice(0, -2);
+        var transform = 'scale(1,' + scale + ')';
+        this.$sym.css({transform: transform});
+    };
+});
+
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
     this.JQ = $('<span class="und-holder"><span>&#8203;</span></span>');

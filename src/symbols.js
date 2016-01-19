@@ -182,7 +182,7 @@ var aggSymbols1 = {
     'lim':   {Tag: Munder, output: 'lim', category: 'Function', rank: "21", latex: "\\lim"},
     'limit': {Tag: Munder, output: 'lim', category: 'Function', rank: "21", latex: "\\lim"},
     'sqrt':  {Tag: Msqrt,  output: '&radic;', category: 'Function', rank: "22", latex: "\\sqrt", version: "basic"},
-    // 'root': {Tag: Msqrt,  output: '&radic;', css: {padding: '0 0.2em 0 0'}},
+    'root':  {Tag: Mroot,  output: '&radic;', category: 'Function', rank: "22"},
     
     'matrix': {Tag: Mo, output: '[]', category: 'Matrix', rank: "1", latex: "[]"},
     'pmatrix': {Tag: Mo, output: '()', category: 'Matrix', rank: "2", latex: "()"},

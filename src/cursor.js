@@ -346,6 +346,11 @@ extend(Cursor, Elem, function(_) {
             throw 'Unknown input "' + key + '"';
         
         var node = new atom.Tag(key, atom);
+        var parent = this.parent;
+        if (this.parent.maxLength === 1) {
+            this.delLeft();
+            this.delRight();
+        }
         node.insert(this);
         
         /*
