@@ -71,7 +71,7 @@ var entry = function(JQ, root) {
 
     function onKeydown(e) {
       var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
-      if (input.mathMode) {
+      if (_mxCF._mm) {
         if (e.ctrlKey)
           key = 'Ctrl-' + key;
         if (e.shiftKey)
@@ -81,7 +81,7 @@ var entry = function(JQ, root) {
     }
 
     function onKeypress(e) {
-      if (input.mathMode) {
+      if (_mxCF._mm) {
         var key = String.fromCharCode(e.charCode);
         input.inputKey(key);
         return false;

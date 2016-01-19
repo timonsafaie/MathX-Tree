@@ -8,8 +8,8 @@ var MathInput = function() {
     this.cursor.hide();
     this.log = [];
     this.uuid = null;
-    this.mathMode = true;
-    this.didExitTextMode = false;
+    _mxCF._mm = true;
+    _mxCF._detm = false;
 };
 
 extend(MathInput, Object, function(_) {
@@ -85,7 +85,7 @@ extend(MathInput, Object, function(_) {
             console.log(this.dumpSavedSelection());
             return false;
         case 'Ctrl-Backslash':
-            if (this.mathMode && !this.didExitTextMode) {
+            if (_mxCF._mm && !_mxCF._detm) {
               var that = this;
               var textSpan = document.createElement('span');
               var textDiv = document.createElement('div');
@@ -93,21 +93,21 @@ extend(MathInput, Object, function(_) {
               $(textDiv).addClass('mx-txt');
               textDiv.onkeydown = function(e) {
                 if (e.keyCode == 220) {
-                  that.didExitTextMode = true;
+                  _mxCF._detm = true;
                   var newMX = document.createElement('span');
                   var newInput = entry($(newMX));
                   this.parentElement.appendChild(newMX);
                   $(newMX).focus();
-                  that.mathMode = true;
+                  _mxCF._mm = true;
                   return false;
                 }
               };
               textSpan.appendChild(textDiv);
               this.root.JQ[0].parentElement.appendChild(textSpan);
               textDiv.focus();
-              this.mathMode = false;
-            } else if (this.mathMode) this.mathMode = false;
-            this.didExitTextMode = false;
+              _mxCF._mm = false;
+            } else if (_mxCF._mm) _mxCF._mm = false;
+            _mxCF._detm = false;
           return false;
         }
     };
