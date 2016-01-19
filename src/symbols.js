@@ -72,8 +72,8 @@ var atomSymbols = [
     {input: '^',             Tag: Msup},
     {input: '_',             Tag: Msub},
     {input: /^[0-9.]$/,      Tag: Mn},
-    {input: /^[:;,'"$@#%&!=?]$/,    Tag: Mo},
-    {input: /^[+\-|\\]$/,           Tag: Mo}
+    {input: /^[:;,'"$@#%&!?]$/,    Tag: Mi},
+    {input: /^[+\-|=\\]$/,         Tag: Mo}
 ];
 
 var aggSymbols1 = {
@@ -231,7 +231,7 @@ var aggSymbols1 = {
     'det':     {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\det'},
     'lcm':     {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\lcm', version: "basic"},
     'Tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\Tr'},
-    'tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\tr'}
+    'tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\tr'},
 };
 
 var aggSymbols = {};
