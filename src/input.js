@@ -22,8 +22,6 @@ extend(MathInput, Object, function(_) {
         cursor.inputKey(key);
         cursor.reduceAgg();
         cursor.afterInput(key);
-
-
     };
 
     _._runControl = function(fn, key) {

@@ -67,7 +67,7 @@ var atomSymbols = [
     {input: ']', Tag: Mclose},
     {input: '}', Tag: Mclose},
 
-    {input: '/',             Tag: Mfrac},
+    {input: '/',             Tag: Mi},
     {input: ' ',             Tag: Mspace},
     {input: '^',             Tag: Msup},
     {input: '_',             Tag: Msub},
@@ -77,12 +77,12 @@ var atomSymbols = [
 ];
 
 var aggSymbols1 = {
+    '/':                  {Tag: Mfrac, latex: "/", version: "basic"},
     '+-':                 {Tag: Mo, output: '&pm;', latex: "\\pm", version: "basic"},
     '-+':                 {Tag: Mo, output: '&mp;', latex: "\\mp", version: "basic"},
     '*':                  {Tag: Mo, output: '&times;', latex: "\\times", version: "basic"},
     '**':                 {Tag: Mo, output: '&#183;', latex: "\\cdot", version: "basic"},
     '-:':                 {Tag: Mo, output: '&#247;', latex: "\\div", version: "basic"},
-    '/':                  {Tag: Mo, output: '&#47;', latex: "/", version: "basic"},
     '\\':                 {Tag: Mo, output: '&#8726;', css: {padding: '0 .15em'}, latex: "\\setminus"},
     
     '<=':                 {Tag: Mo, output: '&leq;', latex: "\\leq", version: "basic"},

@@ -596,6 +596,19 @@ extend(Mfrac, Munderover, function(_, _super) {
             cursor.JQ.prependTo(this.under.children.JQ);
         }
     };
+
+    _.expand = function(cursor) {
+        var parent = this.parent;
+        this.putCursorBefore(cursor);
+        this.remove();
+        if (this.over.hasChild()) {
+            listEach(this.over.children.next, this.over.children, function(elem) {
+                elem.moveBefore(cursor);
+                elem.JQ.insertBefore(cursor.JQ);
+            });
+        }
+        cursor.inputKey('/');
+    };
 });
 
 var Mclose = function(input, info) {

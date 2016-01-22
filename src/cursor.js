@@ -598,21 +598,21 @@ extend(Cursor, Elem, function(_) {
             
     };
 
-    _.expandAgg = function(agg, before) {
+    _.expandAgg = function(agg) {
+        if (agg.expand)
+            return agg.expand(this);
+
         agg.putCursorBefore(this);
         agg.remove();
 
         var cursor = this;
         var first = null;
-        
+
         agg.input.split('').forEach(function(c) {
             cursor.inputKey(c);
             if (first === null)
                 first = cursor.prev;
         });
-
-        if (before)
-            first.putCursorBefore(this);
     };
 
     _.reduceFont = function(JQ, scale) {
