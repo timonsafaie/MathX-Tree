@@ -232,6 +232,15 @@ var aggSymbols1 = {
     'lcm':     {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\lcm', version: "basic"},
     'Tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\Tr'},
     'tr':      {Tag: Mi, css: {padding: '0 0.1em 0 0'}, latex: '\\tr'},
+
+    'vector':  {Tag: Mbar, output: '&#8640;', css: {fontSize: '0.6em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'overbar': {Tag: Mbar, output: '&oline;', css: {fontSize: '0.6em', marginBottom: '-0.4em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'ray':     {Tag: Mbar, output: '&rarr;',  css: {fontSize: '0.6em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'dray':    {Tag: Mbar, output: '&harr;',  css: {fontSize: '0.6em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'hat':     {Tag: Mbar, output: '^',       css: {marginBottom: '-0.35em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'tilde':   {Tag: Mbar, output: '~',       css: {marginBottom: '-0.05em'}, family: "symbol", category: "Punctuation", rank: "1"},
+    'dot':     {Tag: Mbar, output: '&#729;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
+    'ddot':    {Tag: Mbar, output: '&#168;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
 };
 
 var aggSymbols = {};

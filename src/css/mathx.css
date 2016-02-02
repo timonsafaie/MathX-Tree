@@ -70,6 +70,12 @@
     padding-right: 0.1em;
 }
 
+.mbar-sym {
+    display: block;
+    text-align: center;
+    line-height: .25em;
+}
+
 .munder {
   display:inline-block;
   vertical-align:-1em;

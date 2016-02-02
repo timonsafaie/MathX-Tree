@@ -235,6 +235,26 @@ extend(Msqrt, Mrow, function(_, _super) {
     };
 });
 
+var Mbar = function(input, info) {
+    Mrow.call(this, 'mbar', input, info);
+
+    this.JQ = $('<span class="mX">' +
+                '<span class="mbar-sym">' + this.output + '</span>' +
+                '<span class="mbar-row"><span>&#8203;</span></span>' +
+                '</span>');
+    this.JQ.attr('mxId', this.id);
+
+    this.$sym = this.JQ.find('.mbar-sym');
+    if (this.info.css)
+        this.$sym.css(this.info.css);
+    if (this.info.singular)
+        this.maxLength = 1;
+
+    this.children.JQ = this.JQ.find('.mbar-row');
+};
+
+extend(Mbar, Mrow);
+
 var Mroot = function(input, info) {
     Mrow.call(this, 'mroot', input, info);
     this.cursorStay = false;
