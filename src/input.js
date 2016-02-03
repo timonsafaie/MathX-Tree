@@ -17,7 +17,7 @@ var MathInput = function() {
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
         var cursor = this.cursor;
-
+        
         cursor.beforeInput(key);
         cursor.inputKey(key);
         cursor.reduceAgg();

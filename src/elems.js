@@ -442,11 +442,13 @@ extend(Msubsup, Mrow, function(_, _super) {
         cursor.moveAfter(this.sub.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.sub.children.JQ);
+        /*
         var JQ;
         JQ = this.sub.children.JQ;
         JQ.css('font-size', cursor.reduceFont(JQ));
         JQ = this.sup.children.JQ;
         JQ.css('font-size', cursor.reduceFont(JQ));
+        */
     };
 
     _.copy = function() {

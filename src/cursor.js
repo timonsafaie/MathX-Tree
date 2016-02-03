@@ -14,9 +14,10 @@ var clipBoard = new ClipBoard();
 var Cursor = function(root) {
     Elem.call(this, 'cursor', '');
     this.root = root;
-    this.JQ = $('<span class="mX-cursor">&#8203;</span>');
+    var cJQ = this.JQ = $('<span class="mX-cursor">&#8203;</span>');
     this.selection = {start: null, end: null};
-    this.menu = null;
+    this.menu = this.intervalId = null;
+    this.blink = function(){ cJQ.toggleClass('blink'); };
 };
 
 extend(Cursor, Elem, function(_) {
@@ -33,20 +34,36 @@ extend(Cursor, Elem, function(_) {
         'Click',
         'Select',
     ];
-
+    
+    
     _.show = function() {
         this.JQ.parent().addClass('focus');
         this.JQ.removeClass('invisible-cursor');
     };
 
     _.hide = function() {
-        this.JQ.addClass('invisible-cursor');
+        this.JQ.addClass('invisible-cursor').removeClass('blink');
         this.JQ.parent().removeClass('focus');
+    };
+    
+     _.setBlink = function() {
+        if ('intervalId' in this)
+            clearInterval(this.intervalId);
+        this.intervalId = setInterval(this.blink, 500);
+    };
+    
+    _.clearBlink = function() {
+        if ('intervalId' in this)
+            clearInterval(this.intervalId);
+        delete this.intervalId;
+        this.JQ.removeClass('blink');
     };
 
     _.beforeInput = function(key) {
         this.hide();
-
+        this.clearBlink();
+        this.show();
+        
         var prev = this.prev;
         var next = this.next;
         if (cancelSelectKeys.indexOf(key) !== -1) {
@@ -91,6 +108,7 @@ extend(Cursor, Elem, function(_) {
         if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
             this.lastMenclose.settle();
         this.show();
+        this.setBlink();
         this.bubble('resize');
     };
 
@@ -234,6 +252,8 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.delLeft = function() {
+        this.clearBlink();
+        this.show();
         if (this.delSelection())
             return;
         if (this.lastAgg) {
@@ -365,7 +385,7 @@ extend(Cursor, Elem, function(_) {
     _.click = function($elem, pageX, pageY) {
         var mxid = $elem.attr('mxid');
         var elem = allElems[mxid];
-
+        
         if (!elem.putCursorBefore(this))
             this.moveLeft();
         var leftOff = pageX - this.JQ.offset().left;

@@ -10,9 +10,11 @@ var entry = function(JQ, root) {
     });
     JQ.focus(function() {
         input.cursor.show();
+        input.cursor.setBlink();
     });
     JQ.blur(function(e) {
         input.cursor.hide();
+        input.cursor.clearBlink();
         if (typeof mxapi == "object" && mxapi && mxapi.host) {
           var eq = {
             content: toJSON(input.root)
@@ -101,13 +103,18 @@ var entry = function(JQ, root) {
 
         function updateSelection(e) {
             input.updateSelection(startX, startY, e.pageX, e.pageY);
+            input.cursor.clearBlink();
+            input.cursor.hide();
+            if ((startX == e.pageX) && 
+                (startY == e.pageY))
+                input.cursor.show();
         }
 
         function endSelection(e) {
             $('body').off('mousemove.mathx');
             $('body').off('mouseup.mathx');
         }
-
+        
         startSelection(e);
         $('body').on('mousemove.mathx', updateSelection);
         $('body').on('mouseup.mathx', endSelection);
