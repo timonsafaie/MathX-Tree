@@ -102,6 +102,7 @@ extend(Cursor, Elem, function(_) {
             this.lastMenclose = menclose;
         else
             this.lastMenclose = null;
+        this.hide();
     };
 
     _.afterInput = function(key) {

@@ -13,8 +13,8 @@ var entry = function(JQ, root) {
         input.cursor.setBlink();
     });
     JQ.blur(function(e) {
-        input.cursor.hide();
         input.cursor.clearBlink();
+        input.cursor.hide();
         if (typeof mxapi == "object" && mxapi && mxapi.host) {
           var eq = {
             content: toJSON(input.root)
@@ -104,7 +104,8 @@ var entry = function(JQ, root) {
         function updateSelection(e) {
             input.updateSelection(startX, startY, e.pageX, e.pageY);
             input.cursor.clearBlink();
-            input.cursor.hide();
+            input.cursor.JQ.addClass('invisible-cursor').removeClass('blink');
+            
             if ((startX == e.pageX) && 
                 (startY == e.pageY))
                 input.cursor.show();
