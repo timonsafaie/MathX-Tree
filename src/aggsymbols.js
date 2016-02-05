@@ -63,7 +63,7 @@ var aggSymbols2 = {
     "left perpendicular": {Tag: Mo, output: "&#8867;", family: "symbol", category: "Geometry", rank: "12", latex: "\\dashv"},
     "right perpendicular": {Tag: Mo, output: "&#8866;", family: "symbol", category: "Geometry", rank: "13", latex: "\\vdash"},
     "triangle": {Tag: Mo, output: "&#9651;", family: "symbol", category: "Geometry", rank: "14", latex: "\\triangle"},
-    "alpha": {Tag: Mi, output: "&alpha;", css: {"padding": "0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "1", latex: "\\alpha", version: "basic"},
+    "alpha": {Tag: Mi, output: "&#x1d6fc;", css: {"padding": "0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "1", latex: "\\alpha", version: "basic"},
     "beta": {Tag: Mi, output: "&#x1d6fd;", css: {"padding": "0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "2", latex: "\\beta", version: "basic"},
     "gamma": {Tag: Mi, output: "&#x1d6fe;", css: {"padding": "0 .15em 0 0"}, family: "symbol", category: "Greek", rank: "3", latex: "\\gamma", version: "basic"},
     "delta": {Tag: Mi, output: "&#x1d6ff;", css: {"padding": "0 .05em 0 0"}, family: "symbol", category: "Greek", rank: "4", latex: "\\delta"},
