@@ -183,6 +183,6 @@ var aggSymbols2 = {
     "set minus": {Tag: Mo, output: "&#8726;", css: {"padding": "0 .05em 0 .05em"}, family: "symbol", category: "Set", rank: "42", latex: "\\setminus"},
     "infinity": {Tag: Mo, output: "&infin;", family: "symbol", category: "Special Character", rank: "1", latex: "\\infty"},
     "h bar": {Tag: Mo, output: "&#x210f;", family: "symbol", category: "Special Character", rank: "2", latex: "\\hslash"},
-    "Planck constant": {Tag: Mo, output: "&#x210e;", family: "symbol", category: "Special Character", rank: "3", latex: "\h"},
+    "Planck constant": {Tag: Mo, output: "&#x210f;", family: "symbol", category: "Special Character", rank: "3", latex: "\\hslash"},
     "weierstrass power set": {Tag: Mo, output: "&weierp;", family: "symbol", category: "Special Character", rank: "4", latex: "\\wp"}
 };
