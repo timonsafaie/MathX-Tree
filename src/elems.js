@@ -473,6 +473,7 @@ extend(Msubsup, Mrow, function(_, _super) {
 
 var Munder = function(input, info) {
     Mrow.call(this, 'munder', input, info);
+    this.grouping = false;
 
     this.JQ = $('<span class="munder">' +
                 '<span class="munder-sym">' + this.output + '</span>' +
@@ -520,6 +521,7 @@ extend(Mover, Mrow, function(_, _super) {
 var Munderover = function(input, info) {
     Mrow.call(this, 'munderover', input, info);
     this.cursorStay = false;
+    this.grouping = false;
 
     this.under = new Munder();
     this.over = new Mover();
@@ -540,8 +542,6 @@ var Munderover = function(input, info) {
         $sym.css(this.info.css);
 
     this.JQ.attr('mxId', this.id);
-
-    this.grouping = false;
 };
 
 extend(Munderover, Mrow, function(_, _super) {
