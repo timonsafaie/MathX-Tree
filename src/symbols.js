@@ -259,6 +259,19 @@ function addAggSymbols(dict) {
 addAggSymbols(aggSymbols1);
 addAggSymbols(aggSymbols2);
 
+function addLocale(dict) {
+    for (var key in dict) {
+        if (dict.hasOwnProperty(key)) {
+            key1 = dict[key];
+            if (aggSymbols.hasOwnProperty(key1))
+                aggSymbols[key] = aggSymbols[key1];
+        }
+    }
+}
+locales.forEach(function(locale) {
+    addLocale(locale);
+});
+
 // FIXME: may merge atomSymbols with aggSymbols
 
 function findAtom(input) {

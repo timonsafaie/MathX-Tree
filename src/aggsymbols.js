@@ -1,4 +1,3 @@
-// auto-generated
 var aggSymbols2 = {
     "left arrow": {Tag: Mo, output: "&larr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "1", latex: "\\leftarrow"},
     "right arrow": {Tag: Mo, output: "&rarr;", css: {"padding": "0 .2em 0 .2em"}, family: "symbol", category: "Arrow", rank: "2", latex: "\\rightarrow"},
