@@ -746,3 +746,79 @@ extend(Menclose, Mrow, function(_, _super) {
         this.settled = false;
     };
 });
+
+var Mmatrix = function(input, info) {
+    Mrow.call(this, 'mmatrix', input, info);
+    this.cursorStay = false;
+
+    this.mopen = new Elem('mopen', info.open, info);
+    this.mcontent = new Mrow('mrow');
+    this.mcontent.cursorStay = false;
+    this.mclose = new Elem('mclose', info.close, info);
+
+    this.mopen.addBefore(this.children);
+    this.mcontent.addBefore(this.children);
+    this.mclose.addBefore(this.children);
+
+    this.rows = info.rows;
+    this.cols = info.cols;
+
+    var html = [
+        '<span class="func-holder">',
+        '<span class="function">',
+        '<span class="mat-symbol mopen">' + info.open + '</span>',
+        '<span class="matcontents" cellspacing="4">'
+    ];
+    for (var i = 0; i < this.rows; i++) {
+        var row = new Mrow('mrow')
+        row.cursorStay = false;
+        row.addBefore(this.mcontent.children);
+        html.push('<span class="mat-col">');
+        for (var j = 0; j < this.cols; j++) {
+            var elem = new Mrow('mrow')
+            elem.addBefore(row.children);
+            html.push('<span class="func-box mat-box"><span class="arginput mX"></span></span>');
+        }
+        html.push('</span>');
+    }
+    html = html.concat([
+        '</span>',
+        '<span class="mat-symbol mclose">' + info.close + '</span>',
+        '</span>',
+        '</span>'
+    ]);
+    this.JQ = $(html.join(''));
+
+    this.mopen.JQ = this.JQ.find('.mopen');
+    this.mcontent.children.JQ = this.JQ.find('.matcontents');
+    this.mclose.JQ = this.JQ.find('.mclose');
+
+    var i = 0;
+    var $content = this.mcontent.children.JQ;
+    this.mcontent.eachChild(function(row) {
+        row.eachChild(function(elem) {
+            elem.JQ = $content.find('.mat-box').eq(i++);
+            elem.children.JQ = elem.JQ.find('.mX');
+        });
+    });
+};
+
+extend(Mmatrix, Mrow, function(_, _super) {
+    _.insert = function(cursor) {
+        var firstElem = this.mcontent.firstChild().firstChild();
+        this.addBefore(cursor);
+        cursor.moveAfter(firstElem.children);
+        this.JQ.insertBefore(cursor.JQ);
+        cursor.JQ.prependTo(firstElem.children.JQ);
+    };
+
+    _.resize = function() {
+        var $t = this.mcontent.children.JQ;
+        var h = $t.outerHeight()/+$t.css('font-size').slice(0,-2);
+        var hscale = min(1+0.2*(h-1), 1.2);
+        var vscale = 1.0 * h;
+        var transform = 'scale(' + hscale + ',' + vscale + ')';
+        this.mopen.JQ.css({transform: transform});
+        this.mclose.JQ.css({transform: transform});
+    };
+});

@@ -241,6 +241,8 @@ var aggSymbols1 = {
     'tilde':   {Tag: Mbar, output: '~',       css: {marginBottom: '-0.05em'}, family: "symbol", category: "Punctuation", rank: "1"},
     'dot':     {Tag: Mbar, output: '&#729;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
     'double dot': {Tag: Mbar, output: '&#168;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
+
+    'matrix':  {Tag: Mmatrix, open: '(', close: ')', rows: 2, cols: 2},
 };
 
 var aggSymbols = {};

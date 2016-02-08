@@ -162,4 +162,8 @@ extend(Node, List, function(_) {
                 break;
         }
     };
+
+    _.eachChild = function(fn) {
+        listEach(this.children.next, this.children, fn);
+    };
 });
