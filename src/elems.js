@@ -124,7 +124,7 @@ var Mspace = function(input, info) {
 extend(Mspace, Elem);
 
 function copyChildren(src, dst) {
-    listEach(src.children.next, src.children, function(elem) {
+    src.eachChild(function(elem) {
         var cp = elem.copy();
         cp.addBefore(dst.children);
         cp.JQ.appendTo(dst.children.JQ);
@@ -133,7 +133,7 @@ function copyChildren(src, dst) {
 
 function jsonChildren(doc, node) {
     doc.children = [];
-    listEach(node.children.next, node.children, function(elem) {
+    node.eachChild(function(elem) {
         doc.children.push(elem.toJSON());
     });
 }
@@ -624,7 +624,7 @@ extend(Mfrac, Munderover, function(_, _super) {
         this.putCursorBefore(cursor);
         this.remove();
         if (this.over.hasChild()) {
-            listEach(this.over.children.next, this.over.children, function(elem) {
+            this.over.eachChild(function(elem) {
                 elem.moveBefore(cursor);
                 elem.JQ.insertBefore(cursor.JQ);
             });

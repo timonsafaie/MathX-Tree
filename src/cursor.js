@@ -400,9 +400,7 @@ extend(Cursor, Elem, function(_) {
     _.resetSelection = function() {
         if (!this.selection.start)
             return;
-        var start = this.selection.start;
-        var end = this.selection.end.next;
-        listEach(start, end, function(elem) {
+        this.selection.eachChild(function(elem) {
             elem.deSelect();
         });
         this.selection = {start: null, end: null};
@@ -420,7 +418,7 @@ extend(Cursor, Elem, function(_) {
     _.delSelection = function() {
         if (!this.selection.start)
             return false;
-        listEach(this.selection.start, this.selection.end.next, function(elem) {
+        this.selection.eachChild(function(elem) {
             elem.remove();
         });
         this.selection = {start: null, end: null};
@@ -459,11 +457,9 @@ extend(Cursor, Elem, function(_) {
 
     _.getSelection = function(rec, node) {
         var cursor = this;
-        var start = node.children.next;
-        var end = node.children;
         var elems = [];
 
-        listEach(start, end, function(elem) {
+        node.eachChild(function(elem) {
             if (elem === cursor)
                 return;
             var $elem = elem.JQ;
@@ -495,9 +491,7 @@ extend(Cursor, Elem, function(_) {
             return;
 
         clipBoard.reset();
-        var start = this.selection.start;
-        var end = this.selection.end.next;
-        listEach(start, end, function(elem) {
+        this.selection.eachChild(function(elem) {
             var copy = elem.copy();
             copy.addBefore(clipBoard.children);
         });
@@ -513,7 +507,7 @@ extend(Cursor, Elem, function(_) {
         var start = clipBoard.children.next;
         var end = clipBoard.children;
 
-        listEach(start, end, function(elem) {
+        clipBoard.eachChild(function(elem) {
             var copy = elem.copy();
             copy.addBefore(cursor);
             copy.JQ.insertBefore(cursor.JQ);
@@ -525,9 +519,7 @@ extend(Cursor, Elem, function(_) {
             return;
 
         clipBoard.reset();
-        var start = this.selection.start;
-        var end = this.selection.end.next;
-        listEach(start, end, function(elem) {
+        this.selection.eachChild(function(elem) {
             var copy = elem.copy();
             copy.addBefore(clipBoard.children);
         });
