@@ -101,7 +101,13 @@ var Mi = function(input, info) {
     Elem.call(this, 'mi', input, info);
 };
 
-extend(Mi, Elem);
+extend(Mi, Elem, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        if (this.parent.compact)
+            this.JQ.css({padding: ''});
+    };
+});
 
 var Mo = function(input, info) {
     Elem.call(this, 'mo', input, info);
@@ -155,6 +161,7 @@ var Mrow = function() {
     this.JQ = $('<span class="mX-container"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
     this.cursorStay = true;
+    this.compact = false;
 };
 
 extend(Mrow, Elem, function(_, _super) {
@@ -322,6 +329,7 @@ var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
     this.JQ = $('<span class="und-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
+    this.compact = true;
 };
 
 extend(Msub, Mrow, function(_, _super) {
@@ -368,6 +376,7 @@ var Msup = function(input, info) {
         this.offset = em2px(info.offset);
     this.JQ = $('<span class="exp-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
+    this.compact = true;
 };
 
 extend(Msup, Mrow, function(_, _super) {
@@ -410,6 +419,7 @@ extend(Msup, Mrow, function(_, _super) {
 var Msubsup = function(input, info) {
     Mrow.call(this, 'msubsup', input, info);
     this.cursorStay = false;
+    this.compact = true;
 
     this.sub = new Msub(null);
     this.sup = new Msup(null, {offset: info.supOffset});
@@ -474,6 +484,7 @@ extend(Msubsup, Mrow, function(_, _super) {
 var Munder = function(input, info) {
     Mrow.call(this, 'munder', input, info);
     this.grouping = false;
+    this.compact = true;
 
     this.JQ = $('<span class="munder">' +
                 '<span class="munder-sym">' + this.output + '</span>' +
@@ -497,6 +508,7 @@ extend(Munder, Mrow, function(_, _super) {
 
 var Mover = function(input, info) {
     Mrow.call(this, 'mover', input, info);
+    this.compact = true;
 
     this.JQ = $('<span class="mover">' +
                 '<span class="mover-sym">' + this.output + '</span>' +
@@ -522,6 +534,7 @@ var Munderover = function(input, info) {
     Mrow.call(this, 'munderover', input, info);
     this.cursorStay = false;
     this.grouping = false;
+    this.compact = true;
 
     this.under = new Munder();
     this.over = new Mover();
