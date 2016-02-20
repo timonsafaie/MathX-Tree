@@ -49,8 +49,6 @@ extend(Elem, Node, function(_, _super) {
     _.insert = function(cursor) {
         this.addBefore(cursor);
         this.JQ.insertBefore(cursor.JQ);
-        if (this.parent && this.parent.compact)
-            this.JQ.css({padding: '0'});
     };
 
     _.remove = function() {
@@ -110,7 +108,13 @@ var Mo = function(input, info) {
     this.grouping = false;
 };
 
-extend(Mo, Elem);
+extend(Mo, Elem, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        if (this.parent && this.parent.compact)
+            this.JQ.css({padding: '0'});
+    };
+});
 
 var Mn = function(input, info) {
     Elem.call(this, 'mn', input, info);
