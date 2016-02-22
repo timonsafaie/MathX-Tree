@@ -30,7 +30,15 @@
     <div class="mathx-web-basic-container">
       <div class="mathx-tree mathx-web-basic-tb mm-container"></div>
     </div>
+    <div id="mx-version"></div>
     <script src="http://localhost:35729/livereload.js"></script>
     <script src="../build/mathx-tree.js"></script>
+    <script>
+      var para = document.createElement("p");
+      var node = document.createTextNode("Version: "+mxVersion);
+      para.appendChild(node);
+      var element = document.getElementById("mx-version");
+      element.appendChild(para);
+    </script>
   </body>
 </html>
