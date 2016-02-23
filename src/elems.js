@@ -773,47 +773,21 @@ var Mmatrix = function(input, info) {
     this.mcontent.addBefore(this.children);
     this.mclose.addBefore(this.children);
 
-    this.rows = info.rows;
-    this.cols = info.cols;
-
     var html = [
         '<span class="func-holder">',
         '<span class="function">',
         '<span class="mat-symbol mopen">' + info.open + '</span>',
-        '<span class="matcontents" cellspacing="4">'
-    ];
-    for (var i = 0; i < this.rows; i++) {
-        var row = new Mrow('mrow')
-        row.cursorStay = false;
-        row.addBefore(this.mcontent.children);
-        html.push('<span class="mat-col">');
-        for (var j = 0; j < this.cols; j++) {
-            var elem = new Mrow('mrow')
-            elem.addBefore(row.children);
-            html.push('<span class="func-box mat-box"><span class="arginput mX"></span></span>');
-        }
-        html.push('</span>');
-    }
-    html = html.concat([
-        '</span>',
+        '<span class="matcontents" cellspacing="4"></span>',
         '<span class="mat-symbol mclose">' + info.close + '</span>',
         '</span>',
         '</span>'
-    ]);
+    ];
     this.JQ = $(html.join(''));
-
     this.mopen.JQ = this.JQ.find('.mopen');
     this.mcontent.children.JQ = this.JQ.find('.matcontents');
     this.mclose.JQ = this.JQ.find('.mclose');
 
-    var i = 0;
-    var $content = this.mcontent.children.JQ;
-    this.mcontent.eachChild(function(row) {
-        row.eachChild(function(elem) {
-            elem.JQ = $content.find('.mat-box').eq(i++);
-            elem.children.JQ = elem.JQ.find('.mX');
-        });
-    });
+    this.setDimension(info.rows, info.cols);
 };
 
 extend(Mmatrix, Mrow, function(_, _super) {
@@ -823,6 +797,40 @@ extend(Mmatrix, Mrow, function(_, _super) {
         cursor.moveAfter(firstElem.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(firstElem.children.JQ);
+    };
+
+    _.setDimension = function(rows, cols) {
+        this.mcontent.eachChild(function(row) {
+            row.remove();
+        });
+        this.mcontent.children.JQ.empty();
+
+        this.rows = rows;
+        this.cols = cols;
+        var html = [];
+
+        for (var i = 0; i < this.rows; i++) {
+            var row = new Mrow('mrow')
+            row.cursorStay = false;
+            row.addBefore(this.mcontent.children);
+            html.push('<span class="mat-col">');
+            for (var j = 0; j < this.cols; j++) {
+                var elem = new Mrow('mrow')
+                elem.addBefore(row.children);
+                html.push('<span class="func-box mat-box"><span class="arginput mX"></span></span>');
+            }
+            html.push('</span>');
+        }
+        var $content = $(html.join(''));
+        this.mcontent.children.JQ.append($content);
+
+        var i = 0;
+        this.mcontent.eachChild(function(row) {
+            row.eachChild(function(elem) {
+                elem.JQ = $content.find('.mat-box').eq(i++);
+                elem.children.JQ = elem.JQ.find('.mX');
+            });
+        });
     };
 
     _.resize = function() {
