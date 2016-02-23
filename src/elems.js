@@ -108,7 +108,13 @@ var Mo = function(input, info) {
     this.grouping = false;
 };
 
-extend(Mo, Elem);
+extend(Mo, Elem, function(_, _super) {
+    _.insert = function(cursor) {
+        _super.insert.call(this, cursor);
+        if (this.parent && this.parent.compact)
+            this.JQ.css({padding: '0'});
+    };
+});
 
 var Mn = function(input, info) {
     Elem.call(this, 'mn', input, info);
@@ -124,7 +130,7 @@ var Mspace = function(input, info) {
 extend(Mspace, Elem);
 
 function copyChildren(src, dst) {
-    listEach(src.children.next, src.children, function(elem) {
+    src.eachChild(function(elem) {
         var cp = elem.copy();
         cp.addBefore(dst.children);
         cp.JQ.appendTo(dst.children.JQ);
@@ -133,7 +139,7 @@ function copyChildren(src, dst) {
 
 function jsonChildren(doc, node) {
     doc.children = [];
-    listEach(node.children.next, node.children, function(elem) {
+    node.eachChild(function(elem) {
         doc.children.push(elem.toJSON());
     });
 }
@@ -155,6 +161,7 @@ var Mrow = function() {
     this.JQ = $('<span class="mX-container"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
     this.cursorStay = true;
+    this.compact = false;
 };
 
 extend(Mrow, Elem, function(_, _super) {
@@ -322,6 +329,7 @@ var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
     this.JQ = $('<span class="und-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
+    this.compact = true;
 };
 
 extend(Msub, Mrow, function(_, _super) {
@@ -368,6 +376,7 @@ var Msup = function(input, info) {
         this.offset = em2px(info.offset);
     this.JQ = $('<span class="exp-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
+    this.compact = true;
 };
 
 extend(Msup, Mrow, function(_, _super) {
@@ -410,6 +419,7 @@ extend(Msup, Mrow, function(_, _super) {
 var Msubsup = function(input, info) {
     Mrow.call(this, 'msubsup', input, info);
     this.cursorStay = false;
+    this.compact = true;
 
     this.sub = new Msub(null);
     this.sup = new Msup(null, {offset: info.supOffset});
@@ -474,6 +484,7 @@ extend(Msubsup, Mrow, function(_, _super) {
 var Munder = function(input, info) {
     Mrow.call(this, 'munder', input, info);
     this.grouping = false;
+    this.compact = true;
 
     this.JQ = $('<span class="munder">' +
                 '<span class="munder-sym">' + this.output + '</span>' +
@@ -497,6 +508,7 @@ extend(Munder, Mrow, function(_, _super) {
 
 var Mover = function(input, info) {
     Mrow.call(this, 'mover', input, info);
+    this.compact = true;
 
     this.JQ = $('<span class="mover">' +
                 '<span class="mover-sym">' + this.output + '</span>' +
@@ -522,6 +534,7 @@ var Munderover = function(input, info) {
     Mrow.call(this, 'munderover', input, info);
     this.cursorStay = false;
     this.grouping = false;
+    this.compact = true;
 
     this.under = new Munder();
     this.over = new Mover();
@@ -624,7 +637,7 @@ extend(Mfrac, Munderover, function(_, _super) {
         this.putCursorBefore(cursor);
         this.remove();
         if (this.over.hasChild()) {
-            listEach(this.over.children.next, this.over.children, function(elem) {
+            this.over.eachChild(function(elem) {
                 elem.moveBefore(cursor);
                 elem.JQ.insertBefore(cursor.JQ);
             });

@@ -1,6 +1,12 @@
-SRC_DIR = ./src
+SRC_DIR   = ./src
+CSS_DIR   = $(SRC_DIR)/css
+FONT_DIR  = $(SRC_DIR)/font/Symbola
+TEST_DIR  = ./test
+BUILD_DIR = ./build
+
 INTRO = $(SRC_DIR)/intro.js
 OUTRO = $(SRC_DIR)/outro.js
+VERSION = $(BUILD_DIR)/version.js
 
 SOURCES = \
 	$(SRC_DIR)/external/jquery.js \
@@ -16,15 +22,10 @@ SOURCES = \
 	$(SRC_DIR)/input.js \
 	$(SRC_DIR)/entry.js
 
-CSS_DIR = $(SRC_DIR)/css
-FONT_DIR = $(SRC_DIR)/font/Symbola
-
-TEST_DIR = ./test
 TEST_SOURCES = \
 	$(TEST_DIR)/test_input.js \
 	$(TEST_DIR)/test_translate.js
 
-BUILD_DIR = ./build
 BUILD_JS = $(BUILD_DIR)/mathx-tree.js
 TEST_JS = $(BUILD_DIR)/mathx-tree-test.js
 
@@ -46,7 +47,7 @@ font:
 	@mkdir -p $(BUILD_DIR)
 	cp $(FONT_DIR)/* $(BUILD_DIR)
 
-$(BUILD_JS): $(INTRO) $(SOURCES) $(OUTRO)
+$(BUILD_JS): $(INTRO) $(SOURCES) $(OUTRO) $(VERSION)
 	@mkdir -p $(BUILD_DIR)
 	cat $^ > $@
 	cp $(SRC_DIR)/mxapi.js $(BUILD_DIR)
@@ -54,3 +55,6 @@ $(BUILD_JS): $(INTRO) $(SOURCES) $(OUTRO)
 $(TEST_JS): $(INTRO) $(SOURCES) $(TEST_SOURCES) $(OUTRO)
 	@mkdir -p $(BUILD_DIR)
 	cat $^ > $@
+
+$(VERSION): .git/HEAD .git/index
+	@echo "var mxVersion = \"$(shell git rev-parse --short HEAD)\";" > $@
