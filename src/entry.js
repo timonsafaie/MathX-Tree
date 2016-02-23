@@ -74,11 +74,25 @@ var entry = function(JQ, root) {
     function onKeydown(e) {
       var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
       if (input.mathMode) {
+        var prefix = '';
         if (e.ctrlKey)
-          key = 'Ctrl-' + key;
+          prefix = 'Ctrl-';
         if (e.shiftKey)
-          key = 'Shift-' + key;
-        return input.inputControl(key);
+          prefix = 'Shift-';
+        if ($(':focus').hasClass('mat-inp')) {
+            if (key == 'Enter') {
+                var sib = $(':focus').parent().children();
+                // TODO: Delete Matrix Stub at cursor
+                
+                // Takes values of matrix
+                console.log('Rows: '+sib[0].value);
+                if (sib.length > 1)
+                    console.log('Columns: '+sib[1].value);  
+                
+                // TODO: Build Matrix
+            }
+        } 
+        return input.inputControl(prefix+key);
       }
     }
 
@@ -87,9 +101,7 @@ var entry = function(JQ, root) {
         var key = String.fromCharCode(e.charCode);
         input.inputKey(key);
         return false;
-      } else {
-
-      }
+      } 
     }
 
     function onMousedown(e) {

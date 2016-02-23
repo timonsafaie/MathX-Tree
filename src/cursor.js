@@ -81,12 +81,12 @@ extend(Cursor, Elem, function(_) {
                     if (mx.JQ.find('.aC-container').children().length > 0)
                         mx.JQ.find('.aC-container').remove();
                     
-                    var node = new insert.Tag(symbol, insert);
-                    node.insert(this);
-                    
                     if(insert.category == "Matrix") {
                         this.menu.matrixbuilder(symbol);
                     }
+                    
+                    var node = new insert.Tag(symbol, insert);
+                    node.insert(this);
                 }
             }
             this.resetSelection();
@@ -108,14 +108,34 @@ extend(Cursor, Elem, function(_) {
     _.afterInput = function(key) {
         if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
             this.lastMenclose.settle();
-        this.show();
-        this.setBlink();
-        this.bubble('resize');
+        if ($(':focus').attr('class')!='mat-inp') {
+            this.show();
+            this.setBlink();
+            this.bubble('resize');
+        }
     };
 
     _.moveLeft = function() {
         var mx = this.root;
-        if (mx.JQ.find('.aC-container').children().length > 0) {
+        if ($(':focus').attr('class')=='mat-inp') {
+            var input = document.activeElement;
+            var curpos = -1;
+            if ('selectionStart' in input) {
+                // Standard-compliant browsers
+                curpos = input.selectionStart;
+            } else if (document.selection) {
+                // IE
+                input.focus();
+                var sel = document.selection.createRange();
+                var selLen = document.selection.createRange().text.length;
+                sel.moveStart('character', - input.value.length);
+                curpos = sel.text.length - selLen;
+            }
+            if (curpos > 0) {
+                var val = $(':focus').val();
+                input.setSelectionRange(val.length, curpos-1);
+            }
+        } else if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveLeft();
         } else {
             var stay;
@@ -138,7 +158,27 @@ extend(Cursor, Elem, function(_) {
 
     _.moveRight = function() {
         var mx = this.root;
-        if (mx.JQ.find('.aC-container').children().length > 0) {
+        if ($(':focus').attr('class')=='mat-inp') {
+            var input = document.activeElement;
+            var curpos = -1;
+            if ('selectionStart' in input) {
+                // Standard-compliant browsers
+                curpos = input.selectionStart;
+            } else if (document.selection) {
+                // IE
+                input.focus();
+                var sel = document.selection.createRange();
+                var selLen = document.selection.createRange().text.length;
+                sel.moveStart('character', - input.value.length);
+                curpos = sel.text.length - selLen;
+            }
+            if (curpos > -1) {
+                var val = $(':focus').val();
+                if (curpos < val.length) {
+                    input.setSelectionRange(val.length, curpos+1);
+                }
+            }
+        } else if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
         } else {
             var stay;
@@ -197,6 +237,16 @@ extend(Cursor, Elem, function(_) {
     _.moveNextRow = function() {
         var parent = this.parent;
         var mx = this.root;
+        if ($(':focus').attr('class')=='mat-inp') {
+            var inps = mx.JQ.parent().find('.matrixbuilder').children();
+            if(inps.length > 0) {
+                if (inps.length == 2) {
+                    (document.activeElement == inps[0])?
+                        inps[1].focus() : inps[0].focus();
+                    return;
+                }
+            }
+        }
         if (mx.JQ.find('.aC-container').children().length > 0) {
             this.menu.moveRight();
             return;
@@ -254,80 +304,107 @@ extend(Cursor, Elem, function(_) {
 
     _.delLeft = function() {
         this.clearBlink();
-        this.show();
-        if (this.delSelection())
-            return;
-        if (this.lastAgg) {
-            this.expandAgg(this.lastAgg);
-            delete this.lastAgg;
-            return;
-        }
-        if (this.isFirstChild())
-            return;
-        var prev = this.prev;
-        if (prev instanceof Mrow && !prev.selected)
-            return this.setSelection(prev, prev);
-
-        prev.putCursorBefore(this);
-        prev.remove();
-        // Update SmartMenu
-        var parent = this.root;
-        var start = this.parent.firstChild();
-        var search ='';
-        var target = '';
-        var aggList = [];
-        listEachReversed(start, this, function(e) {
-            if ((e instanceof Mi) || (e instanceof Mspace)) {
-                if (e.input.length == 1) 
-                    search = e.input + search;
+        // Erase text in Smart Menu
+        if ($(':focus').attr('class')=='mat-inp') {
+            var input = document.activeElement;
+            var curpos = -1;
+            if ('selectionStart' in input) {
+                // Standard-compliant browsers
+                curpos = input.selectionStart;
+            } else if (document.selection) {
+                // IE
+                input.focus();
+                var sel = document.selection.createRange();
+                var selLen = document.selection.createRange().text.length;
+                sel.moveStart('character', - input.value.length);
+                curpos = sel.text.length - selLen;
             }
-            if (search.trim().length > 2) {
-                for(var aggSymbol in aggSymbols) {
-                    if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
-                        // Add symbol to SmartMenu candidate list
-                        target = search;
-                        if (search == search.trim())
-                            start = e;
+            if (curpos > 0) {
+                var val = $(':focus').val();
+                val = val.substr(0, curpos-1)+val.substr(curpos,val.length);
+                $(':focus').val(val);
+                input.setSelectionRange(val.length, curpos-1);
+            }
+        } else { // Erase text
+            this.show();
+            if (this.delSelection())
+                return;
+            if (this.lastAgg) {
+                this.expandAgg(this.lastAgg);
+                delete this.lastAgg;
+                return;
+            }
+            if (this.isFirstChild())
+                return;
+            var prev = this.prev;
+            if (prev instanceof Mrow && !prev.selected)
+                return this.setSelection(prev, prev);
+
+            prev.putCursorBefore(this);
+            prev.remove();
+            // Update SmartMenu
+            var parent = this.root;
+            var start = this.parent.firstChild();
+            var search ='';
+            var target = '';
+            var aggList = [];
+            // Create Matrix        
+            if ($(':focus').attr('class') == 'mat-inp') {
+                console.log('ENTER TO CREATE');
+            }
+            listEachReversed(start, this, function(e) {
+                if ((e instanceof Mi) || (e instanceof Mspace)) {
+                    if (e.input.length == 1) 
+                        search = e.input + search;
+                }
+                if (search.trim().length > 2) {
+                    for(var aggSymbol in aggSymbols) {
+                        if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
+                            // Add symbol to SmartMenu candidate list
+                            target = search;
+                            if (search == search.trim())
+                                start = e;
+                        }
+                    }
+                 }
+            });
+            if (target) {
+                for (var aggSymbol in aggSymbols) {
+                    target = target.trim();
+                    if ((aggSymbol.indexOf(target) > -1) && (aggSymbols[aggSymbol].rank)) {
+                        var aggNode = {
+                             aggSymbol: aggSymbol,
+                             props: aggSymbols[aggSymbol]
+                        }
+                        aggList.push(aggNode);
                     }
                 }
-             }
-        });
-        if (target) {
-            for (var aggSymbol in aggSymbols) {
-                target = target.trim();
-                if ((aggSymbol.indexOf(target) > -1) && (aggSymbols[aggSymbol].rank)) {
-                    var aggNode = {
-                         aggSymbol: aggSymbol,
-                         props: aggSymbols[aggSymbol]
-                    }
-                    aggList.push(aggNode);
-                }
             }
-        }
-        if (aggList.length > 0) {
-            this.menu = new Menu(aggList, target, start, this, parent);
-            this.menu.display();
-            
-            
-            // Setup Clicking
-            var clickedSymbol = "";
-            var c = this;
-            this.menu.JQ.find('.symbol').click(function(){
-                clickedSymbol = aggSymbols[$(this).attr('title')];
+            if (aggList.length > 0) {
+                this.menu = new Menu(aggList, target, start, this, parent);
+                this.menu.display();
 
-                listEachReversed(start, c, function(e) {
-                    e.remove();
+
+                // Setup Clicking
+                var clickedSymbol = "";
+                var c = this;
+                this.menu.JQ.find('.symbol').click(function(){
+                    clickedSymbol = aggSymbols[$(this).attr('title')];
+
+                    listEachReversed(start, c, function(e) {
+                        e.remove();
+                    });
+
+                    var node = new clickedSymbol.Tag('click', clickedSymbol);
+                    node.insert(c);
+
+                    parent.JQ.find('.aC-container').remove();
                 });
 
-                var node = new clickedSymbol.Tag('click', clickedSymbol);
-                node.insert(c);
-
-                parent.JQ.find('.aC-container').remove();
-            });
-            
-        } else {
-            if (parent.JQ.find('.aC-container'))
-                   parent.JQ.find('.aC-container').remove();
+            } else {
+                if (parent.JQ.find('.aC-container'))
+                       parent.JQ.find('.aC-container').remove();
+            }
         }
     };
 
@@ -363,24 +440,43 @@ extend(Cursor, Elem, function(_) {
             }
         }
 
-        if (!atom)
+        if (!atom) {
+            // TODO: Implement Ctrl+ and Shift+ prefixes
             throw 'Unknown input "' + key + '"';
-        
-        var node = new atom.Tag(key, atom);
-        var parent = this.parent;
-        if (this.parent.maxLength === 1) {
-            this.delLeft();
-            this.delRight();
         }
-        node.insert(this);
         
-        /*
-        if(!this.parent.JQ.next().find('.matrixbuilder').attr('data-str')) 
+        if ($(':focus').attr('class')=='mat-inp') {
+            var reg = new RegExp('^\\d+$');
+            if (reg.test(key)) {
+                var input = document.activeElement;
+                var curpos = -1;
+                if ('selectionStart' in input) {
+                    // Standard-compliant browsers
+                    curpos = input.selectionStart;
+                } else if (document.selection) {
+                    // IE
+                    input.focus();
+                    var sel = document.selection.createRange();
+                    var selLen = document.selection.createRange().text.length;
+                    sel.moveStart('character', - input.value.length);
+                    curpos = sel.text.length - selLen;
+                }
+                if (curpos > -1) {
+                    var val = $(':focus').val();
+                    val = val.substr(0, curpos)+key+val.substr(curpos,val.length);
+                    $(':focus').val(val);
+                    input.setSelectionRange(val.length, curpos+1);
+                }
+            }
+        } else {
+            var node = new atom.Tag(key, atom);
+            var parent = this.parent;
+            if (this.parent.maxLength === 1) {
+                this.delLeft();
+                this.delRight();
+            }
             node.insert(this);
-        else {
-            this.parent.JQ.next().find('input.mat-inp:focus').val(node.input);
         }
-        */
     };
 
     _.click = function($elem, pageX, pageY) {
@@ -604,9 +700,8 @@ extend(Cursor, Elem, function(_) {
             parent.JQ.find('.aC-container').remove();
         }
         
-        
         if (!agg)
-            return
+            return;
         
         listEachReversed(start, this, function(e) {
             e.remove();

@@ -323,8 +323,8 @@ extend(Menu, Object, function(_) {
     
     _.matrixbuilder = function(matrix) {
         var parent = this.attachTo.JQ.parent();
-        var rows = 'ROWS <input type="text" class="mat-inp" name="mat-rows" placeholder="MAX 10" func="'+matrix+'">\n';
-        var columns = 'COLUMNS <input type="text" class="mat-inp" name="mat-cols" placeholder="MAX 10" func="'+matrix+'">';
+        var rows = 'ROWS <input type="text" data-field="row" class="mat-inp" name="mat-rows" placeholder="MAX 10" func="'+matrix+'">\n';
+        var columns = 'COLUMNS <input type="text" data-field="col" class="mat-inp" name="mat-cols" placeholder="MAX 10" func="'+matrix+'">';
         var width = 250;
         if (matrix == 'piecewise') {
             width = 110;
@@ -342,7 +342,7 @@ extend(Menu, Object, function(_) {
         menuJQ.appendTo(parent);
         
         // Position and Size
-        var top = parent.find('.mX-cursor').offset().top-30;// - parent.offset().top-40;
+        var top = parent.find('.mX-cursor').offset().top-30;
         var left = parent.find('.mX-cursor').offset().left;
         if (this.mode == 'right') {
             left -= width;
@@ -354,6 +354,7 @@ extend(Menu, Object, function(_) {
                                               left: left+'px',
                                                top: top+'px'    
                                          });
+        parent.find('mx-cursor').css('visibility','hidden');
         menuJQ.find('input.mat-inp:first').focus();
     };
     

@@ -184,12 +184,6 @@ var aggSymbols1 = {
     'sqrt':  {Tag: Msqrt,  output: '&radic;', category: 'Function', rank: "22", latex: "\\sqrt", version: "basic"},
     'root':  {Tag: Mroot,  output: '&radic;', category: 'Function', rank: "22"},
     
-    'matrix': {Tag: Mo, output: '[]', category: 'Matrix', rank: "1", latex: "[]"},
-    'pmatrix': {Tag: Mo, output: '()', category: 'Matrix', rank: "2", latex: "()"},
-    'determinant': {Tag: Mo, output: '||', category: 'Matrix', rank: "3", latex: "||"},
-    'binomial': {Tag: Mo, output: '()', category: 'Matrix', rank: "4", latex: "()"},
-    'piecewise': {Tag: Mo, output: '{', category: 'Matrix', rank: "5", latex: "\\{"},
-    
     "oo":    {Tag: Mi, output: "&infin;", family: "symbol", category: "Special Character", rank: "1", latex: "\\infty", version: "basic"},
     
     "nary intersection":    {Tag: Munderover, output: "&bigcap;", category: "Set", rank: "2", latex: "\\bigcap"},
@@ -242,7 +236,11 @@ var aggSymbols1 = {
     'dot':     {Tag: Mbar, output: '&#729;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
     'double dot': {Tag: Mbar, output: '&#168;',  css: {marginBottom: '-0.4em'}, singular: true, family: "symbol", category: "Punctuation", rank: "1"},
 
-    'matrix':  {Tag: Mmatrix, open: '(', close: ')', rows: 2, cols: 2},
+    'matrix':       {Tag: Mmatrix, output: '[]', open: '[', close: ']', rows: 1, cols: 1, category: 'Matrix', rank: "1", latex: "[]"},
+    'pmatrix':      {Tag: Mmatrix, output: '()', open: '(', close: ')', rows: 1, cols: 1, category: 'Matrix', rank: "2", latex: "()"},
+    'determinant':  {Tag: Mmatrix, output: '||', open: '|', close: '|', rows: 1, cols: 1, category: 'Matrix', rank: "3", latex: "||"},
+    'binomial':     {Tag: Mmatrix, open: '(', close: ')', rows: 2, cols: 1, category: 'Matrix', rank: "4", latex: "()"},
+    'piecewise':    {Tag: Mmatrix, output: '{', open: '{', close: '',  rows: 1, cols: 2, category: 'Matrix', rank: "5", latex: "\\{"}
 };
 
 var aggSymbols = {};
