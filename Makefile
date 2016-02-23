@@ -56,5 +56,5 @@ $(TEST_JS): $(INTRO) $(SOURCES) $(TEST_SOURCES) $(OUTRO)
 	@mkdir -p $(BUILD_DIR)
 	cat $^ > $@
 
-$(VERSION): .git/HEAD .git/index
+$(VERSION): 
 	@echo "var mxVersion = \"$(shell git rev-parse --short HEAD)\";" > $@
