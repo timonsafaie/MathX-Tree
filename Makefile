@@ -18,6 +18,7 @@ SOURCES = \
 	$(SRC_DIR)/symbols.js \
 	$(SRC_DIR)/translate.js \
 	$(SRC_DIR)/menu.js \
+	$(SRC_DIR)/selection.js \
 	$(SRC_DIR)/cursor.js \
 	$(SRC_DIR)/input.js \
 	$(SRC_DIR)/entry.js

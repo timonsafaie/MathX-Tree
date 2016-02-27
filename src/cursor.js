@@ -1,21 +1,8 @@
-var ClipBoard = function() {
-    Mrow.call(this, 'savedSelection');
-};
-
-extend(ClipBoard, Mrow, function(_) {
-    _.reset = function() {
-        this.children = new List();
-        listInitHead(this.children);
-    };
-});
-
-var clipBoard = new ClipBoard();
-
 var Cursor = function(root) {
     Elem.call(this, 'cursor', '');
     this.root = root;
     var cJQ = this.JQ = $('<span class="mX-cursor">&#8203;</span>');
-    this.selection = {start: null, end: null};
+    this.selection = new Selection();
     this.menu = this.intervalId = null;
     this.blink = function(){ cJQ.toggleClass('blink'); };
 };
@@ -34,8 +21,7 @@ extend(Cursor, Elem, function(_) {
         'Click',
         'Select',
     ];
-    
-    
+
     _.show = function() {
         this.JQ.parent().addClass('focus');
         this.JQ.removeClass('invisible-cursor');
@@ -89,7 +75,7 @@ extend(Cursor, Elem, function(_) {
                     node.insert(this);
                 }
             }
-            this.resetSelection();
+            this.selection.reset();
         }
 
         if (this.lastAgg && key !== 'Backspace') {
@@ -197,7 +183,6 @@ extend(Cursor, Elem, function(_) {
             if (!stay)
                 this.moveRight();
         }
-        
     };
 
     _.moveFirst = function() {
@@ -327,7 +312,7 @@ extend(Cursor, Elem, function(_) {
             }
         } else { // Erase text
             this.show();
-            if (this.delSelection())
+            if (this.selection.del())
                 return;
             if (this.lastAgg) {
                 this.expandAgg(this.lastAgg);
@@ -338,7 +323,7 @@ extend(Cursor, Elem, function(_) {
                 return;
             var prev = this.prev;
             if (prev instanceof Mrow && !prev.selected)
-                return this.setSelection(prev, prev);
+                return this.selection.set(prev, prev);
 
             prev.putCursorBefore(this);
             prev.remove();
@@ -409,20 +394,20 @@ extend(Cursor, Elem, function(_) {
     };
 
     _.delRight = function() {
-        if (this.delSelection())
+        if (this.selection.del())
             return;
         if (this.isLastChild())
             return;
         var next = this.next;
         if (next instanceof Mrow && !next.selected)
-            return this.setSelection(next, next);
+            return this.selection.set(next, next);
 
         next.putCursorBefore(this);
         next.remove();
     };
 
     _.inputKey = function(key) {
-        this.delSelection();
+        this.selection.del();
 
         var atom;
         for (var i = 0; i < atomSymbols.length; i++) {
@@ -493,134 +478,28 @@ extend(Cursor, Elem, function(_) {
             this.moveLeft();
     };
 
-    _.resetSelection = function() {
-        if (!this.selection.start)
-            return;
-        this.selection.eachChild(function(elem) {
-            elem.deSelect();
-        });
-        this.selection = {start: null, end: null};
-    };
-
-    _.setSelection = function(start, end) {
-        if (!start)
-            return;
-        this.selection = {start: start, end: end};
-        listEach(start, end.next, function(elem) {
-            elem.select();
-        });
-    }
-
-    _.delSelection = function() {
-        if (!this.selection.start)
-            return false;
-        this.selection.eachChild(function(elem) {
-            elem.remove();
-        });
-        this.selection = {start: null, end: null};
-        return true;
-    };
-
-    _.updateSelection = function(startX, startY, endX, endY) {
-        var rec = {left: startX, right: endX, top: startY, bottom: endY};
-
-        if (endX < startX) {
-            rec.left = endX;
-            rec.right = startX;
+    _.selectLeft = function() {
+        this.selection.setStart(this);
+        while (true) {
+            if (this.isFirstChild() && this.parent.isRoot)
+                break;
+            this.moveLeft();
+            if (this.selection.setEnd(this))
+                break;
         }
-        if (endY < startY) {
-            rec.top = endY;
-            rec.bottom = startY;
+        this.selection.update(this);
+    };
+
+    _.selectRight = function() {
+        this.selection.setStart(this);
+        while (true) {
+            if (this.isLastChild() && this.parent.isRoot)
+                break;
+            this.moveRight();
+            if (this.selection.setEnd(this))
+                break;
         }
-        if (rec.right - rec.left < 3 && rec.bottom - rec.top < 3)
-            return;
-
-        this.getSelection(rec, this.root);
-        if (!this.selection.start)
-            return;
-
-        if (startX === rec.left) {
-            this.selection.end.putCursorAfter(this);
-        } else {
-            this.selection.start.putCursorBefore(this);
-        }
-    };
-
-    function overlap(rec1, rec2) {
-        return !(rec1.top > rec2.bottom || rec2.top > rec1.bottom ||
-                 rec1.left > rec2.right || rec2.left > rec1.right);
-    }
-
-    _.getSelection = function(rec, node) {
-        var cursor = this;
-        var elems = [];
-
-        node.eachChild(function(elem) {
-            if (elem === cursor)
-                return;
-            var $elem = elem.JQ;
-            var offset = $elem.offset();
-            var recElem = {
-                left: offset.left,
-                top: offset.top,
-                right: offset.left + $elem.width(),
-                bottom: offset.top + $elem.height()
-            };
-            if (overlap(rec, recElem))
-                elems.push(elem);
-        });
-
-        if (elems.length === 0)
-            return;
-
-        if (elems.length > 1 || !elems[0].hasChild()) {
-            if (node.cursorStay === false)
-                return this.setSelection(node, node);
-            return this.setSelection(elems[0], elems[elems.length-1]);
-        }
-
-        return this.getSelection(rec, elems[0]);
-    };
-
-    _.copySelection = function() {
-        if (!this.selection.start)
-            return;
-
-        clipBoard.reset();
-        this.selection.eachChild(function(elem) {
-            var copy = elem.copy();
-            copy.addBefore(clipBoard.children);
-        });
-
-        this.resetSelection();
-    };
-
-    _.pasteSelection = function() {
-        if (!clipBoard.hasChild())
-            return;
-
-        var cursor = this;
-        var start = clipBoard.children.next;
-        var end = clipBoard.children;
-
-        clipBoard.eachChild(function(elem) {
-            var copy = elem.copy();
-            copy.addBefore(cursor);
-            copy.JQ.insertBefore(cursor.JQ);
-        });
-    };
-
-    _.cutSelection = function() {
-        if (!this.selection.start)
-            return;
-
-        clipBoard.reset();
-        this.selection.eachChild(function(elem) {
-            var copy = elem.copy();
-            copy.addBefore(clipBoard.children);
-        });
-
-        this.delSelection();
+        this.selection.update(this);
     };
 
     _.reduceAgg = function() {
@@ -679,14 +558,14 @@ extend(Cursor, Elem, function(_) {
                 var node = c.menu.click(this);
                 node.insert(c);
                 
-                c.resetSelection();
+                c.selection.reset();
                 c.show();
             });
             
             return;
             
         } 
-        
+
         // Hide SmartMenu
         if (parent.JQ.find('.aC-container')) {
             parent.JQ.find('.aC-container').remove();
@@ -698,12 +577,11 @@ extend(Cursor, Elem, function(_) {
         listEachReversed(start, this, function(e) {
             e.remove();
         });
-        
+
         var node = new agg.Tag(input, agg);
         node.insert(this);
         this.lastAgg = node;
         this.lastAgg.unsettle();
-            
     };
 
     _.expandAgg = function(agg) {
@@ -731,5 +609,15 @@ extend(Cursor, Elem, function(_) {
         if (origSize === rootSize)
             return rootSize * 0.72;
         return rootSize * 0.5;
+    };
+
+    _.copy = function() {
+        this.selection.copy();
+    };
+    _.cut = function() {
+        this.selection.cut();
+    };
+    _.paste = function() {
+        this.selection.paste(this);
     };
 });

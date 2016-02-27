@@ -24,8 +24,10 @@ function listAddAfter(node, dest) {
 }
 
 function listDelNode(node) {
-    node.next.prev = node.prev;
-    node.prev.next = node.next;
+    if (node.next)
+        node.next.prev = node.prev;
+    if (node.prev)
+        node.prev.next = node.next;
     node.next = undefined;
     node.prev = undefined;
 }
@@ -151,6 +153,19 @@ extend(Node, List, function(_) {
             node = node.parent;
         }
         return false;
+    };
+
+    _.isBefore = function(node) {
+        n = this;
+        while (!n.isLastChild()) {
+            n = n.next;
+            if (n === node || n.isAncestor(node))
+                return true;
+        }
+        // parent is root node
+        if (n.parent.parent === undefined)
+            return false;
+        return n.parent.isBefore(node);
     };
 
     _.bubble = function(fn) {

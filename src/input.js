@@ -42,6 +42,12 @@ extend(MathInput, Object, function(_) {
         case 'Right':
             this._runControl(cursor.moveRight, key);
             return false;
+        case 'Shift-Left':
+            this._runControl(cursor.selectLeft, key);
+            return false;
+        case 'Shift-Right':
+            this._runControl(cursor.selectRight, key);
+            return false;
         case 'Tab':
             this._runControl(cursor.moveNextRow, key);
             return false;
@@ -70,13 +76,13 @@ extend(MathInput, Object, function(_) {
             this._runControl(cursor.reduceAgg, key);
             return false;
         case 'Ctrl-C':
-            this._runControl(cursor.copySelection, key);
+            this._runControl(cursor.copy, key);
             return false;
         case 'Ctrl-V':
-            this._runControl(cursor.pasteSelection, key);
+            this._runControl(cursor.paste, key);
             return false;
         case 'Ctrl-X':
-            this._runControl(cursor.cutSelection, key);
+            this._runControl(cursor.cut, key);
             return false;
         case 'Ctrl-Esc':
             console.log(this.dumpRoot());
@@ -127,14 +133,14 @@ extend(MathInput, Object, function(_) {
     _.resetSelection = function() {
         cursor = this.cursor;
         cursor.beforeInput('Select');
-        cursor.resetSelection();
+        cursor.selection.reset();
         cursor.afterInput('Select');
     };
 
     _.updateSelection = function(startX, startY, endX, endY) {
         cursor = this.cursor;
         cursor.beforeInput('Select');
-        cursor.updateSelection(startX, startY, endX, endY);
+        // FIXME
         cursor.afterInput('Select');
     };
 

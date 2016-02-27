@@ -101,7 +101,7 @@ var entry = function(JQ, root) {
         var key = String.fromCharCode(e.charCode);
         input.inputKey(key);
         return false;
-      } 
+      }
     }
 
     function onMousedown(e) {
