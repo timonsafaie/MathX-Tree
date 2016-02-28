@@ -118,31 +118,6 @@ extend(MathInput, Object, function(_) {
         }
     };
 
-    _.click = function($elem, pageX, pageY) {
-        var rid = $elem.attr('row-id');
-        if (!rid)
-            return;
-        cursor = this.cursor;
-        cursor.beforeInput('Click');
-        locateCursor(pageX, pageY, rid, cursor);
-        cursor.afterInput('Click');
-        return false;
-    };
-
-    _.resetSelection = function() {
-        cursor = this.cursor;
-        cursor.beforeInput('Select');
-        cursor.selection.reset();
-        cursor.afterInput('Select');
-    };
-
-    _.updateSelection = function(startX, startY, endX, endY) {
-        cursor = this.cursor;
-        cursor.beforeInput('Select');
-        // FIXME
-        cursor.afterInput('Select');
-    };
-
     _.dumpRoot = function() {
         return dumpTree(this.root);
     };

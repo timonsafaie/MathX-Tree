@@ -6,7 +6,6 @@ var entry = function(JQ, root) {
     JQ.bind({
         keydown: onKeydown,
         keypress: onKeypress,
-        mousedown: onMousedown
     });
     JQ.focus(function() {
         input.cursor.show();
@@ -32,10 +31,6 @@ var entry = function(JQ, root) {
             }
           });
         }
-    });
-
-    JQ.on('click', '[row-id]', function(e) {
-        return input.click($(this), e.pageX, e.pageY);
     });
 
     var KEY_VALUES = {
@@ -105,34 +100,51 @@ var entry = function(JQ, root) {
       }
     }
 
-    function onMousedown(e) {
-        var startX, startY;
+    // JQ.on('click', '[row-id]', function(e) {
+    //     var rid = $(this).attr('row-id');
+    //     if (!rid)
+    //         return;
 
-        function startSelection(e) {
-            input.resetSelection()
-            startX = e.pageX;
-            startY = e.pageY;
-        }
+    //     var cursor = input.cursor;
+    //     cursor.beforeInput('Click');
+    //     locateCursor(e.pageX, e.pageY, rid, cursor);
+    //     cursor.afterInput('Click');
 
-        function updateSelection(e) {
-            input.updateSelection(startX, startY, e.pageX, e.pageY);
-            input.cursor.clearBlink();
-            input.cursor.JQ.addClass('invisible-cursor').removeClass('blink');
-            
-            if ((startX == e.pageX) && 
-                (startY == e.pageY))
-                input.cursor.show();
-        }
+    //     return false;
+    // });
 
-        function endSelection(e) {
-            $('body').off('mousemove.mathx');
-            $('body').off('mouseup.mathx');
-        }
-        
-        startSelection(e);
-        $('body').on('mousemove.mathx', updateSelection);
+    JQ.on('mousedown', '[row-id]', function(e) {
+        var rid = $(this).attr('row-id');
+        if (!rid)
+            return;
+
+        var cursor = input.cursor;
+        locateCursor(e.pageX, e.pageY, rid, cursor);
+        cursor.selection.reset();
+        cursor.selection.setStart(cursor);
+
+        JQ.on('mousemove.mathx', '[row-id]', updateSelection);
         $('body').on('mouseup.mathx', endSelection);
+        return false;
+    });
+
+    function updateSelection(e) {
+        var rid = $(this).attr('row-id');
+        if (!rid)
+            return;
+
+        var cursor = input.cursor;
+        locateCursor(e.pageX, e.pageY, rid, cursor);
+        if (cursor.selection.setEnd(cursor))
+            cursor.selection.update(cursor);
+        return false;
     }
-    
+
+    function endSelection(e) {
+        JQ.off('mousemove.mathx', '[row-id]');
+        $('body').off('mouseup.mathx');
+        return false;
+    }
+
     return input;
 };

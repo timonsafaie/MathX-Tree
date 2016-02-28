@@ -106,10 +106,8 @@ extend(Selection, Object, function(_) {
     };
 
     _.setEnd = function(cursor) {
-        if (cursor.next === this.mark || cursor.prev === this.mark) {
-            this.mark.remove();
+        if (cursor.next === this.mark || cursor.prev === this.mark)
             return this.changed(null, null);
-        }
 
         var start = this.mark;
         var end = cursor;

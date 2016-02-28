@@ -160,10 +160,15 @@ function locateCursor(posX, posY, rid, cursor) {
         cursor.JQ.prependTo(this.children.JQ);
         return;
     }
+
+    var first = row.firstChild();
+    while (first === cursor || !(first instanceof Elem)) // for mark
+        first = first.next;
+
     var minElem = null;
-    var minDist = abs(row.firstChild().JQ.offset().left-posX);
+    var minDist = abs(first.JQ.offset().left-posX);
     row.eachChild(function(elem) {
-        if (elem === cursor)
+        if (elem === cursor || !(elem instanceof Elem)) // for mark
             return;
         var dist = abs(elem.JQ.offset().left+elem.JQ.width()-posX);
         if (dist < minDist) {
@@ -171,8 +176,9 @@ function locateCursor(posX, posY, rid, cursor) {
             minElem = elem;
         }
     });
+
     if (minElem === null)
-        row.firstChild().putCursorBefore(cursor);
+        first.putCursorBefore(cursor);
     else
         minElem.putCursorAfter(cursor);
 }
