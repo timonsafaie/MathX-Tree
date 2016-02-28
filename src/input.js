@@ -119,13 +119,12 @@ extend(MathInput, Object, function(_) {
     };
 
     _.click = function($elem, pageX, pageY) {
-        var mxid = $elem.attr('mxid');
-        if (!mxid)
+        var rid = $elem.attr('row-id');
+        if (!rid)
             return;
-        var elem = allElems[mxid];
         cursor = this.cursor;
         cursor.beforeInput('Click');
-        cursor.click($elem, pageX, pageY);
+        locateCursor(pageX, pageY, rid, cursor);
         cursor.afterInput('Click');
         return false;
     };

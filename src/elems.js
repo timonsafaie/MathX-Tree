@@ -21,9 +21,6 @@ function elemFromJSON(doc) {
     return node;
 }
 
-var elemId = 0;
-var allElems = {};
-
 var Elem = function(tag, input, info) {
     Node.call(this);
     this.tag = (tag)? tag : 'mrow';
@@ -32,15 +29,12 @@ var Elem = function(tag, input, info) {
     this.info = info;
     if (info && info.output !== undefined)
         this.output = info.output;
-    this.id = elemId++;
-    allElems[this.id] = this;
 
     this.JQ = $('<span class="mX">' + this.output + '</span>');
     this.JQ.addClass(tag);
     this.JQ.attr('data-value', input);
     if (this.info && this.info.css)
         this.JQ.css(this.info.css);
-    this.JQ.attr('mxId', this.id);
 
     this.grouping = true;
 };
@@ -156,12 +150,43 @@ function loadChildren(node, doc) {
     });
 }
 
+var rowId = 0;
+var allRows = {};
+
+function locateCursor(posX, posY, rid, cursor) {
+    var row = allRows[rid];
+    if (!row.hasChild()) {
+        cursor.moveAfter(row.children);
+        cursor.JQ.prependTo(this.children.JQ);
+        return;
+    }
+    var minElem = null;
+    var minDist = abs(row.firstChild().JQ.offset().left-posX);
+    row.eachChild(function(elem) {
+        if (elem === cursor)
+            return;
+        var dist = abs(elem.JQ.offset().left+elem.JQ.width()-posX);
+        if (dist < minDist) {
+            minDist = dist;
+            minElem = elem;
+        }
+    });
+    if (minElem === null)
+        row.firstChild().putCursorBefore(cursor);
+    else
+        minElem.putCursorAfter(cursor);
+}
+
 var Mrow = function() {
     Elem.apply(this, arguments);
     this.JQ = $('<span class="mX-container"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
     this.cursorStay = true;
     this.compact = false;
+
+    this.rowId = rowId++;
+    allRows[this.rowId] = this;
+    this.setJQRowId();
 };
 
 extend(Mrow, Elem, function(_, _super) {
@@ -170,6 +195,11 @@ extend(Mrow, Elem, function(_, _super) {
         cursor.moveAfter(this.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.children.JQ);
+    };
+
+    _.setJQRowId = function() {
+        if (this.cursorStay)
+            this.children.JQ.attr('row-id', this.rowId);
     };
 
     _.copy = function() {
@@ -223,13 +253,14 @@ var Msqrt = function(input, info) {
                 '<span class="func-symbol-sqrt">' + this.output + '</span>' +
                 '<span class="func-sqrt"><span>&#8203;</span></span>' +
                 '</span>');
-    this.JQ.attr('mxId', this.id);
+
 
     this.$sym = this.JQ.find('.func-symbol-sqrt');
     if (this.info.css)
         this.$sym.css(this.info.css);
 
     this.children.JQ = this.JQ.find('.func-sqrt');
+    this.setJQRowId();
 };
 
 extend(Msqrt, Mrow, function(_, _super) {
@@ -249,7 +280,6 @@ var Mbar = function(input, info) {
                 '<span class="mbar-sym">' + this.output + '</span>' +
                 '<span class="mbar-row"><span>&#8203;</span></span>' +
                 '</span>');
-    this.JQ.attr('mxId', this.id);
 
     this.$sym = this.JQ.find('.mbar-sym');
     if (this.info.css)
@@ -258,6 +288,7 @@ var Mbar = function(input, info) {
         this.maxLength = 1;
 
     this.children.JQ = this.JQ.find('.mbar-row');
+    this.setJQRowId();
 };
 
 extend(Mbar, Mrow);
@@ -279,12 +310,11 @@ var Mroot = function(input, info) {
                 '</span>');
     this.index.children.JQ = this.JQ.find('.root-index');
     this.radicand.children.JQ = this.JQ.find('.root-radicand');
+    this.radicand.setJQRowId();
 
     this.$sym = this.JQ.find('.func-symbol-sqrt');
     if (this.info.css)
         this.$sym.css(this.info.css);
-
-    this.JQ.attr('mxId', this.id);
 };
 
 extend(Mroot, Mrow, function(_, _super) {
@@ -327,9 +357,10 @@ extend(Mroot, Mrow, function(_, _super) {
 
 var Msub = function(input, info) {
     Mrow.call(this, 'msub', input, info);
+    this.compact = true;
     this.JQ = $('<span class="und-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
-    this.compact = true;
+    this.setJQRowId();
 };
 
 extend(Msub, Mrow, function(_, _super) {
@@ -371,12 +402,13 @@ extend(Msub, Mrow, function(_, _super) {
 
 var Msup = function(input, info) {
     Mrow.call(this, 'msup', input, info);
+    this.compact = true;
     this.offset = 0;
     if (info.offset)
         this.offset = em2px(info.offset);
     this.JQ = $('<span class="exp-holder"><span>&#8203;</span></span>');
     this.children.JQ = this.JQ;
-    this.compact = true;
+    this.setJQRowId();
 };
 
 extend(Msup, Mrow, function(_, _super) {
@@ -419,6 +451,7 @@ extend(Msup, Mrow, function(_, _super) {
 var Msubsup = function(input, info) {
     Mrow.call(this, 'msubsup', input, info);
     this.cursorStay = false;
+    this.grouping = false;
     this.compact = true;
 
     this.sub = new Msub(null);
@@ -441,9 +474,8 @@ var Msubsup = function(input, info) {
     if (this.info.css)
         $sym.css(this.info.css);
 
-    this.JQ.attr('mxId', this.id);
-
-    this.grouping = false;
+    this.sub.setJQRowId();
+    this.sup.setJQRowId();
 };
 
 extend(Msubsup, Mrow, function(_, _super) {
@@ -494,9 +526,8 @@ var Munder = function(input, info) {
     var $sym = this.JQ.find('.munder-sym');
     if (this.info && this.info.css)
         $sym.css(this.info.css);
-
-    this.JQ.attr('mxId', this.id);
     this.children.JQ = this.JQ.find('.munder-row');
+    this.setJQRowId();
 };
 
 extend(Munder, Mrow, function(_, _super) {
@@ -518,9 +549,8 @@ var Mover = function(input, info) {
     var $sym = this.JQ.find('.mover-sym');
     if (this.info && this.info.css)
         $sym.css(this.info.css);
-
-    this.JQ.attr('mxId', this.id);
     this.children.JQ = this.JQ.find('.mover-row');
+    this.setJQRowId();
 };
 
 extend(Mover, Mrow, function(_, _super) {
@@ -554,7 +584,8 @@ var Munderover = function(input, info) {
     if (this.info.css)
         $sym.css(this.info.css);
 
-    this.JQ.attr('mxId', this.id);
+    this.under.setJQRowId();
+    this.over.setJQRowId();
 };
 
 extend(Munderover, Mrow, function(_, _super) {
@@ -606,8 +637,8 @@ var Mfrac = function(input, info) {
                 '</span>');
     this.over.children.JQ = this.JQ.find('.divisor');
     this.under.children.JQ = this.JQ.find('.dividend');
-
-    this.JQ.attr('mxId', this.id);
+    this.over.setJQRowId();
+    this.under.setJQRowId();
 };
 
 extend(Mfrac, Munderover, function(_, _super) {
@@ -685,8 +716,7 @@ var Menclose = function(input, info) {
     this.menclosed.children.JQ = this.JQ.find('.menclosed');
     this.mclose.JQ = this.JQ.find('.mclose');
 
-    this.mopen.JQ.attr('mxId', this.mopen.id);
-    this.mclose.JQ.attr('mxId', this.mclose.id);
+    this.menclosed.setJQRowId();
 };
 
 extend(Menclose, Mrow, function(_, _super) {
@@ -829,6 +859,7 @@ extend(Mmatrix, Mrow, function(_, _super) {
             row.eachChild(function(elem) {
                 elem.JQ = $content.find('.mat-box').eq(i++);
                 elem.children.JQ = elem.JQ.find('.mX');
+                elem.setJQRowId();
             });
         });
     };

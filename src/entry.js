@@ -33,10 +33,11 @@ var entry = function(JQ, root) {
           });
         }
     });
-    input.root.JQ.click(function(e) {
-        input.click($(e.target), e.pageX, e.pageY);
+
+    JQ.on('click', '[row-id]', function(e) {
+        return input.click($(this), e.pageX, e.pageY);
     });
-     
+
     var KEY_VALUES = {
         8: 'Backspace',
         9: 'Tab',

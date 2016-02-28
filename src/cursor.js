@@ -464,20 +464,6 @@ extend(Cursor, Elem, function(_) {
         }
     };
 
-    _.click = function($elem, pageX, pageY) {
-        var mxid = $elem.attr('mxid');
-        var elem = allElems[mxid];
-        
-        if (!elem.putCursorBefore(this))
-            this.moveLeft();
-        var leftOff = pageX - this.JQ.offset().left;
-
-        this.moveRight();
-        var rightOff = this.JQ.offset().left - pageX;
-        if (leftOff < rightOff)
-            this.moveLeft();
-    };
-
     _.selectLeft = function() {
         this.selection.setStart(this);
         while (true) {
