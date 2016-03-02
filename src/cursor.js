@@ -66,7 +66,7 @@ extend(Cursor, Elem, function(_) {
         this.hide();
         this.clearBlink();
         this.show();
-        
+
         var prev = this.prev;
         var next = this.next;
         if (cancelSelectKeys.indexOf(key) !== -1) {

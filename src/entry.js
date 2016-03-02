@@ -103,13 +103,15 @@ var entry = function(JQ, root) {
         if (!rid)
             return;
 
+        if (e.mathxProcessed)
+            return;
+        e.mathxProcessed = true;
+
         var cursor = input.cursor;
         cursor.beforeInput('Select');
-
         locateCursor(e.pageX, e.pageY, rid, cursor);
         cursor.selection.reset();
         cursor.selection.setStart(cursor);
-
         cursor.afterInput('Select');
 
         JQ.on('mousemove.mathx', '[row-id]', updateSelection);
@@ -121,10 +123,16 @@ var entry = function(JQ, root) {
         if (!rid)
             return;
 
+        if (e.mathxProcessed)
+            return;
+        e.mathxProcessed = true;
+
         var cursor = input.cursor;
+        cursor.hide();
         locateCursor(e.pageX, e.pageY, rid, cursor);
-        if (cursor.selection.setEnd(cursor))
-            cursor.selection.update(cursor);
+        cursor.selection.setEnd(cursor)
+        cursor.selection.update(cursor);
+        cursor.show();
     }
 
     function endSelection(e) {
