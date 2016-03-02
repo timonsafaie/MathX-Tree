@@ -100,6 +100,21 @@ extend(Selection, Object, function(_) {
         }
     };
 
+    _.setStartEnd = function(start, end) {
+        if (this.start && this.end) {
+            listEach(this.start, this.end.next, function(elem) {
+                elem.deSelect();
+            });
+        }
+        this.start = start;
+        this.end = end;
+        if (this.start && this.end) {
+            listEach(this.start, this.end.next, function(elem) {
+                elem.select();
+            });
+        }
+    };
+
     _.setStart = function(cursor) {
         if (!this.mark.active)
             this.mark.insert(cursor);

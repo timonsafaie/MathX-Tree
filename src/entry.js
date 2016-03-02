@@ -8,12 +8,10 @@ var entry = function(JQ, root) {
         keypress: onKeypress,
     });
     JQ.focus(function() {
-        input.cursor.show();
-        input.cursor.setBlink();
+        input.cursor.focus();
     });
     JQ.blur(function(e) {
-        input.cursor.clearBlink();
-        input.cursor.hide();
+        input.cursor.blur();
         if (typeof mxapi == "object" && mxapi && mxapi.host) {
           var eq = {
             content: toJSON(input.root)
@@ -100,32 +98,22 @@ var entry = function(JQ, root) {
       }
     }
 
-    // JQ.on('click', '[row-id]', function(e) {
-    //     var rid = $(this).attr('row-id');
-    //     if (!rid)
-    //         return;
-
-    //     var cursor = input.cursor;
-    //     cursor.beforeInput('Click');
-    //     locateCursor(e.pageX, e.pageY, rid, cursor);
-    //     cursor.afterInput('Click');
-
-    //     return false;
-    // });
-
     JQ.on('mousedown', '[row-id]', function(e) {
         var rid = $(this).attr('row-id');
         if (!rid)
             return;
 
         var cursor = input.cursor;
+        cursor.beforeInput('Select');
+
         locateCursor(e.pageX, e.pageY, rid, cursor);
         cursor.selection.reset();
         cursor.selection.setStart(cursor);
 
+        cursor.afterInput('Select');
+
         JQ.on('mousemove.mathx', '[row-id]', updateSelection);
         $('body').on('mouseup.mathx', endSelection);
-        return false;
     });
 
     function updateSelection(e) {
@@ -137,13 +125,11 @@ var entry = function(JQ, root) {
         locateCursor(e.pageX, e.pageY, rid, cursor);
         if (cursor.selection.setEnd(cursor))
             cursor.selection.update(cursor);
-        return false;
     }
 
     function endSelection(e) {
         JQ.off('mousemove.mathx', '[row-id]');
         $('body').off('mouseup.mathx');
-        return false;
     }
 
     return input;

@@ -18,9 +18,26 @@ extend(Cursor, Elem, function(_) {
         'Up',
         'Down',
         'Enter',
-        'Click',
         'Select',
     ];
+
+    _.focus = function() {
+        this.show();
+        this.setBlink();
+    };
+
+    _.blur = function() {
+        this.clearBlink();
+        this.hide();
+        this.selection.reset();
+        if (this.lastAgg) {
+            this.lastAgg.settle();
+            delete this.lastAgg;
+        }
+        var menclose = this.parent.parent;
+        if (menclose instanceof Menclose && !menclose.settled)
+            menclose.settle();
+    };
 
     _.show = function() {
         this.JQ.parent().addClass('focus');
@@ -322,8 +339,10 @@ extend(Cursor, Elem, function(_) {
             if (this.isFirstChild())
                 return;
             var prev = this.prev;
-            if (prev instanceof Mrow && !prev.selected)
-                return this.selection.set(prev, prev);
+            if (prev instanceof Mrow && !prev.selected) {
+                this.selection.setStartEnd(prev, prev);
+                return;
+            }
 
             prev.putCursorBefore(this);
             prev.remove();
@@ -399,8 +418,10 @@ extend(Cursor, Elem, function(_) {
         if (this.isLastChild())
             return;
         var next = this.next;
-        if (next instanceof Mrow && !next.selected)
-            return this.selection.set(next, next);
+        if (next instanceof Mrow && !next.selected) {
+            this.selection.setStartEnd(next, next);
+            return;
+        }
 
         next.putCursorBefore(this);
         next.remove();
