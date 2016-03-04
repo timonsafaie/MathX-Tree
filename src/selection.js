@@ -180,6 +180,7 @@ extend(Selection, Object, function(_) {
             var copy = elem.copy();
             copy.addBefore(cursor);
             copy.JQ.insertBefore(cursor.JQ);
+            copy.depthFirstIter('postInsertJQ', cursor);
         });
     };
 });

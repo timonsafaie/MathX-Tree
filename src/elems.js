@@ -105,6 +105,10 @@ var Mo = function(input, info) {
 extend(Mo, Elem, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
+        this.postInsertJQ(cursor);
+    };
+
+    _.postInsertJQ = function(cursor) {
         if (this.parent && this.parent.compact)
             this.JQ.css({padding: '0'});
     };
@@ -329,8 +333,11 @@ extend(Mroot, Mrow, function(_, _super) {
         cursor.moveAfter(this.index.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.index.children.JQ);
-        var JQ;
-        JQ = this.index.children.JQ;
+        this.postInsertJQ(cursor);
+    };
+
+    _.postInsertJQ = function(cursor) {
+        var JQ = this.index.children.JQ;
         JQ.css('font-size', cursor.reduceFont(JQ, 0.5));
     };
 
@@ -372,8 +379,7 @@ var Msub = function(input, info) {
 extend(Msub, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
-        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
-        this.repose();
+        this.postInsertJQ(cursor);
     };
 
     _.putCursorBefore = function(cursor) {
@@ -384,6 +390,12 @@ extend(Msub, Mrow, function(_, _super) {
     _.putCursorAfter = function(cursor) {
         var next = this.next;
         return _super.putCursorAfter.call(this, cursor) && !(next instanceof Msup);
+    };
+
+    _.postInsertJQ = function(cursor) {
+        var JQ = this.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
+        this.repose();
     };
 
     _.repose = function() {
@@ -420,8 +432,7 @@ var Msup = function(input, info) {
 extend(Msup, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
-        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
-        this.repose();
+        this.postInsertJQ(cursor);
     };
 
     _.putCursorBefore = function(cursor) {
@@ -432,6 +443,12 @@ extend(Msup, Mrow, function(_, _super) {
     _.putCursorAfter = function(cursor) {
         var next = this.next;
         return _super.putCursorAfter.call(this, cursor) && !(next instanceof Msub);
+    };
+
+    _.postInsertJQ = function(cursor) {
+        var JQ = this.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
+        this.repose();
     };
 
     _.repose = function() {
@@ -490,13 +507,6 @@ extend(Msubsup, Mrow, function(_, _super) {
         cursor.moveAfter(this.sub.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.sub.children.JQ);
-        /*
-        var JQ;
-        JQ = this.sub.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(JQ));
-        JQ = this.sup.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(JQ));
-        */
     };
 
     _.copy = function() {
@@ -539,7 +549,12 @@ var Munder = function(input, info) {
 extend(Munder, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
-        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
+        this.postInsertJQ(cursor);
+    };
+
+    _.postInsertJQ = function(cursor) {
+        var JQ = this.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 });
 
@@ -562,7 +577,12 @@ var Mover = function(input, info) {
 extend(Mover, Mrow, function(_, _super) {
     _.insert = function(cursor) {
         _super.insert.call(this, cursor);
-        this.children.JQ.css('font-size', cursor.reduceFont(this.children.JQ));
+        this.postInsertJQ(cursor);
+    };
+
+    _.postInsertJQ = function(cursor) {
+        var JQ = this.children.JQ;
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 });
 
@@ -600,6 +620,10 @@ extend(Munderover, Mrow, function(_, _super) {
         cursor.moveAfter(this.under.children);
         this.JQ.insertBefore(cursor.JQ);
         cursor.JQ.prependTo(this.under.children.JQ);
+        this.postInsertJQ(cursor);
+    };
+
+    _.postInsertJQ = function(cursor) {
         var JQ;
         JQ = this.under.children.JQ;
         JQ.css('font-size', cursor.reduceFont(JQ));

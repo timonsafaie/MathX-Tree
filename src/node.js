@@ -178,6 +178,18 @@ extend(Node, List, function(_) {
         }
     };
 
+    _.depthFirstIter = function(fn) {
+        var args = __slice.call(arguments, 1);
+        var _fn = function(node) {
+            if (node[fn])
+                node[fn].apply(node, args);
+        };
+        (function recurse(node) {
+            node.eachChild(recurse);
+            _fn(node);
+        })(this);
+    };
+
     _.eachChild = function(fn) {
         listEach(this.children.next, this.children, fn);
     };
