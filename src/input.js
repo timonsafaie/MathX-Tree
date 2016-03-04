@@ -14,76 +14,45 @@ var MathInput = function() {
     this.didExitTextMode = false;
 };
 
+var cursorControlOps = {
+    'Left':        'moveLeft',
+    'Right':       'moveRight',
+    'Tab':         'moveNextRow',
+    'Shift-Tab':   'movePrevRow',
+    'Home':        'moveFirst',
+    'End':         'moveLast',
+    'Up':          'moveUp',
+    'Down':        'moveDown',
+    'Backspace':   'delLeft',
+    'Del':         'delRight',
+    'Enter':       'reduceAgg',
+    'Shift-Left':  'selectLeft',
+    'Shift-Right': 'selectRight',
+    'Ctrl-A':      'selectAll',
+    'Ctrl-C':      'copySelection',
+    'Ctrl-V':      'pasteSelection',
+    'Ctrl-X':      'cutSelection',
+};
+
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
         var cursor = this.cursor;
-        
         cursor.beforeInput(key);
         cursor.inputKey(key);
         cursor.reduceAgg();
         cursor.afterInput(key);
     };
 
-    _._runControl = function(fn, key) {
-        var cursor = this.cursor;
-
-        cursor.beforeInput(key);
-        fn.apply(cursor);
-        cursor.afterInput(key);
-    };
-
     _.inputControl = function(key) {
-        var cursor = this.cursor;
-
+        if (cursorControlOps[key]) {
+            var ctrlOp = cursorControlOps[key];
+            var cursor = this.cursor;
+            cursor.beforeInput(ctrlOp);
+            cursor[ctrlOp].apply(cursor);
+            cursor.afterInput(ctrlOp);
+            return false;
+        }
         switch (key) {
-        case 'Left':
-            this._runControl(cursor.moveLeft, key);
-            return false;
-        case 'Right':
-            this._runControl(cursor.moveRight, key);
-            return false;
-        case 'Shift-Left':
-            this._runControl(cursor.selectLeft, key);
-            return false;
-        case 'Shift-Right':
-            this._runControl(cursor.selectRight, key);
-            return false;
-        case 'Tab':
-            this._runControl(cursor.moveNextRow, key);
-            return false;
-        case 'Shift-Tab':
-            this._runControl(cursor.movePrevRow, key);
-            return false;
-        case 'Home':
-            this._runControl(cursor.moveFirst, key);
-            return false;
-        case 'End':
-            this._runControl(cursor.moveLast, key);
-            return false;
-        case 'Up':
-            this._runControl(cursor.moveUp, key);
-            return false;
-        case 'Down':
-            this._runControl(cursor.moveDown, key);
-            return false;
-        case 'Backspace':
-            this._runControl(cursor.delLeft, key);
-            return false;
-        case 'Del':
-            this._runControl(cursor.delRight, key);
-            return false;
-        case 'Enter':
-            this._runControl(cursor.reduceAgg, key);
-            return false;
-        case 'Ctrl-C':
-            this._runControl(cursor.copy, key);
-            return false;
-        case 'Ctrl-V':
-            this._runControl(cursor.paste, key);
-            return false;
-        case 'Ctrl-X':
-            this._runControl(cursor.cut, key);
-            return false;
         case 'Ctrl-Esc':
             console.log(this.dumpRoot());
             return false;

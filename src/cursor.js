@@ -8,18 +8,22 @@ var Cursor = function(root) {
 };
 
 extend(Cursor, Elem, function(_) {
-    var cancelSelectKeys = [
-        'Left',
-        'Right',
-        'Tab',
-        'Shift-Tab',
-        'Home',
-        'End',
-        'Up',
-        'Down',
-        'Enter',
-        'Select',
+    var cancelSelectOps = [
+        'moveLeft',
+        'moveRight',
+        'moveNextRow',
+        'movePrevRow',
+        'moveFirst',
+        'moveLast',
+        'moveUp',
+        'moveDown',
+        'selectLeft',
+        'selectRight',
+        'selectAll',
+        'reduceAgg',
     ];
+
+    _.copy = function() {};
 
     _.focus = function() {
         this.show();
@@ -48,8 +52,8 @@ extend(Cursor, Elem, function(_) {
         this.JQ.addClass('invisible-cursor').removeClass('blink');
         this.JQ.parent().removeClass('focus');
     };
-    
-     _.setBlink = function() {
+
+    _.setBlink = function() {
         if ('intervalId' in this)
             clearInterval(this.intervalId);
         this.intervalId = setInterval(this.blink, 500);
@@ -69,7 +73,7 @@ extend(Cursor, Elem, function(_) {
 
         var prev = this.prev;
         var next = this.next;
-        if (cancelSelectKeys.indexOf(key) !== -1) {
+        if (cancelSelectOps.indexOf(key) !== -1) {
             if (key == 'Enter') {
                 var mx = this.root;
                 if (mx.JQ.find('.aC-container').children().length > 0) {
@@ -618,13 +622,21 @@ extend(Cursor, Elem, function(_) {
         return rootSize * 0.5;
     };
 
-    _.copy = function() {
+    _.copySelection = function() {
         this.selection.copy();
     };
-    _.cut = function() {
+
+    _.cutSelection = function() {
         this.selection.cut();
     };
-    _.paste = function() {
+
+    _.pasteSelection = function() {
         this.selection.paste(this);
+    };
+
+    _.selectAll = function() {
+        var first = this.root.firstChild();
+        var last = this.root.lastChild();
+        this.selection.setStartEnd(first, last);
     };
 });

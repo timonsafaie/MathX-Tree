@@ -130,8 +130,10 @@ extend(Mspace, Elem);
 function copyChildren(src, dst) {
     src.eachChild(function(elem) {
         var cp = elem.copy();
-        cp.addBefore(dst.children);
-        cp.JQ.appendTo(dst.children.JQ);
+        if (cp) {
+            cp.addBefore(dst.children);
+            cp.JQ.appendTo(dst.children.JQ);
+        }
     });
 }
 
@@ -705,6 +707,8 @@ extend(Mfrac, Munderover, function(_, _super) {
         }
         cursor.inputKey('/');
     };
+
+    _.postInsertJQ = function() {};
 });
 
 var Mclose = function(input, info) {

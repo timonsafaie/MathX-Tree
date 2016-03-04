@@ -154,7 +154,8 @@ extend(Selection, Object, function(_) {
             clipBoard.reset();
             listEach(this.start, this.end.next, function(elem) {
                 var copy = elem.copy();
-                copy.addBefore(clipBoard.children);
+                if (copy)
+                    copy.addBefore(clipBoard.children);
             });
         }
         this.reset();
@@ -166,7 +167,8 @@ extend(Selection, Object, function(_) {
             clipBoard.reset();
             listEach(this.start, this.end.next, function(elem) {
                 var copy = elem.copy();
-                copy.addBefore(clipBoard.children);
+                if (copy)
+                    copy.addBefore(clipBoard.children);
             });
         }
         this.del();
@@ -181,6 +183,7 @@ extend(Selection, Object, function(_) {
             copy.addBefore(cursor);
             copy.JQ.insertBefore(cursor.JQ);
             copy.depthFirstIter('postInsertJQ', cursor);
+            copy.depthFirstIter('resize', cursor);
         });
     };
 });
