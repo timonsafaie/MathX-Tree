@@ -69,7 +69,7 @@ var entry = function(JQ, root) {
       var key = KEY_VALUES[e.keyCode] || String.fromCharCode(e.keyCode);
       if (input.mathMode) {
         var prefix = '';
-        if (e.ctrlKey)
+        if (e.metaKey || e.ctrlKey)
           prefix = 'Ctrl-';
         if (e.shiftKey)
           prefix = 'Shift-';
