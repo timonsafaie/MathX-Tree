@@ -17,8 +17,6 @@ extend(Cursor, Elem, function(_) {
         'moveLast',
         'moveUp',
         'moveDown',
-        'selectLeft',
-        'selectRight',
         'selectAll',
         'reduceAgg',
     ];
@@ -218,6 +216,18 @@ extend(Cursor, Elem, function(_) {
             return;
         var last = this.parent.lastChild();
         last.putCursorAfter(this);
+    };
+
+    _.moveBegin = function() {
+        var begin = this.root.firstChild();
+        if (begin instanceof Elem && begin !== this)
+            begin.putCursorBefore(this);
+    };
+
+    _.moveEnd = function() {
+        var end = this.root.lastChild();
+        if (end instanceof Elem && end !== this)
+            end.putCursorAfter(this);
     };
 
     _.movePrevRow = function() {

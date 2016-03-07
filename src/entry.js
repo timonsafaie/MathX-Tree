@@ -108,11 +108,11 @@ var entry = function(JQ, root) {
         e.mathxProcessed = true;
 
         var cursor = input.cursor;
-        cursor.beforeInput('Select');
+        cursor.beforeInput('selectAll');
         locateCursor(e.pageX, e.pageY, rid, cursor);
         cursor.selection.reset();
         cursor.selection.setStart(cursor);
-        cursor.afterInput('Select');
+        cursor.afterInput('selectAll');
 
         JQ.on('mousemove.mathx', '[row-id]', updateSelection);
         $('body').on('mouseup.mathx', endSelection);

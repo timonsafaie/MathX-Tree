@@ -14,13 +14,15 @@ var MathInput = function() {
     this.didExitTextMode = false;
 };
 
-var cursorControlOps = {
+var cursorControlKeys = {
     'Left':        'moveLeft',
     'Right':       'moveRight',
     'Tab':         'moveNextRow',
     'Shift-Tab':   'movePrevRow',
     'Home':        'moveFirst',
     'End':         'moveLast',
+    'Ctrl-Left':   'moveBegin',
+    'Ctrl-Right':  'moveEnd',
     'Up':          'moveUp',
     'Down':        'moveDown',
     'Backspace':   'delLeft',
@@ -44,8 +46,8 @@ extend(MathInput, Object, function(_) {
     };
 
     _.inputControl = function(key) {
-        if (cursorControlOps[key]) {
-            var ctrlOp = cursorControlOps[key];
+        if (cursorControlKeys[key]) {
+            var ctrlOp = cursorControlKeys[key];
             var cursor = this.cursor;
             cursor.beforeInput(ctrlOp);
             cursor[ctrlOp].apply(cursor);
