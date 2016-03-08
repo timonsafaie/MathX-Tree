@@ -7,7 +7,7 @@ var Cursor = function(root) {
     this.blink = function(){ cJQ.toggleClass('blink'); };
 };
 
-extend(Cursor, Elem, function(_) {
+extend(Cursor, Node, function(_) {
     var cancelSelectOps = [
         'moveLeft',
         'moveRight',
@@ -20,8 +20,6 @@ extend(Cursor, Elem, function(_) {
         'selectAll',
         'reduceAgg',
     ];
-
-    _.copy = function() {};
 
     _.focus = function() {
         this.show();

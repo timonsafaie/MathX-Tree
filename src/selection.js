@@ -65,7 +65,8 @@ extend(Selection, Object, function(_) {
         var changed = false;
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.remove();
+                if (elem instanceof Elem)
+                    elem.remove();
             });
             changed = true;
         }
@@ -84,14 +85,16 @@ extend(Selection, Object, function(_) {
     _.update = function(cursor) {
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.deSelect();
+                if (elem instanceof Elem)
+                    elem.deSelect();
             });
         }
         this.start = this.newStart;
         this.end = this.newEnd;
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.select();
+                if (elem instanceof Elem)
+                    elem.select();
             });
             if (this.reversed)
                 this.start.putCursorBefore(cursor);
@@ -103,14 +106,16 @@ extend(Selection, Object, function(_) {
     _.setStartEnd = function(start, end) {
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.deSelect();
+                if (elem instanceof Elem)
+                    elem.deSelect();
             });
         }
         this.start = start;
         this.end = end;
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.select();
+                if (elem instanceof Elem)
+                    elem.select();
             });
         }
     };
@@ -153,9 +158,10 @@ extend(Selection, Object, function(_) {
         if (this.start && this.end) {
             clipBoard.reset();
             listEach(this.start, this.end.next, function(elem) {
-                var copy = elem.copy();
-                if (copy)
+                if (elem instanceof Elem) {
+                    var copy = elem.copy();
                     copy.addBefore(clipBoard.children);
+                }
             });
         }
         this.reset();
@@ -166,9 +172,10 @@ extend(Selection, Object, function(_) {
         if (this.start && this.end) {
             clipBoard.reset();
             listEach(this.start, this.end.next, function(elem) {
-                var copy = elem.copy();
-                if (copy)
+                if (elem instanceof Elem) {
+                    var copy = elem.copy();
                     copy.addBefore(clipBoard.children);
+                }
             });
         }
         this.del();

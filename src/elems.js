@@ -129,8 +129,8 @@ extend(Mspace, Elem);
 
 function copyChildren(src, dst) {
     src.eachChild(function(elem) {
-        var cp = elem.copy();
-        if (cp) {
+        if (elem instanceof Elem) {
+            var cp = elem.copy();
             cp.addBefore(dst.children);
             cp.JQ.appendTo(dst.children.JQ);
         }
