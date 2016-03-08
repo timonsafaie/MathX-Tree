@@ -55,7 +55,8 @@ extend(Selection, Object, function(_) {
     _.reset = function() {
         if (this.start && this.end) {
             listEach(this.start, this.end.next, function(elem) {
-                elem.deSelect();
+                if (elem instanceof Elem)
+                    elem.deSelect();
             });
         }
         this._reset();

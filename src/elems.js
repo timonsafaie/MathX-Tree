@@ -395,8 +395,11 @@ extend(Msub, Mrow, function(_, _super) {
     };
 
     _.postInsertJQ = function(cursor) {
-        var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(JQ));
+        // FIXME: not good
+        if (!(this.parent instanceof Msubsup)) {
+            var JQ = this.children.JQ;
+            JQ.css('font-size', cursor.reduceFont(JQ));
+        }
         this.repose();
     };
 
@@ -406,6 +409,9 @@ extend(Msub, Mrow, function(_, _super) {
             this.JQ.css('margin-left', -prev.JQ.width());
             prev = prev.prev;
         }
+        // FIXME: not good
+        if (this.parent instanceof Msubsup)
+            return;
         if (prev.JQ) {
             var height = prev.JQ.outerHeight() * -0.25;
             this.JQ.css('vertical-align', height);
@@ -448,8 +454,11 @@ extend(Msup, Mrow, function(_, _super) {
     };
 
     _.postInsertJQ = function(cursor) {
-        var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(JQ));
+        // FIXME: not good
+        if (!(this.parent instanceof Msubsup)) {
+            var JQ = this.children.JQ;
+            JQ.css('font-size', cursor.reduceFont(JQ));
+        }
         this.repose();
     };
 
@@ -459,6 +468,9 @@ extend(Msup, Mrow, function(_, _super) {
             this.JQ.css('margin-left', this.offset-prev.JQ.width());
             prev = prev.prev;
         }
+        // FIXME: not good
+        if (this.parent instanceof Msubsup)
+            return;
         if (prev.JQ) {
             var height = prev.JQ.outerHeight() * 0.375;
             this.JQ.css('vertical-align', height);
