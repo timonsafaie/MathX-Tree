@@ -71,7 +71,7 @@ extend(Cursor, Node, function(_) {
         var prev = this.prev;
         var next = this.next;
         if (cancelSelectOps.indexOf(key) !== -1) {
-            if (key == 'Enter') {
+            if (key === 'reduceAgg') {
                 var mx = this.root;
                 if (mx.JQ.find('.aC-container').children().length > 0) {
                     // Insert highlighted Symbol
@@ -96,7 +96,7 @@ extend(Cursor, Node, function(_) {
             this.selection.reset();
         }
 
-        if (this.lastAgg && key !== 'Backspace') {
+        if (this.lastAgg && key !== 'delLeft') {
             this.lastAgg.settle();
             delete this.lastAgg;
         }
