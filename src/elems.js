@@ -340,7 +340,7 @@ extend(Mroot, Mrow, function(_, _super) {
 
     _.postInsertJQ = function(cursor) {
         var JQ = this.index.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this, 0.5));
+        JQ.css('font-size', cursor.reduceFont(JQ, 0.5));
     };
 
     _.copy = function() {
@@ -396,7 +396,7 @@ extend(Msub, Mrow, function(_, _super) {
 
     _.postInsertJQ = function(cursor) {
         var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
         this.repose();
     };
 
@@ -449,7 +449,7 @@ extend(Msup, Mrow, function(_, _super) {
 
     _.postInsertJQ = function(cursor) {
         var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
         this.repose();
     };
 
@@ -556,7 +556,7 @@ extend(Munder, Mrow, function(_, _super) {
 
     _.postInsertJQ = function(cursor) {
         var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 });
 
@@ -584,7 +584,7 @@ extend(Mover, Mrow, function(_, _super) {
 
     _.postInsertJQ = function(cursor) {
         var JQ = this.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 });
 
@@ -628,9 +628,9 @@ extend(Munderover, Mrow, function(_, _super) {
     _.postInsertJQ = function(cursor) {
         var JQ;
         JQ = this.under.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
         JQ = this.over.children.JQ;
-        JQ.css('font-size', cursor.reduceFont(this));
+        JQ.css('font-size', cursor.reduceFont(JQ));
     };
 
     _.copy = function() {

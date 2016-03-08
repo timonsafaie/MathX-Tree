@@ -622,11 +622,12 @@ extend(Cursor, Elem, function(_) {
         });
     };
 
-    _.reduceFont = function(elem, scale) {
+    _.reduceFont = function(JQ, scale) {
         var rootSize = this.root.JQ.css('font-size').slice(0, -2);
+        var origSize = JQ.css('font-size').slice(0, -2);
         if (scale)
             return rootSize * scale;
-        if (elem.parent === this.root)
+        if (origSize === rootSize)
             return rootSize * 0.72;
         return rootSize * 0.5;
     };
