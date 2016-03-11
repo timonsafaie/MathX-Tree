@@ -590,10 +590,10 @@ extend(Cursor, Node, function(_) {
         if (parent.JQ.find('.aC-container')) {
             parent.JQ.find('.aC-container').remove();
         }
-        
+
         if (!agg)
             return;
-        
+
         listEachReversed(start, this, function(e) {
             e.remove();
         });
@@ -619,6 +619,18 @@ extend(Cursor, Node, function(_) {
             if (first === null)
                 first = cursor.prev;
         });
+    };
+
+    _.rebuildMatrix = function(rows, cols) {
+        if (!(this.lastAgg instanceof Mmatrix))
+            return;
+        var matrix = this.lastAgg;
+        var info = matrix.info;
+        info.rows = rows;
+        info.cols = cols;
+        matrix.remove();
+        matrix = new Mmatrix(matrix.input, info);
+        matrix.insert(this);
     };
 
     _.reduceFont = function(JQ, scale) {

@@ -76,14 +76,13 @@ var entry = function(JQ, root) {
         if ($(':focus').hasClass('mat-inp')) {
             if (key == 'Enter') {
                 var sib = $(':focus').parent().children();
-                // TODO: Delete Matrix Stub at cursor
-                
-                // Takes values of matrix
-                console.log('Rows: '+sib[0].value);
-                if (sib.length > 1)
-                    console.log('Columns: '+sib[1].value);  
-                
-                // TODO: Build Matrix
+                if (sib.length !== 2)
+                    return;
+                var rows = 0 + sib[0].value;
+                var cols = 0 + sib[1].value;
+                if (rows <= 0 || rows > 10 || cols <= 0 || cols > 10)
+                    return;
+                return input.inputMatrixBuilder(rows, cols);
             }
         } 
         return input.inputControl(prefix+key);

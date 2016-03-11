@@ -45,6 +45,10 @@ extend(MathInput, Object, function(_) {
         cursor.afterInput(key);
     };
 
+    _.inputMatrixBuilder = function(rows, cols) {
+        return this.cursor.rebuildMatrix(rows, cols);
+    };
+
     _.inputControl = function(key) {
         if (cursorControlKeys[key]) {
             var ctrlOp = cursorControlKeys[key];
