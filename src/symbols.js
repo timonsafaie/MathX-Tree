@@ -68,16 +68,19 @@ var atomSymbols = [
     {input: '}', Tag: Mclose},
 
     {input: '/',             Tag: Mi},
+    {input: '^',             Tag: Mi},
+    {input: '_',             Tag: Mi},
     {input: ' ',             Tag: Mspace},
-    {input: '^',             Tag: Msup},
-    {input: '_',             Tag: Msub},
     {input: /^[0-9.]$/,      Tag: Mn},
     {input: /^[:;,'"$@#%&!?]$/,    Tag: Mi},
     {input: /^[+\-|=\\]$/,         Tag: Mo}
 ];
 
 var aggSymbols1 = {
+    '^':                  {Tag: Msup},
+    '_':                  {Tag: Msub},
     '/':                  {Tag: Mfrac, latex: "/", version: "basic"},
+
     '+-':                 {Tag: Mo, output: '&pm;', latex: "\\pm", version: "basic"},
     '-+':                 {Tag: Mo, output: '&mp;', latex: "\\mp", version: "basic"},
     '*':                  {Tag: Mo, output: '&times;', latex: "\\times", version: "basic"},
