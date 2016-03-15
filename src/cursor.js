@@ -700,6 +700,7 @@ extend(Cursor, Node, function(_) {
         var cursor = this;
         state.siblings.forEach(function(elem) {
             elem.insert(cursor);
+            elem.deSelect();
         });
         if (state.prev instanceof Elem)
             state.prev.putCursorAfter(this);
