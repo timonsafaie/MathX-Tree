@@ -699,7 +699,8 @@ extend(Cursor, Node, function(_) {
         parent.appendCursor(this);
         var cursor = this;
         state.siblings.forEach(function(elem) {
-            elem.insert(cursor);
+            elem.addBefore(cursor);
+            elem.JQ.insertBefore(cursor.JQ);
             elem.deSelect();
         });
         if (state.prev instanceof Elem)
