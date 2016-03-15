@@ -34,6 +34,7 @@ var cursorControlKeys = {
     'Ctrl-C':      'copySelection',
     'Ctrl-V':      'pasteSelection',
     'Ctrl-X':      'cutSelection',
+    'Ctrl-Z':      'undo',
 };
 
 extend(MathInput, Object, function(_) {

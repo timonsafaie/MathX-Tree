@@ -19,6 +19,7 @@ extend(Cursor, Node, function(_) {
         'moveDown',
         'selectAll',
         'reduceAgg',
+        'undo',
     ];
 
     _.focus = function() {
@@ -67,6 +68,9 @@ extend(Cursor, Node, function(_) {
         this.hide();
         this.clearBlink();
         this.show();
+
+        if (key !== 'undo')
+            this.saveState();
 
         var prev = this.prev;
         var next = this.next;
@@ -117,6 +121,10 @@ extend(Cursor, Node, function(_) {
             this.setBlink();
             this.bubble('resize');
         }
+    };
+
+    _.undo = function() {
+        this.restoreState();
     };
 
     _.moveLeft = function() {
@@ -659,5 +667,43 @@ extend(Cursor, Node, function(_) {
         var first = this.root.firstChild();
         var last = this.root.lastChild();
         this.selection.setStartEnd(first, last);
+    };
+
+    _.saveState = function() {
+        var state = {}
+        state.parent = this.parent;
+        state.prev = this.prev;
+        state.next = this.next;
+        state.siblings = [];
+        var cursor = this;
+        this.parent.eachChild(function(elem) {
+            if (elem !== cursor)
+                state.siblings.push(elem);
+        });
+        this.saved = state;
+    };
+
+    _.restoreState = function() {
+        if (!this.saved)
+            return;
+
+        var state = this.saved;
+        this.saved = null;
+
+        var parent = this.parent;
+        while (parent !== state.parent && parent !== this.root)
+            parent = parent.parent;
+        parent.eachChild(function(elem) {
+            elem.remove();
+        });
+        parent.appendCursor(this);
+        var cursor = this;
+        state.siblings.forEach(function(elem) {
+            elem.insert(cursor);
+        });
+        if (state.prev instanceof Elem)
+            state.prev.putCursorAfter(this);
+        else if (state.next instanceof Elem)
+            state.next.putCursorBefore(this);
     };
 });
