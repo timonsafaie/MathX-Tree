@@ -677,7 +677,7 @@ extend(Cursor, Node, function(_) {
         state.siblings = [];
         var cursor = this;
         this.parent.eachChild(function(elem) {
-            if (elem !== cursor)
+            if (elem instanceof Elem)
                 state.siblings.push(elem);
         });
         this.saved = state;
