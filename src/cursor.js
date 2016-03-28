@@ -91,11 +91,11 @@ extend(Cursor, Node, function(_) {
                     
                     if(insert.category == "Matrix") {
                         this.menu.matrixbuilder(symbol);
+                    } else {
+                        var node = new insert.Tag(symbol, insert);
+                        node.insert(this);
+                        this.lastAgg = node;
                     }
-                    
-                    var node = new insert.Tag(symbol, insert);
-                    node.insert(this);
-                    this.lastAgg = node;
                 }
             }
             this.selection.reset();
@@ -643,7 +643,7 @@ extend(Cursor, Node, function(_) {
         
         var node = new insert.Tag(this.menu.symbol, insert);
         node.insert(this);
-        
+        this.lastAgg = node;
         
         return false;
     };
