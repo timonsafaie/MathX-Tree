@@ -14,6 +14,7 @@ var Menu = function(list, searchTerm, start, cursor, attachTo) {
     this.attachTo = attachTo;
     this.mode = 'left';
     this.cursor = cursor;
+    this.symbol = null;
 };
 
 extend(Menu, Object, function(_) {
@@ -312,12 +313,16 @@ extend(Menu, Object, function(_) {
     
     _.click = function(e) {
         // Setup Clicking
-        var symbol = $(e).attr('title');
-        var clickedSymbol = aggSymbols[symbol];
+        this.symbol = $(e).attr('title');
+        var clickedSymbol = aggSymbols[this.symbol];
 
         this.attachTo.JQ.find('.aC-container').remove();
-
-        var node = new clickedSymbol.Tag(symbol, clickedSymbol);
+        
+        if(clickedSymbol.category == "Matrix") {
+            this.matrixbuilder(this.symbol);
+        }
+        
+        var node = new clickedSymbol.Tag(this.symbol, clickedSymbol);
         return node;
     };
     
@@ -326,6 +331,7 @@ extend(Menu, Object, function(_) {
         var rows = 'ROWS <input type="text" data-field="row" class="mat-inp" name="mat-rows" placeholder="MAX 10" func="'+matrix+'">\n';
         var columns = 'COLUMNS <input type="text" data-field="col" class="mat-inp" name="mat-cols" placeholder="MAX 10" func="'+matrix+'">';
         var width = 250;
+        this.symbol = matrix;
         if (matrix == 'piecewise') {
             width = 110;
             columns = '';
@@ -356,6 +362,15 @@ extend(Menu, Object, function(_) {
                                          });
         parent.find('mx-cursor').css('visibility','hidden');
         menuJQ.find('input.mat-inp:first').focus();
+    };
+    
+    _.getMatrixType = function () {
+        return this.symbol;  
+    };
+    
+    _.closeMenu = function() {
+        this.attachTo.JQ.parent().find('.aC-container').remove();
+        return false;
     };
     
     _.sort = function() {

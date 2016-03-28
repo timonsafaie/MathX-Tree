@@ -95,6 +95,7 @@ extend(Cursor, Node, function(_) {
                     
                     var node = new insert.Tag(symbol, insert);
                     node.insert(this);
+                    this.lastAgg = node;
                 }
             }
             this.selection.reset();
@@ -630,15 +631,21 @@ extend(Cursor, Node, function(_) {
     };
 
     _.rebuildMatrix = function(rows, cols) {
-        if (!(this.lastAgg instanceof Mmatrix))
-            return;
-        var matrix = this.lastAgg;
-        var info = matrix.info;
-        info.rows = rows;
-        info.cols = cols;
-        matrix.remove();
-        matrix = new Mmatrix(matrix.input, info);
-        matrix.insert(this);
+        // TODO: Move cursor after stub matrix
+        // and delete stub
+        
+        var insert = aggSymbols[this.menu.symbol];
+        console.log(this.menu.symbol);
+        insert.rows = rows;
+        insert.cols = cols;
+        
+        this.menu.closeMenu();
+        
+        var node = new insert.Tag(this.menu.symbol, insert);
+        node.insert(this);
+        
+        
+        return false;
     };
 
     _.reduceFont = function(JQ, scale) {

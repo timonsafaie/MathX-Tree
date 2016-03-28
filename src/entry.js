@@ -75,14 +75,16 @@ var entry = function(JQ, root) {
           prefix = 'Shift-';
         if ($(':focus').hasClass('mat-inp')) {
             if (key == 'Enter') {
-                var sib = $(':focus').parent().children();
-                if (sib.length !== 2)
-                    return;
-                var rows = 0 + sib[0].value;
-                var cols = 0 + sib[1].value;
+                var dims = $(':focus').parent().children();
+                if (dims.length !== 2)
+                    return false;
+                var rows = 0 + parseInt(dims[0].value);
+                var cols = 0 + parseInt(dims[1].value);
                 if (rows <= 0 || rows > 10 || cols <= 0 || cols > 10)
-                    return;
-                return input.inputMatrixBuilder(rows, cols);
+                    return false;
+                input.inputMatrixBuilder(rows, cols);
+                
+                return false;
             }
         } 
         return input.inputControl(prefix+key);
