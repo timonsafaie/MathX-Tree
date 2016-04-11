@@ -89,6 +89,17 @@ extend(Elem, Node, function(_, _super) {
         this.selected = false;
         this.JQ.removeClass('mx-selected');
     };
+
+    _.hasChildElem = function() {
+        var ret = false;
+        this.eachChild(function(node) {
+            if (node instanceof Elem) {
+                ret = true;
+                return false;
+            }
+        });
+        return ret;
+    };
 });
 
 var Mi = function(input, info) {
@@ -161,18 +172,11 @@ var allRows = {};
 
 function locateCursor(posX, posY, rid, cursor) {
     var row = allRows[rid];
-    var hasElemChild = false;
 
-    row.eachChild(function(node) {
-        if (node instanceof Elem) {
-            hasElemChild = true;
-            return false;
-        }
-    });
-
-    if (!hasElemChild) {
+    if (!row.hasChildElem()) {
         cursor.moveAfter(row.children);
         cursor.JQ.prependTo(row.children.JQ);
+        row.bubble('resize');
         return;
     }
 
@@ -260,7 +264,7 @@ extend(Mrow, Elem, function(_, _super) {
     _.resize = function() {
         var first = this.firstChild();
         var last = this.lastChild();
-        if (!this.hasChild() || (first === last && first instanceof Cursor))
+        if (!this.hasChildElem())
             this.children.JQ.addClass('empty');
         else
             this.children.JQ.removeClass('empty');
