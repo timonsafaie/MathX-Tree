@@ -39,7 +39,6 @@ var cursorControlKeys = {
 
 extend(MathInput, Object, function(_) {
     _.inputKey = function(key) {
-        console.log("key: "+key);
         var cursor = this.cursor;
         cursor.beforeInput(key);
         cursor.inputKey(key);
@@ -48,7 +47,10 @@ extend(MathInput, Object, function(_) {
     };
 
     _.inputMatrixBuilder = function(rows, cols) {
-        return this.cursor.rebuildMatrix(rows, cols);
+        var cursor = this.cursor;
+        cursor.beforeInput('matrix');
+        cursor.rebuildMatrix(rows, cols);
+        cursor.afterInput('matrix');
     };
 
     _.inputControl = function(key) {
@@ -91,7 +93,7 @@ extend(MathInput, Object, function(_) {
               this.mathMode = false;
             } else if (this.mathMode) this.mathMode = false;
             this.didExitTextMode = false;
-          return false;
+            return false;
         }
     };
 

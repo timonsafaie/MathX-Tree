@@ -83,7 +83,6 @@ var entry = function(JQ, root) {
                 if (rows <= 0 || rows > 10 || cols <= 0 || cols > 10)
                     return false;
                 input.inputMatrixBuilder(rows, cols);
-                
                 return false;
             }
         } 

@@ -635,7 +635,6 @@ extend(Cursor, Node, function(_) {
         // and delete stub
         
         var insert = aggSymbols[this.menu.symbol];
-        console.log(this.menu.symbol);
         insert.rows = rows;
         insert.cols = cols;
         
@@ -644,7 +643,7 @@ extend(Cursor, Node, function(_) {
         var node = new insert.Tag(this.menu.symbol, insert);
         node.insert(this);
         this.lastAgg = node;
-        
+
         return false;
     };
 
