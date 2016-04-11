@@ -161,20 +161,29 @@ var allRows = {};
 
 function locateCursor(posX, posY, rid, cursor) {
     var row = allRows[rid];
-    if (!row.hasChild()) {
+    var hasElemChild = false;
+
+    row.eachChild(function(node) {
+        if (node instanceof Elem) {
+            hasElemChild = true;
+            return false;
+        }
+    });
+
+    if (!hasElemChild) {
         cursor.moveAfter(row.children);
-        cursor.JQ.prependTo(this.children.JQ);
+        cursor.JQ.prependTo(row.children.JQ);
         return;
     }
 
     var first = row.firstChild();
-    while (first === cursor || !(first instanceof Elem)) // for mark
+    while (!(first instanceof Elem))
         first = first.next;
 
     var minElem = null;
     var minDist = abs(first.JQ.offset().left-posX);
     row.eachChild(function(elem) {
-        if (elem === cursor || !(elem instanceof Elem)) // for mark
+        if (!(elem instanceof Elem))
             return;
         var dist = abs(elem.JQ.offset().left+elem.JQ.width()-posX);
         if (dist < minDist) {
