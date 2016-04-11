@@ -24,3 +24,9 @@ function extend(type, base, fn) {
     if (typeof fn === 'function')
         fn(type.prototype, base.prototype);
 }
+
+function clone(obj) {
+    if (obj === undefined)
+        return obj;
+    return JSON.parse(JSON.stringify(obj));
+}

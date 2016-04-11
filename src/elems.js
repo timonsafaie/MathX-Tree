@@ -26,7 +26,7 @@ var Elem = function(tag, input, info) {
     this.tag = (tag)? tag : 'mrow';
     this.input = input;
     this.output = input;
-    this.info = info;
+    this.info = clone(info);
     if (info && info.output !== undefined)
         this.output = info.output;
 
@@ -931,5 +931,43 @@ extend(Mmatrix, Mrow, function(_, _super) {
         var transform = 'scale(' + hscale + ',' + vscale + ')';
         this.mopen.JQ.css({transform: transform});
         this.mclose.JQ.css({transform: transform});
+    };
+
+    _.getElem = function(i, j) {
+        if (i >= this.rows || j >= this.cols)
+            return;
+        var row;
+        this.mcontent.eachChild(function(r) {
+            row = r;
+            if (i-- === 0)
+                return false;
+        });
+        var elem;
+        row.eachChild(function(e) {
+            elem = e;
+            if (j-- === 0)
+                return false;
+        });
+        return elem;
+    };
+
+    _.copy = function() {
+        var copy = new this.constructor(this.input, this.info);
+        for (var i = 0; i < this.rows; i++) {
+            for (var j = 0; j < this.cols; j++) {
+                orig = this.getElem(i, j);
+                dest = copy.getElem(i, j);
+                copyChildren(orig, dest);
+            }
+        }
+        return copy;
+    };
+
+    // FIXME: toJSON
+    _.toJSON = function() {
+    };
+
+    // FIXME: loadJSON
+    _.loadJSON = function(doc) {
     };
 });
