@@ -1,6 +1,7 @@
 var entry = function(JQ, root) {
     var input = new MathInput();
     if (root) input.root = root;
+    input.root.containerJQ = JQ;
     JQ.append(input.root.JQ);
     JQ.prop('tabindex', 0);
     JQ.bind({
@@ -81,8 +82,9 @@ var entry = function(JQ, root) {
                 var rows = 0 + parseInt(dims[0].value);
                 var cols = 0 + parseInt(dims[1].value);
                 if (rows <= 0 || rows > 10 || cols <= 0 || cols > 10)
-                    return false;
+                    return false;                
                 input.inputMatrixBuilder(rows, cols);
+                cursor = input.cursor;
                 return false;
             }
         } 

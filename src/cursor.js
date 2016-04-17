@@ -115,8 +115,9 @@ extend(Cursor, Node, function(_) {
     };
 
     _.afterInput = function(key) {
-        if (this.lastMenclose && !this.lastMenclose.isAncestor(this))
+        if (this.lastMenclose && !this.lastMenclose.isAncestor(this)) {
             this.lastMenclose.settle();
+        }
         if ($(':focus').attr('class')!='mat-inp') {
             this.show();
             this.setBlink();
@@ -385,7 +386,8 @@ extend(Cursor, Node, function(_) {
                 }
                 if (search.trim().length > 2) {
                     for(var aggSymbol in aggSymbols) {
-                        if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
+                        if ((aggSymbol.indexOf(search.trim()) > -1) &&
+                            (aggSymbols[aggSymbol].rank)) {
                             // Add symbol to SmartMenu candidate list
                             target = search;
                             if (search == search.trim())
@@ -631,14 +633,13 @@ extend(Cursor, Node, function(_) {
     };
 
     _.rebuildMatrix = function(rows, cols) {
-        // TODO: Move cursor after stub matrix
-        // and delete stub
-        
         var insert = aggSymbols[this.menu.symbol];
         insert.rows = rows;
         insert.cols = cols;
         
         this.menu.closeMenu();
+        
+        this.root.containerJQ.focus();
         
         var node = new insert.Tag(this.menu.symbol, insert);
         node.insert(this);

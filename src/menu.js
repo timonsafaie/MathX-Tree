@@ -370,7 +370,6 @@ extend(Menu, Object, function(_) {
     
     _.closeMenu = function() {
         this.attachTo.JQ.parent().find('.aC-container').remove();
-        return false;
     };
     
     _.sort = function() {
