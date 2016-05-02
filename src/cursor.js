@@ -610,11 +610,15 @@ extend(Cursor, Node, function(_) {
         listEachReversed(start, this, function(e) {
             e.remove();
         });
-
-        var node = new agg.Tag(input, agg);
-        node.insert(this);
-        this.lastAgg = node;
-        this.lastAgg.unsettle();
+        
+        if(agg.category == "Matrix") {
+            this.menu.matrixbuilder(input);
+        } else {    
+            var node = new agg.Tag(input, agg);
+            node.insert(this);
+            this.lastAgg = node;
+            this.lastAgg.unsettle();
+        }
     };
 
     _.expandAgg = function(agg) {
