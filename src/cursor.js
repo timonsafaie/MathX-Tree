@@ -588,9 +588,15 @@ extend(Cursor, Node, function(_) {
                     e.remove();
                 });
                 
-                var node = c.menu.click(this);
-                node.insert(c);
-                
+                var csym = $(this).attr('title');
+                var cagg = aggSymbols[csym];
+
+                if(cagg.category == "Matrix") {
+                    c.menu.matrixbuilder(csym);
+                } else { 
+                    var node = c.menu.click(this);
+                    node.insert(c);
+                }
                 c.selection.reset();
                 c.show();
             });
