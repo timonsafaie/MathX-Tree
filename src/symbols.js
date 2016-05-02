@@ -72,8 +72,8 @@ var atomSymbols = [
     {input: '_',             Tag: Mi},
     {input: ' ',             Tag: Mspace},
     {input: /^[0-9.]$/,      Tag: Mn},
-    {input: /^[:;,'"$@#%&!?]$/,    Tag: Mi},
-    {input: /^[+\-|=\\]$/,         Tag: Mo}
+    {input: /^[:;,~`'"$@#%&!?]$/,   Tag: Mi},
+    {input: /^[+\-|=\\]$/,          Tag: Mo}
 ];
 
 var aggSymbols1 = {
