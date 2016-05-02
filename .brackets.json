@@ -1,5 +1,7 @@
 {
     "jscodehints.detectedExclusions": [
-        "/Users/timonsafaie/Workspace/github/MathX-Tree/src/input.js"
+        "/Users/timonsafaie/Workspace/github/MathX-Tree/src/input.js",
+        "/Users/timonsafaie/Workspace/github/MathX-Tree/build/mxapi.js",
+        "/Users/timonsafaie/Workspace/github/MathX-Tree/tools/watchreload.js"
     ]
 }

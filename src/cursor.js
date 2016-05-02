@@ -554,7 +554,8 @@ extend(Cursor, Node, function(_) {
             }
             if (search.trim().length > 2) {
                 for(var aggSymbol in aggSymbols)
-                    if ((aggSymbol.indexOf(search.trim()) > -1) && (aggSymbols[aggSymbol].rank)) {
+                    if ((aggSymbol.indexOf(search.trim()) > -1) &&
+                        (aggSymbols[aggSymbol].rank)) {
                         target = search;
                         if (search == search.trim())
                             start = e;
@@ -564,7 +565,8 @@ extend(Cursor, Node, function(_) {
         if (target && target != input) {
             var trimTarget = target.trim();
             for(var aggSymbol in aggSymbols) {
-                if ((aggSymbol.indexOf(trimTarget) > -1) && (aggSymbols[aggSymbol].rank)) {
+                if ((aggSymbol.indexOf(trimTarget) > -1) && 
+                    (aggSymbols[aggSymbol].rank)) {
                     input = target;
                     var aggNode = {
                          aggSymbol: aggSymbol,

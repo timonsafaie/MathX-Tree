@@ -15,6 +15,7 @@ var Menu = function(list, searchTerm, start, cursor, attachTo) {
     this.mode = 'left';
     this.cursor = cursor;
     this.symbol = null;
+    this.isopen = false;
 };
 
 extend(Menu, Object, function(_) {
@@ -36,6 +37,7 @@ extend(Menu, Object, function(_) {
         var maxLength = 0;
         var mult = 1;
         this.sort();
+        this.isopen = true;
         
         // Reset state by clearing out any old SmartMenues
         if (parent.JQ.find('.aC-container')) {
@@ -368,7 +370,12 @@ extend(Menu, Object, function(_) {
         return this.symbol;  
     };
     
+    _.isOpen = function () {
+        return this.isopen;  
+    };
+    
     _.closeMenu = function() {
+        this.isopen = false;
         this.attachTo.JQ.parent().find('.aC-container').remove();
     };
     

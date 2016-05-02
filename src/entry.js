@@ -111,7 +111,8 @@ var entry = function(JQ, root) {
 
         var cursor = input.cursor;
         cursor.beforeInput('selectAll');
-        locateCursor(e.pageX, e.pageY, rid, cursor);
+        if (!cursor.menu.isOpen())
+            locateCursor(e.pageX, e.pageY, rid, cursor);
         cursor.selection.reset();
         cursor.selection.setStart(cursor);
         cursor.afterInput('selectAll');
