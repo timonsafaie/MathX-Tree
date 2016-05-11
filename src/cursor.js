@@ -38,7 +38,7 @@ extend(Cursor, Node, function(_) {
         var menclose = this.parent.parent;
         if (menclose instanceof Menclose && !menclose.settled)
             menclose.settle();
-        this.JQ.parent().find('.aC-container').remove();
+        this.root.JQ.find('.aC-container').remove();
     };
 
     _.show = function() {
