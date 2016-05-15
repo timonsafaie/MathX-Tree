@@ -97,6 +97,19 @@ extend(MathInput, Object, function(_) {
         }
     };
 
+    _.isEmpty = function() {
+        var text = this.root.JQ.text();
+        for (var i = 0; i < text.length; i++) {
+            if ((text.charAt(i) != null) && 
+                (text.charAt(i) != " ") &&
+                (text.charAt(i) != "") &&
+                (text.charCodeAt(i) != 8203)) {
+                return false;
+            }
+        }
+        return true;
+    };
+    
     _.dumpRoot = function() {
         return dumpTree(this.root);
     };
