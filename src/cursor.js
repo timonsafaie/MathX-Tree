@@ -56,7 +56,7 @@ extend(Cursor, Node, function(_) {
             clearInterval(this.intervalId);
         this.intervalId = setInterval(this.blink, 500);
     };
-    
+
     _.clearBlink = function() {
         if ('intervalId' in this)
             clearInterval(this.intervalId);
@@ -81,14 +81,14 @@ extend(Cursor, Node, function(_) {
                     // Insert highlighted Symbol
                     var symbol = this.menu.JQ.find('.list-row-hover').attr('title');
                     var insert = aggSymbols[symbol];
-                    
+
                     listEachReversed(this.menu.start, this, function(e) {
                         e.remove();
                     });
-                    
+
                     if (mx.JQ.find('.aC-container').children().length > 0)
                         mx.JQ.find('.aC-container').remove();
-                    
+
                     if(insert.category == "Matrix") {
                         this.menu.matrixbuilder(symbol);
                     } else {
@@ -375,13 +375,13 @@ extend(Cursor, Node, function(_) {
             var search ='';
             var target = '';
             var aggList = [];
-            // Create Matrix        
+            // Create Matrix
             if ($(':focus').attr('class') == 'mat-inp') {
                 console.log('ENTER TO CREATE');
             }
             listEachReversed(start, this, function(e) {
                 if ((e instanceof Mi) || (e instanceof Mspace)) {
-                    if (e.input.length == 1) 
+                    if (e.input.length == 1)
                         search = e.input + search;
                 }
                 if (search.trim().length > 2) {
@@ -474,7 +474,7 @@ extend(Cursor, Node, function(_) {
             // TODO: Implement Ctrl+ and Shift+ prefixes
             throw 'Unknown input "' + key + '"';
         }
-        
+
         if ($(':focus').attr('class')=='mat-inp') {
             var reg = new RegExp('^\\d+$');
             if (reg.test(key)) {
@@ -535,7 +535,7 @@ extend(Cursor, Node, function(_) {
 
     _.reduceAgg = function() {
         var agg, input;
-        
+
         var parent = this.root;
         var start = this.parent.firstChild();
         var aggTag = this.prev.tag;
@@ -565,7 +565,7 @@ extend(Cursor, Node, function(_) {
         if (target && target != input) {
             var trimTarget = target.trim();
             for(var aggSymbol in aggSymbols) {
-                if ((aggSymbol.indexOf(trimTarget) > -1) && 
+                if ((aggSymbol.indexOf(trimTarget) > -1) &&
                     (aggSymbols[aggSymbol].rank)) {
                     input = target;
                     var aggNode = {
@@ -578,32 +578,32 @@ extend(Cursor, Node, function(_) {
             // Add list and display SmartMenu
             this.menu = new Menu(aggList, trimTarget, start, this, parent);
             this.menu.display();
-            
+
             // Setup Clicking
             var c = this;
             this.menu.JQ.find('.symbol').click(function(){
                 c.hide();
-                
+
                 listEachReversed(start, c, function(e) {
                     e.remove();
                 });
-                
+
                 var csym = $(this).attr('title');
                 var cagg = aggSymbols[csym];
 
                 if(cagg.category == "Matrix") {
                     c.menu.matrixbuilder(csym);
-                } else { 
+                } else {
                     var node = c.menu.click(this);
                     node.insert(c);
                 }
                 c.selection.reset();
                 c.show();
             });
-            
+
             return;
-            
-        } 
+
+        }
 
         // Hide SmartMenu
         if (parent.JQ.find('.aC-container')) {
@@ -616,10 +616,10 @@ extend(Cursor, Node, function(_) {
         listEachReversed(start, this, function(e) {
             e.remove();
         });
-        
+
         if(agg.category == "Matrix") {
             this.menu.matrixbuilder(input);
-        } else {    
+        } else {
             var node = new agg.Tag(input, agg);
             node.insert(this);
             this.lastAgg = node;
@@ -648,11 +648,11 @@ extend(Cursor, Node, function(_) {
         var insert = aggSymbols[this.menu.symbol];
         insert.rows = rows;
         insert.cols = cols;
-        
+
         this.menu.closeMenu();
-        
+
         this.root.containerJQ.focus();
-        
+
         var node = new insert.Tag(this.menu.symbol, insert);
         node.insert(this);
         this.lastAgg = node;
@@ -726,5 +726,17 @@ extend(Cursor, Node, function(_) {
             state.prev.putCursorAfter(this);
         else if (state.next instanceof Elem)
             state.next.putCursorBefore(this);
+    };
+    _.isStart = function() {
+      if (this.parent.JQ.hasClass('mX-container')) {
+        return this.JQ.prev().html() == String.fromCharCode(8203);
+      }
+      return false;
+    };
+    _.isEnd = function() {
+      if (this.parent.JQ.hasClass('mX-container')) {
+        return this.JQ.next().size() <= 0;
+      }
+      return false;
     };
 });
